@@ -9,59 +9,61 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Template.Web
 build_property.RootNamespace = Template.Web
-build_property.ProjectDir = C:\Users\tommy\OneDrive\Desktop\Uni\Interfaccia uomo-macchina\Unibo-Template\src\Template.Web\
+build_property.ProjectDir = c:\Users\tommy\OneDrive\Desktop\Uni\Interfaccia uomo-macchina\Marcatempo\Template.Web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = true
-build_property.MSBuildProjectDirectory = C:\Users\tommy\OneDrive\Desktop\Uni\Interfaccia uomo-macchina\Unibo-Template\src\Template.Web
+build_property.MSBuildProjectDirectory = c:\Users\tommy\OneDrive\Desktop\Uni\Interfaccia uomo-macchina\Marcatempo\Template.Web
 build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Areas/Example/Users/Edit.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Areas/Example/Users/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRXhhbXBsZVxVc2Vyc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Areas/Example/Users/Index.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Areas/Example/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcRXhhbXBsZVxVc2Vyc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Areas/_ViewImports.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Areas/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Areas/_ViewStart.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Areas/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Features/Login/Login.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Features/Login/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcTG9naW5cTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Features/_ViewImports.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Features/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Features/_ViewStart.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Features/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = RmVhdHVyZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Views/Shared/_Layout.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Views/Shared/_LayoutHtml.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Views/Shared/_LayoutHtml.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRIdG1sLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Views/Shared/_PagingPartial.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Views/Shared/_PagingPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdpbmdQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Views/Shared/_PagingPartialFilter.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Views/Shared/_PagingPartialFilter.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdpbmdQYXJ0aWFsRmlsdGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Unibo-Template/src/Template.Web/Views/_ViewImports.cshtml]
+[c:/Users/tommy/OneDrive/Desktop/Uni/Interfaccia uomo-macchina/Marcatempo/Template.Web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
