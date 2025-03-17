@@ -2,14 +2,22 @@
 
 ## Alex
 [X] Template su Figma
-[] Pullare la repo e inizializzare la configurazione
+[X] Pullare la repo e inizializzare la configurazione
 
 ## Enri
-[] Pullare la repo e inizializzare la configurazione
+[X] Pullare la repo e inizializzare la configurazione
 
 
 ## Tommi
-[] Riguardare il progetto e la repo e capirne l'organizzazione e i file principali
+[X] Riguardare il progetto e la repo e capirne l'organizzazione e i file principali
 
 
 ## Da assegnare
+
+- Pagina di login
+- Pagina area personale dipendenti
+- Pagina area personale responsabili
+- Pagina creazione task (responsabili)
+- Pagina task disponibili (dipendente)
+- Pagina storico task (dipendente)
+- Pagina dettagli task
