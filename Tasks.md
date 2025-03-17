@@ -3,10 +3,11 @@
 ## Alex
 [X] Template su Figma
 [X] Pullare la repo e inizializzare la configurazione
+[] Creare pagina di template
 
 ## Enri
 [X] Pullare la repo e inizializzare la configurazione
-
+[] Creare pagina di login
 
 ## Tommi
 [X] Riguardare il progetto e la repo e capirne l'organizzazione e i file principali
