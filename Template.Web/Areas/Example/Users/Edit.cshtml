@@ -33,7 +33,7 @@
                     <button class="dropdown-item text-danger" type="button" onclick="document.getElementById('delete-form').submit();">
                         <i class="fa-solid fa-trash"></i>&nbsp;Elimina
                     </button>
-                    <form hidden autocomplete="off" id="delete-form" method="post" action="@Url.Action(MVC.Example.Users.Delete())">
+                    <form hidden autocomplete="off" id="delete-form" method="post" action="@Url.Action("Edit", "Users", new { area = "Example", id = Model.Id })">
                         <input type="hidden" asp-for="Id" />
                     </form>
                 </div>
@@ -47,7 +47,7 @@
     <div class="container-lg">
         <div class="row">
             <div class="col-12">
-                <form autocomplete="off" method="post" class="onit-form-sm" action="@Url.Action(MVC.Example.Users.Edit())" id="edit-form">
+                <form autocomplete="off" method="post" class="onit-form-sm" action="@Url.Action("Edit", "Users", new { area = "Example", id = Model.Id })" id="edit-form">">
                     <!-- Enables form submit on Enter -->
                     <input id="edit-form-submitter" class="d-none" type="submit" />
                     <fieldset class="pb-3">
