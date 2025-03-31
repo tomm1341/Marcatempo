@@ -1,7 +1,8 @@
 *.cache
 *.editorconfig
-Template.web/obj/Debug/*
+Template.Web/node_modules/*
+Template.Web/obj/Debug/*
 Template/obj/Debug/*
-Template.web/bin*
+Template.Web/bin*
 Template/bin*
 .vs/*
