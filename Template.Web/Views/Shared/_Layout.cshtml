@@ -6,32 +6,59 @@
 
     var identitaCorrente = (Template.Web.Areas.IdentitaViewModel)ViewData[Template.Web.Areas.IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY];
 }
-@section metas{
+
+@section metas {
     @RenderSection("metas", false)
 }
-@section styles{
+
+@section styles {
     @RenderSection("styles", false)
 }
-<div id="pageId" class="onit-page">
+
+<div id="pageId" class="onit-page mx-5 mt-3">
     <div class="onit-page-sticky-top" id="onit-page-sticky-top">
         <nav class="navbar navbar-expand-lg navbar-dark onit-page-menu">
             <div class="container-fluid">
+                <!-- Logo -->
                 <a class="navbar-brand" href="/">
                     <img class="onit-suites-logo" src="~/images/app-logo.png" />
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa-solid fa-bars"></i>
+
+                <!-- Navbar Toggler per Mobile (Hamburger Menu Nero) -->
+                <button class="navbar-toggler navbar-toggler-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars text-black"></i>
                 </button>
-                <div class="collapse navbar-collapse flex-wrap" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ms-auto onit-page-menu-user">
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Menu principale -->
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="btn btn-secondary mx-2 my-1" href="@Url.Action("AreaPersonale", "Account")" title="Vai all'Area Personale">
+                                <i class="fa-solid fa-user"></i> Area Personale
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-dark mx-2 my-1" href="@Url.Action("Storico", "Storico")" title="Vai allo Storico">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Storico
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary mx-2 my-1" href="@Url.Action("Task", "Task")" title="Vai ai Task Disponibili">
+                                <i class="fa-solid fa-tasks"></i> Task Disponibili
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Profilo Utente (Solo Icona, a Destra) -->
+                    <ul class="navbar-nav ms-auto onit-page-menu-user">
                         @if (identitaCorrente != null)
                         {
                             <li class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />&nbsp;@identitaCorrente.EmailUtenteCorrente
+                                    <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end" role="menu">
-                                    <a class="dropdown-item" href="javascript:void(0)" onclick="javascript: document.getElementById('POST_LogOut').submit()" title="@SharedLocalizer["Chiudi sessione di lavoro"]">
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()" title="@SharedLocalizer["Chiudi sessione di lavoro"]">
                                         <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
                                     </a>
                                     <form autocomplete="off" method="post" action="@Url.Action(MVC.Login.Logout())" id="POST_LogOut" display="none"></form>
@@ -47,7 +74,8 @@
     @RenderSection("pageSubtitle", false)
     @RenderBody()
 </div>
-@section googlehead{
+
+@section googlehead {
     @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
@@ -55,11 +83,11 @@
     gtag('js', new Date());
     gtag('config', 'UA-', { 'anonymize_ip': true });    // Ricordarsi di anonimizzare per fare ricadere il cookie tra quelli tecnici ed evitare l'obbligo del banner
     </script>*@
-    }
-@section scripts{
+}
+
+@section scripts {
     <script type="text/javascript">
         @this.RenderAlertsWithToastify()
     </script>
-
     @RenderSection("scripts", false)
 }

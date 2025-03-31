@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Utenti";
 }
-@section pageTitle{
+@section pageTitle {
     <nav class="navbar navbar-expand navbar-light flex-wrap onit-page-title">
         <a class="navbar-brand">
             @ViewData["Title"] <small class="text-muted" title="numero di elementi individuati con i filtri attuali">(@Model.TotalItems.ToString("N0"))</small>
@@ -14,10 +14,11 @@
                     <i class="fa-solid fa-plus"></i>&nbsp;Nuovo
                 </a>
             </li>
+            
         </ul>
     </nav>
 }
-@section pageSubtitle{
+@section pageSubtitle {
     <nav class="navbar navbar-expand navbar-light flex-wrap onit-page-subtitle">
         <form method="get" id="annullaRicerca">
         </form>

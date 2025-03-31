@@ -1,0 +1,42 @@
+﻿@model TaskViewModel
+
+@{
+    ViewData["Title"] = "Crea un Nuovo Task";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form method="post" action="@Url.Action("Create", "Task", new { userRole = "NomeRuolo" })">
+    <div class="form-group">
+        <label for="Descrizione">Descrizione Task</label>
+        <input type="text" class="form-control" id="Descrizione" name="Descrizione" required />
+    </div>
+    <div class="form-group">
+        <label for="Tipologia">Tipologia</label>
+        <select class="form-control" id="Tipologia" name="Tipologia" required>
+            <option value="Interno">Interno</option>
+            <option value="Esterno">Esterno</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="Scadenza">Scadenza</label>
+        <input type="date" class="form-control" id="Scadenza" name="Scadenza" required />
+    </div>
+    <div class="form-group">
+        <label for="Priorità">Priorità</label>
+        <select class="form-control" id="Priorità" name="Priorità" required>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Bassa">Bassa</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crea Task</button>
+</form>

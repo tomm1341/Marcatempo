@@ -27,7 +27,7 @@ else
     </a>
 }
 
-<select class="form-select" name="PageSize" title="@SharedLocalizer["Elementi per pagina"]" onchange="javascript:onit.navigateUrlWithoutHystory(this.value)">
+<select class="form-select" name="PageSize" title="@SharedLocalizer["Task per pagina"]" onchange="javascript:onit.navigateUrlWithoutHystory(this.value)">
     @foreach (var size in Model.PageSizeListItems)
     {
         @if (Model.PageSize.ToString() == size.Value)
