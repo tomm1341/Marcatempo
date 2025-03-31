@@ -1,0 +1,81 @@
+﻿/* login.css */
+
+/* Stili globali per il body */
+body {
+    background-color: #f5f5f5; /* Sfondo chiaro per contrastare la card */
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Personalizzazione della card */
+.card {
+    border: none; /* Rimuove bordi predefiniti */
+    border-radius: 10px; /* Angoli arrotondati */
+    background-color: #fff;
+}
+
+/* Ombreggiatura personalizzata */
+.shadow {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Personalizzazione dell'area interna della card */
+.card-body {
+    padding: 2rem;
+}
+
+/* Titolo della card */
+.card-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #007bff; /* Colore principale (primary) */
+    text-align: center;
+}
+
+/* Stile per le etichette del form */
+.form-label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+/* Stile per gli input del form */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+/* Stile per il messaggio di errore */
+.text-danger {
+    font-size: 0.9rem;
+}
+
+/* Stile per il checkbox e la sua etichetta */
+.form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.form-check-label {
+    margin-left: 0.5rem;
+}
+
+/* Personalizzazione del bottone di submit */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 2.1rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
