@@ -1,5 +1,5 @@
 *.cache
 *.editorconfig
-Template.web/obj/Debug/*
-Template/obj/Debug/*
+Template.web/bin*
+Template/bin*
 .vs/*
