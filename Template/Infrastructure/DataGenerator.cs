@@ -17,31 +17,55 @@ namespace Template.Infrastructure
             context.Users.AddRange(
                 new User
                 {
-                    Id = Guid.Parse("3de6883f-9a0b-4667-aa53-0fbc52c4d300"), // Forced to specific Guid for tests
-                    Email = "email1@test.it",
+                    Id = Guid.NewGuid(),
+                    Email = "ckleehuhler0@furl.net",
                     Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
-                    FirstName = "Nome1",
-                    LastName = "Cognome1",
-                    NickName = "Nickname1"
+                    FirstName = "Carmelita",
+                    LastName = "Kleehuhler",
+                    NickName = "ckleehuhler0",
+                    Role = "User"
                 },
                 new User
                 {
-                    Id = Guid.Parse("a030ee81-31c7-47d0-9309-408cb5ac0ac7"), // Forced to specific Guid for tests
-                    Email = "email2@test.it",
-                    Password = "Uy6qvZV0iA2/drm4zACDLCCm7BE9aCKZVQ16bg80XiU=", // SHA-256 of text "Test"
-                    FirstName = "Nome2",
-                    LastName = "Cognome2",
-                    NickName = "Nickname2"
+                    Id = Guid.NewGuid(),
+                    Email = "sgowrie1@amazon.com",
+                    Password = "$2a$04$ZoH0ul/L.YTCAIz9WmazMe.tHC5s9soNbxq5vyv5QXV845IiN4mNq", 
+                    FirstName = "Stace",
+                    LastName = "Gowrie",
+                    NickName = "sgowrie1",
+                    Role = "User"
                 },
                 new User
                 {
-                    Id = Guid.Parse("bfdef48b-c7ea-4227-8333-c635af267354"), // Forced to specific Guid for tests
-                    Email = "email3@test.it",
-                    Password = "Uy6qvZV0iA2/drm4zACDLCCm7BE9aCKZVQ16bg80XiU=", // SHA-256 of text "Test"
-                    FirstName = "Nome3",
-                    LastName = "Cognome3",
-                    NickName = "Nickname3"
+                    Id = Guid.NewGuid(),
+                    Email = "vdenmead2@mozilla.org",
+                    Password = "$2a$04$T1PK56EZ5h/moAeCEFhc0egNZLoB8lrYsTw4G2FPURBaGQoqNzz8m", 
+                    FirstName = "Valry",
+                    LastName = "Denmead",
+                    NickName = "vdenmead2",
+                    Role = "User"
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Email = "dbalwin3@biglobe.ne.jp",
+                    Password = "$2a$04$hQ.9pXMdRlu4HUCShaFNiuH95207.YKIJrE6lYXtD/hf5dEwGIwti", 
+                    FirstName = "Daven",
+                    LastName = "Balwin",
+                    NickName = "dbalwin3",
+                    Role = "Manager"
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Email = "fhallede4@themeforest.net",
+                    Password = "$2a$04$6b5J1MvETageDvIKaW6jkuYqLdV5nm6soxKNokrCtZzr1nIyehts2", 
+                    FirstName = "Franzen",
+                    LastName = "Hallede",
+                    NickName = "fhallede4",
+                    Role = "Manager"
                 });
+
 
             context.SaveChanges();
         }

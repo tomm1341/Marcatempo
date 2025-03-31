@@ -20,6 +20,8 @@ namespace Template.Services.Shared
         public string NickName { get; set; }
      
 
+        public string Role { get; set; }
+
         /// <summary>
         /// Checks if password passed as parameter matches with the Password of the current user
         /// </summary>
