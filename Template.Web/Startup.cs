@@ -125,7 +125,7 @@ namespace Template.Web
 
                 // 3 Pagina Storico, accessibile solo agli utenti autenticati
                 endpoints.MapControllerRoute(
-                    name: "Storico",
+                    name: "storico",
                     pattern: "{controller=Storico}/{action=Storico}"
                 ).RequireAuthorization();
             });
