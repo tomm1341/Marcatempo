@@ -1,9 +1,9 @@
 **/*.cache
 **/*.editorconfig
-Template/obj/Debug/*
-Template.Web/obj/Debug/*
-Template/bin/*
-Template.Web/bin/*
-Template.Web/node_modules/*
-.vs/*
+Template/obj/Debug/**
+Template.Web/obj/Debug/**
+Template/bin/**
+Template.Web/bin/**
+Template.Web/node_modules/**
+.vs/**
 Template/obj/*
