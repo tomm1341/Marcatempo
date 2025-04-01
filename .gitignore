@@ -6,3 +6,4 @@ Template/bin/*
 Template.Web/bin/*
 Template.Web/node_modules/*
 .vs/*
+Template/obj/*
