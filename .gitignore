@@ -5,3 +5,4 @@
 Template.Web/node_modules/
 .vs/
 Template/obj/
+**/*.json
