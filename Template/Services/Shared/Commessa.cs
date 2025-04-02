@@ -12,6 +12,11 @@ namespace Template.Services.Shared
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        public Guid IdResponsabile { get; set; }
+
+        public String PresaInCarico { get; set; } = null; // Utente che prende in carico la commessa
+
+        public String Stato { get; set; } // Stato della commessa, considerare sostituzione con "InLavorazione" booleano
 
     }
 }
