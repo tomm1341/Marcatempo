@@ -11,7 +11,7 @@ namespace Template.Services.Shared
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Guid IdCommessa { get; set;} //FK
+        // public Guid IdCommessa { get; set;} //FK
 
         public String Stato { get; set;} //In lavorazione, completato ecc...
         public String Titolo { get; set;}
