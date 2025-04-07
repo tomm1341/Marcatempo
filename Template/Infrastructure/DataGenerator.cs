@@ -87,6 +87,15 @@ namespace Template.Infrastructure
                     Titolo = "Migrazione_Teams",
                     Descrizione = "Questa è una descrizione"
 
+                },
+                new Task
+                {
+                    Id = Guid.NewGuid(),
+                    IdCommessa = Guid.NewGuid(), //DA RIGUARDARE (non si può mettere a null)
+                    Stato = "Assegnato",
+                    Titolo = "Questo è un task",
+                    Descrizione = "Questa è una descrizione"
+
                 }
 
                 );
