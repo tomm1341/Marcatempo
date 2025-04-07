@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Template.Services.Shared
 {
-    internal class Commessa
+    public class Commessa
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

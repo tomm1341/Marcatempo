@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Template.Services.Shared
 {
-    internal class Task
+    public class Task
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

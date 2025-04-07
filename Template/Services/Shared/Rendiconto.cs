@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Template.Services.Shared
 {
-    internal class Rendiconto
+    public class Rendiconto
     {
         [Key]
         public Guid IdUtente { get; set; }
