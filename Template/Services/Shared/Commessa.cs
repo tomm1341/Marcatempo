@@ -14,9 +14,11 @@ namespace Template.Services.Shared
 
         public Guid IdResponsabile { get; set; }
 
-        public String PresaInCarico { get; set; } = null; // Utente che prende in carico la commessa
+        public string Titolo { get; set; }
 
-        public String Stato { get; set; } // Stato della commessa, considerare sostituzione con "InLavorazione" booleano
+        public string PresaInCarico { get; set; } // Utente che prende in carico la commessa
+
+        public string Stato { get; set; } // Stato della commessa, considerare sostituzione con "InLavorazione" booleano
 
     }
 }
