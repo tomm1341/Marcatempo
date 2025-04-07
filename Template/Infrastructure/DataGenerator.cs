@@ -69,5 +69,28 @@ namespace Template.Infrastructure
 
             context.SaveChanges();
         }
+
+
+        //************ INITIALIZING TASKS (PROBABLY TO BE REMOVED IN PRODUCTION) *************
+        public static void InitializeTasks(TemplateDbContext context)
+        {
+            if (context.Tasks.Any())
+                return; // Data already present
+
+            context.Tasks.AddRange(
+
+                new Task
+                {
+                    Id = Guid.NewGuid(),
+                    IdCommessa = Guid.NewGuid(), //DA RIGUARDARE (non si può mettere a null)
+                    Stato = "Assegnabile",
+                    Titolo = "Migrazione_Teams",
+                    Descrizione = "Questa è una descrizione"
+
+                }
+
+                );
+            context.SaveChanges();
+        }
     }
 }
