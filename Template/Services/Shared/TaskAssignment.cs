@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Template.Services.Shared
 {
-    public class Commessa
+    public class TaskAssignment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,9 +16,9 @@ namespace Template.Services.Shared
 
         public string Titolo { get; set; }
 
-        public string PresaInCarico { get; set; } // Utente che prende in carico la commessa
+        public string PresaInCarico { get; set; } // Utente che prende in carico il task
 
-        public string Stato { get; set; } // Stato della commessa, considerare sostituzione con "InLavorazione" booleano
+        public string Stato { get; set; } // Stato del task, considerare sostituzione con "InLavorazione" booleano
 
     }
 }

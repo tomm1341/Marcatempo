@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Template.Services.Shared
 {
-    public class Commessa
+    public class CommessaQueries
     {
     }
 }
