@@ -1,8 +1,17 @@
-*.cache
-*.editorconfig
-Template/obj/Debug/*
-Template.Web/obj/Debug/*
-Template/bin/*
-Template.Web/bin/*
-Template.Web/node_modules/*
-.vs/*
+# Cache e file temporanei
+**/*.cache
+**/*.editorconfig
+**/*.log
+
+# Cartelle di build
+**/bin/
+**/obj/
+
+# File di Visual Studio
+.vs/
+**/*.suo
+**/*.user
+
+# Node.js 
+Template.Web/node_modules/
+Template.Web/package-lock.json
