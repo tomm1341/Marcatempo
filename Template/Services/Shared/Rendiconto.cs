@@ -17,7 +17,7 @@ namespace Template.Services.Shared
 
         public int Ore {  get; set; }
 
-        public String Descrizione { get; set; }
+        public string Descrizione { get; set; }
 
 
     }
