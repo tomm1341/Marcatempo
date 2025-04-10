@@ -16,5 +16,11 @@ namespace Template.Services
         }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Commessa> Commesse { get; set; }
+
+        public DbSet<Task> Tasks { get; set; }
+
+        public DbSet<Rendiconto> Rendiconto { get; set; }
     }
 }

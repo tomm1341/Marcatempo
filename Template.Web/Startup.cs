@@ -113,22 +113,17 @@ namespace Template.Web
                 endpoints.MapHub<TemplateHub>("/templateHub");
 
                 endpoints.MapAreaControllerRoute("Example", "Example", "Example/{controller=Users}/{action=Index}/{id?}");
-                
+
                 // 1️ Il login è la pagina di default (visibile a tutti)
                 endpoints.MapControllerRoute("default", "{controller=Login}/{action=Login}");
 
-                // 2️ La Home è accessibile solo agli utenti autenticati
-                endpoints.MapControllerRoute(
-                    name: "home",
-                    pattern: "{controller=Home}/{action=Home}"
-                ).RequireAuthorization(); // Solo utenti autenticati
+
 
                 // 3 Pagina Storico, accessibile solo agli utenti autenticati
-                endpoints.MapControllerRoute(
-                    name: "storico",
-                    pattern: "{controller=Storico}/{action=Storico}"
-                ).RequireAuthorization();
+                endpoints.MapAreaControllerRoute("Storico", "Storico", "Storico/{controller=Storico}/{action=Storico}/{id?}");
             });
+
+
         }
     }
 
