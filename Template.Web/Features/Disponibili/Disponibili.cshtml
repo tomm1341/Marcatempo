@@ -1,0 +1,80 @@
+﻿@model List<Template.Web.Features.Disponibili.DisponibiliViewModel>
+@inject Template.Services.Shared.SharedService SharedService
+@{
+    ViewData["Title"] = "Task Disponibili";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container mt-4">
+    <h2 class="mb-4">Task disponibili</h2>
+
+    @if (Model != null)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Descrizione</th>
+                        <th>Tipologia</th>
+                        <th>Priorità</th>
+                        <th>Scadenza</th>
+                        <th>Assegna</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Task di esempio 1
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">Esterna</span>
+                        </td>
+                        <td>
+                            <span class="badge text-bg-danger fw-semibold">Alta</span>
+                        </td>
+                        <td>
+                            15/04/2025
+                        </td>
+                        <td class="text-left">
+                            <input type="checkbox" id="task1" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Task di esempio 2
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">Interna</span>
+                        </td>
+                        <td>
+                            <span class="badge text-bg-light fw-semibold">Bassa</span>
+                        </td>
+                        <td>
+                            20/04/2025
+                        </td>
+                        <td class="text-left">
+                            <input type="checkbox"  id="task2" />
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-success" id="confirmButton">
+                <i class="bi bi-check-circle me-2"></i> Conferma Selezioni
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            Nessun task trovato.
+        </div>
+    }
+</div>
