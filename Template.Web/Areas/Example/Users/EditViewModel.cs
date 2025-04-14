@@ -39,16 +39,16 @@ namespace Template.Web.Areas.Example.Users
             }
         }
 
-        public AddOrUpdateUserCommand ToAddOrUpdateUserCommand()
-        {
-            return new AddOrUpdateUserCommand
-            {
-                Id = Id,
-                Email = Email,
-                FirstName = FirstName,
-                LastName = LastName,
-                NickName = NickName
-            };
-        }
+        //public AddOrUpdateUserCommand ToAddOrUpdateUserCommand()
+        //{
+        //    return new AddOrUpdateUserCommand
+        //    {
+        //        Id = Id,
+        //        Email = Email,
+        //        FirstName = FirstName,
+        //        LastName = LastName,
+        //        NickName = NickName
+        //    };
+        //}
     }
 }

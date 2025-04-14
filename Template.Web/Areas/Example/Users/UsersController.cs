@@ -65,7 +65,7 @@ namespace Template.Web.Areas.Example.Users
             {
                 try
                 {
-                    model.Id = await _sharedService.Handle(model.ToAddOrUpdateUserCommand());
+                    //model.Id = await _sharedService.Handle(model.ToAddOrUpdateUserCommand());
 
                     Alerts.AddSuccess(this, "Informazioni aggiornate");
 
