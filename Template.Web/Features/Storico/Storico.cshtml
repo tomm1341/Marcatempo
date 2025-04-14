@@ -10,7 +10,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Storico dei Task</h2>
 
-    @if (Model != null && Model.Any(user => user.Events.Any(e => e.Stato == "Completato")))
+    @if (Model != null @* && Model.Any(user => user.Events.Any(e => e.Stato == "Completato")) *@)
     {
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
@@ -22,29 +22,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Model)
-                    {
-                        @foreach (var evento in user.Events.Where(e => e.Stato == "Completato"))
-                        {
-                            <tr>
-                                <td>@evento.Descrizione</td>
-                                <td>
-                                    @if (evento.Tipologia == Template.Web.Features.Storico.TipologiaEvento.Interna)
-                                    {
-                                        <span class="badge bg-primary">Interna</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary">Esterna</span>
-                                    }
-                                </td>
-                                <td>
-                                    <span class="text-success"><i class="bi bi-check-circle"></i> Completato</span>
-                                </td>
-                            </tr>
-                        }
-                    }
+                    <tr>
+                        <td>
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Task di esempio 1
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">Esterna</span>
+                        </td>
+                        <td>
+                            <span class="text-success fw-semibold">Completato</span>
+                        </td>
+                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Task di esempio 2
+                        </td>
+                        <td>
+                            <span class="badge bg-secondary">Interna</span>
+                        </td>
+                        <td>
+                            <span class="text-success fw-semibold">Completato</span>
+                        </td>
+                        
+                    </tr>
                 </tbody>
+
+
             </table>
         </div>
     }
