@@ -20,22 +20,32 @@ namespace Template.Services.Shared
     {
         public async Task<Guid> Handle(CreateTaskCommand cmd, Guid IdCreatore)
         {
-            var task = new Task
-            {
-                Id = Guid.NewGuid(),
-                IdCreatore = IdCreatore, // Va passato LATO FRONTEND, da gestire nel controller utilizzando i Claim per recuperare l'id
-                Priorità = cmd.Priorità,
-                Stato = cmd.Stato,
-                Titolo = cmd.Titolo,
-                Tipologia = cmd.Tipologia,
-                Descrizione = cmd.Descrizione,
-                DataCreazione = DateTime.UtcNow,
-                DataScadenza = cmd.DataScadenza // Da rivedere il motivo per cui necessita il cast
-            }; 
-            _dbContext.Tasks.Add(task);
-            await _dbContext.SaveChangesAsync();
+            var dataCreazione = DateTime.UtcNow;
 
-            return task.Id;
+            // Validazione: la data di scadenza non può essere prima della data di creazione
+            if (cmd.DataScadenza < dataCreazione)
+            {
+                throw new ArgumentException("La data di scadenza non può essere precedente alla data di creazione.");
+            }
+            else
+            {
+                var task = new Task
+                {
+                    Id = Guid.NewGuid(),
+                    IdCreatore = IdCreatore, // Va passato LATO FRONTEND, da gestire nel controller utilizzando i Claim per recuperare l'id
+                    Priorità = cmd.Priorità,
+                    Stato = cmd.Stato,
+                    Titolo = cmd.Titolo,
+                    Tipologia = cmd.Tipologia,
+                    Descrizione = cmd.Descrizione,
+                    DataCreazione = dataCreazione,
+                    DataScadenza = cmd.DataScadenza
+                };
+                _dbContext.Tasks.Add(task);
+                await _dbContext.SaveChangesAsync();
+
+                return task.Id;
+            }
         }
     }
 }
