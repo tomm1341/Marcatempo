@@ -9,8 +9,6 @@ namespace Template.Services.Shared
 {
     public class GetAllTasksQuery
     {
-        public Guid Id { get; set; }
-
         public Guid IdCreatore { get; set; } 
         public string Titolo { get; set; }
         public string Stato { get; set; }
@@ -23,10 +21,20 @@ namespace Template.Services.Shared
     
     public partial class SharedService
     {
-        public async Task<List<Task>> GetAllTasksAsync() // Returns every task
+        public async Task<List<GetAllTasksQuery>> GetAllTasksAsync() // Returns every task without id
         {
             return await _dbContext.Tasks
                 .OrderByDescending(t => t.DataCreazione)
+                .Select(t => new GetAllTasksQuery
+                {
+                    IdCreatore = t.IdCreatore, // Valutare se IdCreatore oppure niente oppure Nome Creatore
+                    Titolo = t.Titolo,
+                    Stato = t.Stato,
+                    Tipologia = t.Tipologia,
+                    Descrizione = t.Descrizione,
+                    DataCreazione = t.DataCreazione,
+                    DataScadenza = t.DataScadenza
+                })
                 .ToListAsync();
         }
     }
