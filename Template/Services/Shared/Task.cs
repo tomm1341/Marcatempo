@@ -19,6 +19,10 @@ namespace Template.Services.Shared
         [StatoValido(new[] { "InAttesa", "InLavorazione", "Completato", "Approvato", "Respinto" })]
         public string Stato { get; set; }
         public string Titolo { get; set;}
+
+        [Required]
+        [StatoValido(new[] {"Interno", "Esterno"})]
+        public string Tipologia { get; set;} // Interno, esterno
         public string Descrizione { get; set;}
 
         public DateTime DataCreazione { get; set;} // Optional
