@@ -16,6 +16,12 @@ namespace Template.Services.Shared
         public DateTime DataScadenza { get; set; }
     }
 
+    public class ChangeTaskStatusCommand
+    {
+        public Guid Id { get; set; }
+        public string Stato { get; set; }
+    }
+
 
     public partial class SharedService
     {
@@ -48,5 +54,28 @@ namespace Template.Services.Shared
                 return task.Id;
             }
         }
+
+        public async Task<string> Handle(ChangeTaskStatusCommand cmd)
+        {
+            var statiValidi = new[] { "InAttesa", "InLavorazione", "Completato", "Approvato", "Respinto" };
+
+            if (!statiValidi.Contains(cmd.Stato))
+            {
+                throw new ArgumentException($"Stato non valido. I valori permessi sono: {string.Join(", ", statiValidi)}");
+            }
+
+            var task = await _dbContext.Tasks.FindAsync(cmd.Id);
+            if (task == null)
+            {
+                throw new ArgumentException("Task non trovato.");
+            }
+
+            task.Stato = cmd.Stato;
+            _dbContext.Tasks.Update(task);
+            await _dbContext.SaveChangesAsync();
+
+            return task.Stato;
+        }
+
     }
 }
