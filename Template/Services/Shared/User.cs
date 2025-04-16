@@ -42,6 +42,7 @@ namespace Template.Services.Shared
         }
     }
 
+    //********** Validazione Ruolo *************//
     public class RuoloValidoAttribute : ValidationAttribute
     {
         private readonly string[] _valoriPermessi;
