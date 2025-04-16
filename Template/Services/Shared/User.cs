@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,16 +12,19 @@ namespace Template.Services.Shared
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Password { get; set; }
-
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string NickName { get; set; }
-     
-
-        public string Role { get; set; }
+        [Required]
+        public string Nome { get; set; }
+        [Required]
+        public string Cognome { get; set; }
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        [RuoloValido(new[] { "ResponsabileEsterno", "ResponsabileInterno", "Utente" })]
+        public string Ruolo { get; set; }
 
         /// <summary>
         /// Checks if password passed as parameter matches with the Password of the current user
@@ -35,6 +39,25 @@ namespace Template.Services.Shared
             var testPassword = System.Convert.ToBase64String(sha256.ComputeHash(Encoding.ASCII.GetBytes(password)));
 
             return this.Password == testPassword;
+        }
+    }
+
+    public class RuoloValidoAttribute : ValidationAttribute
+    {
+        private readonly string[] _valoriPermessi;
+
+        public RuoloValidoAttribute(string[] valoriPermessi)
+        {
+            _valoriPermessi = valoriPermessi;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value == null || !_valoriPermessi.Contains(value.ToString()))
+            {
+                return new ValidationResult($"Valore non valido. I valori permessi sono: {string.Join(", ", _valoriPermessi)}");
+            }
+            return ValidationResult.Success;
         }
     }
 }
