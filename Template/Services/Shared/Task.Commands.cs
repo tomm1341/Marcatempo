@@ -22,6 +22,12 @@ namespace Template.Services.Shared
         public string Stato { get; set; }
     }
 
+    public class DeleteTaskCommand
+    {
+        public Guid IdTask { get; set; }
+        public Guid IdUtente { get; set; }
+    }
+
 
     public partial class SharedService
     {
@@ -75,6 +81,25 @@ namespace Template.Services.Shared
             await _dbContext.SaveChangesAsync();
 
             return task.Stato;
+        }
+
+        public async Task Handle(DeleteTaskCommand cmd)
+        {
+            var task = await _dbContext.Tasks.FindAsync(cmd.IdTask);
+            if(task == null)
+            {
+                throw new ArgumentException("Task non trovato.");
+            }
+
+            var user = await _dbContext.Users.FindAsync(cmd.IdUtente);
+            if (user == null)
+            {
+                throw new ArgumentException("Task non trovato.");
+            }
+
+            bool autorized = 
+                (task.Tipologia == "Interno" && user.Role == "ResponsabileInterno") ||      // !!! da rivedere i titoli dei responsabili (interno-esterno)!!!
+                (task.Tipologia == "Esterno" && user.Role == "ResponsabileEsterno");
         }
 
     }
