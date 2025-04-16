@@ -16,6 +16,7 @@ namespace Template.Services.Shared
         public DateTime DataScadenza { get; set; }
     }
 
+
     public partial class SharedService
     {
         public async Task<Guid> Handle(CreateTaskCommand cmd, Guid IdCreatore)
