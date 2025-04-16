@@ -28,8 +28,6 @@ namespace Template.Services.Shared
         public string Tipologia { get; set;} // Interno, esterno
         public string Descrizione { get; set;}
 
-
-
         public DateTime DataCreazione { get; set;} // Optional
 
         public DateTime DataScadenza { get; set;} // Optional
