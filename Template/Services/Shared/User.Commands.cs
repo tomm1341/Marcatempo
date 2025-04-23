@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +8,15 @@ namespace Template.Services.Shared
 {
     public class AddOrUpdateUserCommand
     {
+        [Required]
         public Guid? Id { get; set; }
+        [Required]
         public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string NickName { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public string Nome { get; set; }
+        public string Cognome { get; set; }
+        public string Username { get; set; }
     }
 
     public partial class SharedService
@@ -31,9 +36,9 @@ namespace Template.Services.Shared
                 _dbContext.Users.Add(user);
             }
 
-            user.FirstName = cmd.FirstName;
-            user.LastName = cmd.LastName;
-            user.NickName = cmd.NickName;
+            user.Nome = cmd.Nome;
+            user.Cognome = cmd.Cognome;
+            user.Username = cmd.Username;
 
             await _dbContext.SaveChangesAsync();
 
