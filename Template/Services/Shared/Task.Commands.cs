@@ -83,10 +83,10 @@ namespace Template.Services.Shared
             return task.Stato;
         }
 
-        public async Task Handle(DeleteTaskCommand cmd)
+        public async Task<string> Handle(DeleteTaskCommand cmd)
         {
             var task = await _dbContext.Tasks.FindAsync(cmd.IdTask);
-            if(task == null)
+            if (task == null)
             {
                 throw new ArgumentException("Task non trovato.");
             }
@@ -94,13 +94,23 @@ namespace Template.Services.Shared
             var user = await _dbContext.Users.FindAsync(cmd.IdUtente);
             if (user == null)
             {
-                throw new ArgumentException("Task non trovato.");
+                throw new ArgumentException("Utente non trovato.");
             }
 
-            bool autorized = 
-                (task.Tipologia == "Interno" && user.Role == "ResponsabileInterno") ||      // !!! da rivedere i titoli dei responsabili (interno-esterno)!!!
-                (task.Tipologia == "Esterno" && user.Role == "ResponsabileEsterno");
-        }
+            bool autorized =
+                (task.Tipologia == "Interno" && user.Ruolo == "ResponsabileInterno") ||      // !!! da rivedere i titoli dei responsabili (interno-esterno)!!!
+                (task.Tipologia == "Esterno" && user.Ruolo == "ResponsabileEsterno");
 
+            if (!autorized)
+            {
+                throw new UnauthorizedAccessException("Non sei autorizzato a eliminare questo task.");
+            }
+            else
+            {
+                _dbContext.Tasks.Remove(task);
+                await _dbContext.SaveChangesAsync();
+            }
+            return $"Task con ID {task.Id} eliminato con successo."; // Messaggio di conferma
+        }
     }
 }
