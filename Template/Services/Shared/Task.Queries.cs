@@ -29,7 +29,17 @@ namespace Template.Services.Shared
         public DateTime DataScadenza { get; set; }
 
     }
-    
+
+    public class  GetCompletedTasksQuery
+    {
+        public string Titolo { get; set; }
+        public string Tipologia { get; set; }
+        public string Stato { get; set; }
+        public string Descrizione { get; set; }
+        public Guid IdAssegnatario { get; set; }
+        public string NomeAssegnatario { get; set; }
+    }
+
     public partial class SharedService
     {
         public async Task<IEnumerable<GetAllTasksQuery>> GetAllTasksAsync()
@@ -64,6 +74,24 @@ namespace Template.Services.Shared
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<GetCompletedTasksQuery>> GetCompletedTasksAsync()
+        {
+            return await _dbContext.Tasks
+                .Where(t => t.Stato == "Completato" && t.IdAssegnatario != null)
+                .Join(_dbContext.Users,
+                      task => task.IdAssegnatario,
+                      user => user.Id,
+                      (task, user) => new GetCompletedTasksQuery
+                      {
+                          Titolo = task.Titolo,
+                          Tipologia = task.Tipologia,
+                          Stato = task.Stato,
+                          Descrizione = task.Descrizione,
+                          IdAssegnatario = user.Id,
+                          NomeAssegnatario = $"{user.Nome} {user.Cognome}" // Merge di nome e cognome in un solo campo per comodità
+                      })
+                .ToListAsync();
+        }
     }
-    
 }
