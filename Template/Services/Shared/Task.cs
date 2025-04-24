@@ -13,7 +13,10 @@ namespace Template.Services.Shared
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        [Required]
         public Guid IdCreatore { get; set;} // FK -> Utente
+
+        public Guid? IdAssegnatario { get; set; } = null; // L'utente che prende in carico il task, inizialmente null
 
         [Required]
         public int Priorità { get; set;} // Alta, media, bassa
