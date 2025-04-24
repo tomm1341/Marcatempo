@@ -35,6 +35,11 @@ namespace Template.Services.Shared
 
     }
 
+    public class MarkTaskAsCompleted
+    {
+        public Guid TaskId { get; set; }
+        public Guid IdUtente { get; set; } // Id dell'utente loggato in quel momento che sta segnando come completato il task
+    }
 
     public partial class SharedService
     {
@@ -145,6 +150,27 @@ namespace Template.Services.Shared
             await _dbContext.SaveChangesAsync();
 
             return $"Task con ID {task.Id} è stato preso in carico da {user.Username}.";
+        }
+
+        public async Task<string> Handle(MarkTaskAsCompleted cmd)
+        {
+            var task = await _dbContext.Tasks.FindAsync(cmd.TaskId);
+            if (task == null)
+            {
+                throw new ArgumentException("Task non trovato.");
+            }
+
+            if (task.IdAssegnatario == null || task.IdAssegnatario != cmd.IdUtente)
+            {
+                throw new UnauthorizedAccessException("Non sei autorizzato a segnare questo task come completato.");
+            }
+
+            task.Stato = "Completato";
+            _dbContext.Tasks.Update(task);
+            await _dbContext.SaveChangesAsync();
+
+            return $"Task con ID {task.Id} è stato segnato come completato.";
+
         }
     }
 }
