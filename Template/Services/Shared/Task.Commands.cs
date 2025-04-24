@@ -28,6 +28,13 @@ namespace Template.Services.Shared
         public Guid IdUtente { get; set; }
     }
 
+    public class PresaInCaricoTask
+    {
+        public Guid TaskId { get; set; }
+        public Guid IdAssegnatario { get; set; } // L'utente che prende in carico il task
+
+    }
+
 
     public partial class SharedService
     {
@@ -111,6 +118,33 @@ namespace Template.Services.Shared
                 await _dbContext.SaveChangesAsync();
             }
             return $"Task con ID {task.Id} eliminato con successo."; // Messaggio di conferma
+        }
+
+        public async Task<string> Handle(PresaInCaricoTask cmd)
+        {
+            var task = await _dbContext.Tasks.FindAsync(cmd.TaskId);
+            if (task == null)
+            {
+                throw new ArgumentException("Task non trovato.");
+            }
+            var user = await _dbContext.Users.FindAsync(cmd.IdAssegnatario);
+            if (user == null)
+            {
+                throw new ArgumentException("Utente non trovato.");
+            }
+
+            if (task.Stato != "InAttesa")
+            {
+                throw new InvalidOperationException("Il task può essere preso in carico solo se è nello stato 'In Attesa'.");
+            }
+
+            task.Stato = "InLavorazione";
+            task.IdAssegnatario = cmd.IdAssegnatario;
+
+            _dbContext.Tasks.Update(task);
+            await _dbContext.SaveChangesAsync();
+
+            return $"Task con ID {task.Id} è stato preso in carico da {user.Username}.";
         }
     }
 }
