@@ -49,7 +49,7 @@ namespace Template.Services.Shared
                     Priorità = cmd.Priorità,
                     Stato = cmd.Stato,
                     Titolo = cmd.Titolo,
-                    Tipologia = cmd.Tipologia,
+                    Tipologia = cmd.Tipologia, // Da passare lato frontend, se il responsabile che lo crea è interno o esterno
                     Descrizione = cmd.Descrizione,
                     DataCreazione = dataCreazione,
                     DataScadenza = cmd.DataScadenza

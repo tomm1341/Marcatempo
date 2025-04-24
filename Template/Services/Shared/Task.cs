@@ -16,10 +16,10 @@ namespace Template.Services.Shared
         public Guid IdCreatore { get; set;} // FK -> Utente
 
         [Required]
-        public int Priorità { get; set;} // 1 max prio - 4 min prio
+        public int Priorità { get; set;} // Alta, media, bassa
 
         [Required]
-        [StatoValido(new[] { "InAttesa", "InLavorazione", "Completato", "Approvato", "Respinto" })]
+        [StatoValido(new[] { "InAttesa", "InLavorazione", "Completato" })]
         public string Stato { get; set; }
         public string Titolo { get; set;}
 
