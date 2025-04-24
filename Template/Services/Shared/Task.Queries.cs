@@ -9,30 +9,57 @@ namespace Template.Services.Shared
 {
     public class GetAllTasksQuery
     {
-        public Guid IdCreatore { get; set; } 
         public string Titolo { get; set; }
         public string Stato { get; set; }
         public string Tipologia { get; set; }
 
+        public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataCreazione { get; set; }
         public DateTime? DataScadenza { get; set; }
     }
+
+    public class GetAvailableTasksQuery
+    {
+        public string Titolo { get; set; }
+        public string Tipologia { get; set; }
+        public string Stato { get; set; }
+        public string Priorità { get; set; }
+        public string Descrizione { get; set; }
+        public DateTime DataScadenza { get; set; }
+
+    }
     
     public partial class SharedService
     {
-        public async Task<List<GetAllTasksQuery>> GetAllTasksAsync() // Returns every task without id
+        public async Task<IEnumerable<GetAllTasksQuery>> GetAllTasksAsync()
         {
             return await _dbContext.Tasks
                 .OrderByDescending(t => t.DataCreazione)
                 .Select(t => new GetAllTasksQuery
                 {
-                    IdCreatore = t.IdCreatore, // Valutare se IdCreatore oppure niente oppure Nome Creatore
                     Titolo = t.Titolo,
                     Stato = t.Stato,
                     Tipologia = t.Tipologia,
                     Descrizione = t.Descrizione,
+                    Priorità = t.Priorità.ToString(),
                     DataCreazione = t.DataCreazione,
+                    DataScadenza = t.DataScadenza
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<GetAvailableTasksQuery>> GetAvailableTasksAsync() 
+        {
+            return await _dbContext.Tasks
+                .Where(t => t.Stato == "InAttesa")
+                .Select(t => new GetAvailableTasksQuery
+                {
+                    Titolo = t.Titolo,
+                    Priorità = t.Priorità.ToString(),
+                    Stato = t.Stato,
+                    Tipologia = t.Tipologia,
+                    Descrizione = t.Descrizione,
                     DataScadenza = t.DataScadenza
                 })
                 .ToListAsync();
