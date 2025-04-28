@@ -24,7 +24,7 @@
                 </a>
 
                 <!-- Toggler -->
-                <button class="navbar-toggler navbar-toggler-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler navbar-toggler-dark ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars text-black"></i>
                 </button>
 
@@ -37,10 +37,7 @@
                                 <i class="fa-solid fa-user"></i> Area Personale
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="btn btn-dark mx-2 my-1" href="@Url.Action("Storico", "Storico")">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Storico
-                            </a>
+                        
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-primary mx-2 my-1" href="@Url.Action("Disponibili", "Disponibili")">
@@ -55,24 +52,24 @@
                     </ul>
 
                     <!-- MOBILE MENU -->
-                    <ul class="navbar-nav w-100 d-lg-none">
+                    <ul class="navbar-nav w-50 d-lg-none mt-5">
                         <li class="nav-item">
-                            <a class="btn btn-sm btn-secondary w-100 text-start my-1" href="@Url.Action("AreaPersonale", "Account")">
+                            <a class="btn btn-sm btn-secondary w-50 text-start my-1" href="@Url.Action("AreaPersonale", "Account")">
                                 <i class="fa-solid fa-user"></i> Area Personale
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-sm btn-dark w-100 text-start my-1" href="@Url.Action("Storico", "Storico")">
+                            <a class="btn btn-sm btn-dark w-50 text-start my-1" href="@Url.Action("Storico", "Storico")">
                                 <i class="fa-solid fa-clock-rotate-left"></i> Storico
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-sm btn-primary w-100 text-start my-1" href="@Url.Action("Disponibili", "Disponibili")">
+                            <a class="btn btn-sm btn-primary w-50 text-start my-1" href="@Url.Action("Disponibili", "Disponibili")">
                                 <i class="fa-solid fa-tasks"></i> Task Disponibili
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-sm btn-outline-dark w-100 text-start my-1" href="@Url.Action("Task", "Task")">
+                            <a class="btn btn-sm btn-outline-dark w-50 text-start my-1" href="@Url.Action("Task", "Task")">
                                 <i class="fa-solid fa-plus"></i> Crea task
                             </a>
                         </li>
@@ -96,8 +93,8 @@
                             </li>
 
                             <!-- Mobile: pulsante uniforme -->
-                            <li class="nav-item d-lg-none">
-                                <a class="btn btn-sm btn-dark w-100 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
+                            <li class="nav-item d-lg-none w-50">
+                                <a class="btn btn-sm btn-dark w-50 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
                                     <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
                                 </a>
                             </li>
