@@ -1,153 +1,109 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Localization;
+using System;
+using System.Threading.Tasks;
+using Template.Services.Shared;
+using Template.Web.Infrastructure;
+using Template.Web.SignalR;
+using Template.Web.SignalR.Hubs.Events;
+using Template.Web.Features.Task;
+using Template.Web.Areas;
 
 namespace Template.Web.Features.Task
+
 {
-    public partial class TaskController : Controller
+    public partial class TaskController : AuthenticatedBaseController
     {
-        private static List<TaskViewModel> tasks = new List<TaskViewModel>();
+        private readonly SharedService _sharedService;
+        private readonly IPublishDomainEvents _publisher;
+        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
 
-        // Azione per visualizzare i task disponibili per i dipendenti
+        public TaskController(SharedService sharedService, IPublishDomainEvents publisher, IStringLocalizer<SharedResource> sharedLocalizer)
+        {
+            _sharedService = sharedService;
+            _publisher = publisher;
+            _sharedLocalizer = sharedLocalizer;
+
+            ModelUnbinderHelpers.ModelUnbinders.Add(typeof(TaskViewModel), new SimplePropertyModelUnbinder());
+        }
+
         [HttpGet]
-        public IActionResult AvailableTasksForEmployees(string userRole, string employeeName)
+        public virtual async Task<IActionResult> Task(TaskViewModel model)
         {
-            var availableTasks = tasks.Where(t => !t.Completo && string.IsNullOrEmpty(t.AssegnatoA)).ToList();
-            return View(availableTasks); // Mostra i task disponibili per essere assegnati
+
+            return View(model);
         }
 
 
-        // Azione per assegnare un task a un dipendente
-        [HttpPost]
-        public IActionResult AssignTask(int taskId, string employeeName)
-        {
-            var task = tasks.FirstOrDefault(t => t.Id == taskId);
-            if (task != null && string.IsNullOrEmpty(task.AssegnatoA)) // Se il task non è già assegnato
-            {
-                task.AssegnatoA = employeeName; // Assegna il task al dipendente
-                TempData["SuccessMessage"] = $"Task {taskId} assegnato a {employeeName} con successo!";
-                return RedirectToAction("Task"); // Redirect alla lista dei task con il messaggio di successo
-            }
-            TempData["ErrorMessage"] = "Il task è già assegnato o non esiste.";
-            return RedirectToAction("Task");  // Redirect con messaggio di errore
-        }
-
-
-        // Azione per visualizzare i task assegnati a un dipendente
         [HttpGet]
-        public IActionResult MyAssignedTasks(string employeeName)
+        public virtual IActionResult New()
         {
-            // Filtra i task assegnati al dipendente specificato
-            var assignedTasks = tasks.Where(t => t.AssegnatoA == employeeName).ToList();
-            return View(assignedTasks); // Mostra i task assegnati al dipendente
+            return RedirectToAction(Actions.Edit());
         }
 
-        // Azione per visualizzare tutti i task (sia per responsabili che dipendenti)
         [HttpGet]
-        public IActionResult Task(string userRole)
+        public virtual async Task<IActionResult> Edit(Guid? id)
         {
-            var filteredTasks = tasks.Where(t =>
-                (userRole == "Interno" && t.Tipologia == "Interno") ||
-                (userRole == "Esterno" && t.Tipologia == "Esterno") ||
-                (userRole == "Amministratore")).ToList(); // "Amministratore" può vedere entrambi
-            return View(filteredTasks);
+            var model = new TaskViewModel();
+
+            //if (id.HasValue)
+            //{
+            //    model.SetTask(await _sharedService.Query(new TaskDetailQuery
+            //    {
+            //        Id = id.Value,
+            //    }));
+            //}
+
+            return View(model);
         }
 
-        // Azione per creare un nuovo task
         [HttpPost]
-        public IActionResult Create([FromBody] TaskViewModel newTask, string userRole)
+        public virtual async Task<IActionResult> Edit(TaskViewModel model)
         {
-            if (userRole == "Esterno" && newTask.Tipologia != "Esterno")
-            {
-                TempData["ErrorMessage"] = "Il responsabile esterno può solo creare task di tipo Esterno.";
-                return RedirectToAction("Task");  // Redirect alla pagina dei task con il messaggio di errore
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        model.Id = await _sharedService.Handle(model.ToAddOrUpdateTaskCommand());
 
-            newTask.Id = tasks.Count + 1;
-            newTask.Completo = false;
-            tasks.Add(newTask);
+            //        Alerts.AddSuccess(this, "Task salvato correttamente");
 
-            TempData["SuccessMessage"] = "Task creato con successo!";
-            return RedirectToAction("Task");  // Redirect alla lista dei task con il messaggio di successo
+            //        await _publisher.Publish(new NewMessageEvent
+            //        {
+            //            IdGroup = model.Id.Value,
+            //            IdUser = CurrentUserId, // metodo dal base controller
+            //            IdMessage = Guid.NewGuid()
+            //        });
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ModelState.AddModelError(string.Empty, e.Message);
+            //    }
+            //}
+
+            //if (!ModelState.IsValid)
+            //{
+            //    Alerts.AddError(this, "Errore nel salvataggio");
+            //}
+
+            return RedirectToAction(Actions.Edit(model.Id));
         }
 
-
-        // Azione per marcare un task come completato
         [HttpPost]
-        public IActionResult MarkComplete(int id, string userRole)
+        public virtual async Task<IActionResult> Delete(Guid id)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null)
-            {
-                TempData["ErrorMessage"] = "Task non trovato.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
+            //var task = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
-            // Permetti di completare solo task che corrispondono al ruolo dell'utente
-            // Solo i dipendenti possono completare qualsiasi tipo di task
-            if (userRole != "Dipendente" && (userRole == "Responsabile Esterno" && task.Tipologia != "Esterno"))
-            {
-                TempData["ErrorMessage"] = "Un responsabile esterno può solo completare task esterni.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
+            //if (task.IdCreatore != CurrentUserId)
+            //{
+            //    return Unauthorized();
+            //}
 
-            task.Completo = true;
-            TempData["SuccessMessage"] = "Task completato con successo!";
-            return RedirectToAction("Task");  // Redirect alla lista dei task con un messaggio di successo
+            //await _sharedService.Handle(new DeleteTaskCommand { Id = id });
+
+            //Alerts.AddSuccess(this, "Task eliminato");
+
+            return RedirectToAction(Actions.Task());
         }
-
-
-
-        // Azione per modificare un task
-        [HttpPost]
-        public IActionResult UpdateTask([FromBody] TaskViewModel updatedTask, string userRole)
-        {
-            var task = tasks.FirstOrDefault(t => t.Id == updatedTask.Id);
-            if (task == null)
-            {
-                TempData["ErrorMessage"] = "Task non trovato.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
-
-            // Logica di autorizzazione basata sul ruolo
-            if (userRole == "Responsabile Esterno" && updatedTask.Tipologia != "Esterno")
-            {
-                TempData["ErrorMessage"] = "Un responsabile esterno non può cambiare la tipologia del task.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
-
-            task.Descrizione = updatedTask.Descrizione;
-            task.Tipologia = updatedTask.Tipologia;
-            task.Priorità = updatedTask.Priorità;
-            task.Scadenza = updatedTask.Scadenza;
-
-            TempData["SuccessMessage"] = "Task aggiornato con successo!";
-            return RedirectToAction("Task");  // Redirect alla lista dei task con un messaggio di successo
-        }
-
-
-        // Azione per eliminare un task
-        [HttpPost]
-        public IActionResult DeleteTask(int id, string userRole)
-        {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null)
-            {
-                TempData["ErrorMessage"] = "Task non trovato.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
-
-            // Logica di autorizzazione basata sul ruolo
-            if (userRole == "Responsabile Esterno" && task.Tipologia == "Interno")
-            {
-                TempData["ErrorMessage"] = "Un responsabile esterno non può eliminare task interni.";
-                return RedirectToAction("Task");  // Ritorna alla lista dei task con un messaggio di errore
-            }
-
-            tasks.Remove(task);
-            TempData["SuccessMessage"] = "Task eliminato con successo!";
-            return RedirectToAction("Task");  // Redirect alla lista dei task con un messaggio di successo
-        }
-
     }
 }

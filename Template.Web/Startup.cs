@@ -112,15 +112,26 @@ namespace Template.Web
                 // ROUTING PER HUB
                 endpoints.MapHub<TemplateHub>("/templateHub");
 
-                endpoints.MapAreaControllerRoute("Example", "Example", "Example/{controller=Users}/{action=Index}/{id?}");
+                // NON CI SERVE -> endpoints.MapAreaControllerRoute("Example", "Example", "Example/{controller=Users}/{action=Index}/{id?}");
 
                 // 1️ Il login è la pagina di default (visibile a tutti)
                 endpoints.MapControllerRoute("default", "{controller=Login}/{action=Login}");
 
 
-
                 // 3 Pagina Storico, accessibile solo agli utenti autenticati
-                endpoints.MapAreaControllerRoute("Storico", "Storico", "Storico/{controller=Storico}/{action=Storico}/{id?}");
+                endpoints.MapControllerRoute("Storico", "{controller=Storico}/{action=Storico}");
+
+                // Pagina creazione task, accessibile solo se autenticato e dai Responsabili
+                endpoints.MapControllerRoute("Task", "{controller=Task}/{action=Task}");
+
+                // Pagina task disponibili
+                endpoints.MapControllerRoute("Disponibili", "{controller=Disponibili}/{action=Disponibili}");
+
+                // Pagina dettagli task
+                endpoints.MapControllerRoute("Dettagli", "{controller=Dettagli}/{action=Dettagli}");
+
+                // Pagina area personale
+                endpoints.MapControllerRoute("AreaPersonale", "{controller=AreaPersonale}/{action=AreaPersonale}");
             });
 
 

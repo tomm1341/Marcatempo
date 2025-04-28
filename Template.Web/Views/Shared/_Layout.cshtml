@@ -3,7 +3,6 @@
 @{
     Layout = "_LayoutHtml";
     var version = System.Reflection.Assembly.GetAssembly(typeof(Startup)).GetName().Version;
-
     var identitaCorrente = (Template.Web.Areas.IdentitaViewModel)ViewData[Template.Web.Areas.IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY];
 }
 
@@ -24,65 +23,96 @@
                     <img class="onit-suites-logo" src="~/images/app-logo.png" />
                 </a>
 
-                <!-- Navbar Toggler per Mobile (Hamburger Menu Nero) -->
-                <button class="navbar-toggler navbar-toggler-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <!-- Toggler -->
+                <button class="navbar-toggler navbar-toggler-dark ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars text-black"></i>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Menu principale -->
-                    <ul class="navbar-nav mx-auto">
+
+                    <!-- DESKTOP MENU -->
+                    <ul class="navbar-nav mx-auto d-none d-lg-flex">
                         <li class="nav-item">
-                            <a class="btn btn-secondary mx-2 my-1" href="@Url.Action("AreaPersonale", "Account")" title="Vai all'Area Personale">
+                            <a class="btn btn-secondary mx-2 my-1" href="@Url.Action("AreaPersonale", "AreaPersonale")">
                                 <i class="fa-solid fa-user"></i> Area Personale
                             </a>
                         </li>
+                        
+                        </li>
                         <li class="nav-item">
-                            <a class="btn btn-dark mx-2 my-1" href="@Url.Action("Storico", "Storico")" title="Vai allo Storico">
-                                <i class="fa-solid fa-clock-rotate-left"></i> Storico
+                            <a class="btn btn-primary mx-2 my-1" href="@Url.Action("Disponibili", "Disponibili")">
+                                <i class="fa-solid fa-tasks"></i> Task Disponibili
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary mx-2 my-1" href="@Url.Action("Task", "Task")" title="Vai ai Task Disponibili">
-                                <i class="fa-solid fa-tasks"></i> Task Disponibili
+                            <a class="btn btn-outline-dark mx-2 my-1" href="@Url.Action("Task", "Task")">
+                                <i class="fa-solid fa-plus"></i> Crea task
                             </a>
                         </li>
                     </ul>
 
-                    <!-- Profilo Utente (Solo Icona, a Destra) -->
+                    <!-- MOBILE MENU -->
+                    <ul class="navbar-nav w-50 d-lg-none mt-5">
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-secondary w-50 text-start my-1" href="@Url.Action("AreaPersonale", "Account")">
+                                <i class="fa-solid fa-user"></i> Area Personale
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-dark w-50 text-start my-1" href="@Url.Action("Storico", "Storico")">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Storico
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-primary w-50 text-start my-1" href="@Url.Action("Disponibili", "Disponibili")">
+                                <i class="fa-solid fa-tasks"></i> Task Disponibili
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-outline-dark w-50 text-start my-1" href="@Url.Action("Task", "Task")">
+                                <i class="fa-solid fa-plus"></i> Crea task
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- USER SECTION -->
                     <ul class="navbar-nav ms-auto onit-page-menu-user">
                         @if (identitaCorrente != null)
                         {
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Desktop dropdown con immagine -->
+                            <li class="nav-item dropdown d-none d-lg-block">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end" role="menu">
-                                    <a class="dropdown-item" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()" title="@SharedLocalizer["Chiudi sessione di lavoro"]">
+                                <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
                                         <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
                                     </a>
-                                    <form autocomplete="off" method="post" action="@Url.Action(MVC.Login.Logout())" id="POST_LogOut" display="none"></form>
+                                    <form autocomplete="off" method="post" action="@Url.Action(MVC.Login.Logout())" id="POST_LogOut" style="display:none;"></form>
                                 </div>
+                            </li>
+
+                            <!-- Mobile: pulsante uniforme -->
+                            <li class="nav-item d-lg-none w-50">
+                                <a class="btn btn-sm btn-dark w-50 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
+                                    <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
+                                </a>
                             </li>
                         }
                     </ul>
                 </div>
             </div>
         </nav>
+
         @RenderSection("pageTitle", false)
     </div>
+
     @RenderSection("pageSubtitle", false)
     @RenderBody()
 </div>
 
 @section googlehead {
-    @*<script async src="https://www.googletagmanager.com/gtag/js?id=UA-"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'UA-', { 'anonymize_ip': true });    // Ricordarsi di anonimizzare per fare ricadere il cookie tra quelli tecnici ed evitare l'obbligo del banner
-    </script>*@
+    @* Google Analytics (opzionale) *@
 }
 
 @section scripts {
