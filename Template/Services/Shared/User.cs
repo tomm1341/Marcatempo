@@ -23,7 +23,7 @@ namespace Template.Services.Shared
         [Required]
         public string Username { get; set; }
         [Required]
-        [RuoloValido(new[] { "ResponsabileEsterno", "ResponsabileInterno", "Utente" })]
+        [RuoloValido(new[] { "ResponsabileEsterno", "ResponsabileInterno", "Developer" })]
         public string Ruolo { get; set; }
 
         /// <summary>
