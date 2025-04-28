@@ -1,4 +1,5 @@
-﻿using Template.Web.Infrastructure;
+﻿using System;
+using Template.Web.Infrastructure;
 
 namespace Template.Web.Areas
 {
@@ -6,8 +7,14 @@ namespace Template.Web.Areas
     {
         public static string VIEWDATA_IDENTITACORRENTE_KEY = "IdentitaUtenteCorrente";
 
-        public string IdUtenteCorrente { get; set; }
+        public Guid IdUtenteCorrente { get; set; }
         public string EmailUtenteCorrente { get; set; }
+        public string NomeUtenteCorrente { get; set; }
+        public string CognomeUtenteCorrente { get; set; }
+        public string UsernameUtenteCorrente { get; set; }
+        public string RuoloUtenteCorrente { get; set; }
+
+
 
         public string GravatarUrl
         {

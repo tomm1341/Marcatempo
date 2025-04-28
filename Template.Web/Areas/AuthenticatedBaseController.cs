@@ -28,31 +28,34 @@ namespace Template.Web.Areas
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            try
+            if (context.HttpContext?.User?.Identity?.IsAuthenticated == true)
             {
-                if (context.HttpContext != null && context.HttpContext.User != null && context.HttpContext.User.Identity.IsAuthenticated)
-                {
-                    ViewData[IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY] = new IdentitaViewModel
-                    {
-                        IdUtenteCorrente = context.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value,
-                        EmailUtenteCorrente = context.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Email).First().Value
-                    };
-                }
-                else
-                {
-                    HttpContext.SignOutAsync();
-                    this.SignOut();
+                var userClaims = context.HttpContext.User.Claims;
 
-                    context.Result = new RedirectResult(context.HttpContext.Request.GetEncodedUrl());
-                    Alerts.AddError(this, "L'utente non possiede i diritti per visualizzare la risorsa richiesta");
-                }
+                var idClaim = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                Guid.TryParse(idClaim, out var idUtente);
 
-                base.OnActionExecuting(context);
+                ViewData[IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY] = new IdentitaViewModel
+                {
+                    IdUtenteCorrente = idUtente,
+                    EmailUtenteCorrente = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                    NomeUtenteCorrente = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value,
+                    CognomeUtenteCorrente = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value,
+                    UsernameUtenteCorrente = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+                    RuoloUtenteCorrente = userClaims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value
+                };
             }
-            catch (Exception)
+            else
             {
-                throw;
+                // Logout automatico se l'utente non è autenticato
+                HttpContext.SignOutAsync();
+                SignOut();
+
+                context.Result = new RedirectResult(context.HttpContext.Request.GetEncodedUrl());
+                Alerts.AddError(this, "L'utente non possiede i diritti per visualizzare la risorsa richiesta");
             }
+
+            base.OnActionExecuting(context);
         }
     }
 }
