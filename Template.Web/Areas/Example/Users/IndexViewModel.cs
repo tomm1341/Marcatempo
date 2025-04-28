@@ -62,13 +62,13 @@ namespace Template.Web.Areas.Example.Users
         {
             this.Id = userIndexDTO.Id;
             this.Email = userIndexDTO.Email;
-            this.FirstName = userIndexDTO.FirstName;
-            this.LastName = userIndexDTO.LastName;
+            this.Nome = userIndexDTO.Nome;
+            this.Cognome = userIndexDTO.Cognome;
         }
 
         public Guid Id { get; set; }
         public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Nome { get; set; }
+        public string Cognome { get; set; }
     }
 }

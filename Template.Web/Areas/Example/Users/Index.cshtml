@@ -61,13 +61,13 @@
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:utilities.navigateUrlWithoutHystory('@(Model.OrderbyUrl(Url, r => r.FirstName))')">
-                                    @ModelLocalizer["Nome"]&nbsp;<span class="@Model.OrderbyCss(Context, r => r.FirstName)"></span>
+                                <a href="javascript:utilities.navigateUrlWithoutHystory('@(Model.OrderbyUrl(Url, r => r.Nome))')">
+                                    @ModelLocalizer["Nome"]&nbsp;<span class="@Model.OrderbyCss(Context, r => r.Nome)"></span>
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:utilities.navigateUrlWithoutHystory('@(Model.OrderbyUrl(Url, r => r.LastName))')">
-                                    @ModelLocalizer["Cognome"]&nbsp;<span class="@Model.OrderbyCss(Context, r => r.LastName)"></span>
+                                <a href="javascript:utilities.navigateUrlWithoutHystory('@(Model.OrderbyUrl(Url, r => r.Cognome))')">
+                                    @ModelLocalizer["Cognome"]&nbsp;<span class="@Model.OrderbyCss(Context, r => r.Cognome)"></span>
                                 </a>
                             </th>
                         </tr>
@@ -88,10 +88,10 @@
                                         @user.Email
                                     </td>
                                     <td class="text-nowrap">
-                                        @user.FirstName
+                                        @user.Nome
                                     </td>
                                     <td class="text-nowrap">
-                                        @user.LastName
+                                        @user.Cognome
                                     </td>
                                 </tr>
                             }
