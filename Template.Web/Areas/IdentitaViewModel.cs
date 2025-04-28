@@ -6,6 +6,7 @@ namespace Template.Web.Areas
     {
         public static string VIEWDATA_IDENTITACORRENTE_KEY = "IdentitaUtenteCorrente";
 
+        public string IdUtenteCorrente { get; set; }
         public string EmailUtenteCorrente { get; set; }
 
         public string GravatarUrl
