@@ -6,10 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template.Services;
 using Template.Services.Shared;
+using Template.Web.Areas;
 
 namespace Template.Web.Features.Disponibili
 {
-    public partial class DisponibiliController : Controller
+    public partial class DisponibiliController : AuthenticatedBaseController
     {
         private readonly TemplateDbContext _dbContext;
 
