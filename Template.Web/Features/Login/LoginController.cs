@@ -32,7 +32,11 @@ namespace Template.Web.Features.Login
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, utente.Id.ToString()),
-                new Claim(ClaimTypes.Email, utente.Email)
+                new Claim(ClaimTypes.Email, utente.Email),
+                new Claim(ClaimTypes.GivenName, utente.Nome),
+               /* new Claim(ClaimTypes.Surname, utente.Cognome),
+                new Claim(ClaimTypes.Name, utente.Username),*/
+                new Claim(ClaimTypes.Role, utente.Ruolo)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
