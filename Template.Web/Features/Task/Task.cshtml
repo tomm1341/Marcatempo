@@ -38,7 +38,7 @@
                 <form autocomplete="off" method="post" class="onit-form-sm" action="@Url.Action("Edit", "Task", new { area = "Features", id = Model.Id })" id="edit-form">
                     <input id="edit-form-submitter" class="d-none" type="submit" />
                     <fieldset class="pb-3">
-                        <legend class="info mt-4 mb-4">Dati del Task</legend> <!-- Spazio sotto il titolo -->
+                        <legend class="info mt-4 mb-4">Dati del Task</legend> 
                         <!-- Titolo -->
                         <div class="form-group mb-3">
                             <label for="Titolo">Titolo</label>
@@ -55,24 +55,16 @@
                             </select>
                         </div>
 
-                        <!-- Tipologia -->
+                        <!-- Tipologia DA RIVEDERE-->
                         <div class="form-group mb-3">
                             <label for="Tipologia">Tipologia</label>
                             <select v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia">
-                                <option value="Interna">Interna</option>
-                                <option value="Esterna">Esterna</option>
+                                <option value="Interna">Interno</option>
+                                <option value="Esterna">Esterno</option>
                             </select>
                         </div>
 
-                        <!-- Data di Creazione -->
-                        <div class="form-group mb-3">
-                            <label for="DataCreazione">Data di Creazione</label>
-                            <input v-model="task.DataCreazione"
-                                   :max="task.DataScadenza"
-                                   type="date"
-                                   class="form-control form-control-sm"
-                                   id="DataCreazione" />
-                        </div>
+                      
 
                         <!-- Data di Scadenza -->
                         <div class="form-group mb-3">
