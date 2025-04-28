@@ -14,9 +14,9 @@ namespace Template.Web.Features.AreaPersonale
         {
             var model = new AreaPersonaleViewModel
             {
-                Nome = "Mario",
-                Cognome = "Rossi",
-                Ruolo = "Developer",
+                Nome = Identita.NomeUtenteCorrente,
+                Cognome = Identita.CognomeUtenteCorrente,
+                Ruolo = Identita.RuoloUtenteCorrente,
                 TaskInLavorazione = new List<TaskItemViewModel>
                 {
                     new() { Descrizione = "Fix bug login", Scadenza = DateTime.Today.AddDays(2), StatoColore = "green" },
