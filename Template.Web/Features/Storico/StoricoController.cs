@@ -7,10 +7,11 @@ using Template.Services;
 using System;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Template.Web.Areas;
 
 namespace Template.Web.Features.Storico
 {
-    public partial class StoricoController : Controller
+    public partial class StoricoController : AuthenticatedBaseController
     {
         private readonly TemplateDbContext _dbContext;
 
