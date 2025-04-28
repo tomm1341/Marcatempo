@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Template.Web.Areas;
 
 namespace Template.Web.Features.AreaPersonale
 {
-    public partial class AreaPersonaleController : AuthenticatedBaseController
+    public partial class AreaPersonaleController : Controller
     {
         [HttpGet]
         public virtual IActionResult AreaPersonale()

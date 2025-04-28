@@ -50,7 +50,7 @@ namespace Template.Web.Features.Storico
             //    .Select(x => new
             //    {
             //        x.Id,
-            //        x.FirstName,
+            //        x.Nome,
             //        x.Role,
             //        Events = x.Events
             //            .Where(e => e.Stato == "Completato")  // Filter events where state is "Completato"
@@ -72,7 +72,7 @@ namespace Template.Web.Features.Storico
             //// Create the template for the view
             //var model = allData.Select(userData => new StoricoViewModel
             //{
-            //    Nome = userData.FirstName,               
+            //    Nome = userData.Nome,               
             //    Ruolo = userData.Role,
             //    Email = userEmail,               
             //    Events = userData.Events.Select(e => new Event
