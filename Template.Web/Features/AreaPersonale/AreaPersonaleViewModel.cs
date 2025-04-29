@@ -13,6 +13,7 @@ namespace Template.Web.Features.AreaPersonale
     public class RendicontoGiornaliero
     {
         public string Giorno { get; set; }
+        public string Data { get; set; } // DA CAMBIARE IL TIPO IN DateTime
         public string OrarioInizio { get; set; }
         public string OrarioFine { get; set; }
     }
