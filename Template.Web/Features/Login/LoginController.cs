@@ -29,15 +29,22 @@ namespace Template.Web.Features.Login
 
         private ActionResult LoginAndRedirect(UserDetailDTO utente, string returnUrl, bool rememberMe)
         {
+            // Creazione dei claims
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, utente.Id.ToString()),
                 new Claim(ClaimTypes.Email, utente.Email),
                 new Claim(ClaimTypes.GivenName, utente.Nome),
-               /* new Claim(ClaimTypes.Surname, utente.Cognome),
-                new Claim(ClaimTypes.Name, utente.Username),*/
+                new Claim(ClaimTypes.Surname, utente.Cognome),
+                new Claim(ClaimTypes.Name, utente.Username),
                 new Claim(ClaimTypes.Role, utente.Ruolo)
             };
+
+            // Debug: stampa dei claims in console per il controllo
+            foreach (var claim in claims)
+            {
+                Console.WriteLine($"Claim: {claim.Type} - {claim.Value}");
+            }
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -47,11 +54,11 @@ namespace Template.Web.Features.Login
                 IsPersistent = rememberMe,
             });
 
+            // Se c'è un returnUrl valido, redirigi, altrimenti alla AreaPersonale
             if (string.IsNullOrWhiteSpace(returnUrl) == false)
                 return Redirect(returnUrl);
 
             return RedirectToAction("AreaPersonale", "AreaPersonale");
-
         }
 
         [HttpGet]
@@ -63,7 +70,6 @@ namespace Template.Web.Features.Login
                     return Redirect(returnUrl);
 
                 return RedirectToAction("AreaPersonale", "AreaPersonale");
-
             }
 
             var model = new LoginViewModel
@@ -81,16 +87,19 @@ namespace Template.Web.Features.Login
             {
                 try
                 {
+                    // Verifica credenziali utente
                     var utente = await _sharedService.Query(new CheckLoginCredentialsQuery
                     {
                         Email = model.Email,
                         Password = model.Password,
                     });
 
+                    // Se l'utente è valido esegue il login e reindirizza
                     return LoginAndRedirect(utente, model.ReturnUrl, model.RememberMe);
                 }
                 catch (LoginException e)
                 {
+                    // Se il login fallisce mostra errore
                     ModelState.AddModelError(LoginErrorModelStateKey, e.Message);
                 }
             }
