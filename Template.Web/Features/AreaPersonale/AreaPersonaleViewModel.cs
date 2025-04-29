@@ -20,6 +20,7 @@ namespace Template.Web.Features.AreaPersonale
 
     public class AreaPersonaleViewModel
     {
+        public Guid UserId { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public string Ruolo { get; set; }
