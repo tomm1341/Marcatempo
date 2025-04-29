@@ -14,6 +14,10 @@ namespace Template.Infrastructure
                 return;   // Data was already seeded
             }
 
+           /* // Rimuove tutti gli utenti esistenti (uncomment only for testing)
+            context.Users.RemoveRange(context.Users);
+            context.SaveChanges();*/
+
             context.Users.AddRange(
                 new User
                 {
@@ -23,47 +27,47 @@ namespace Template.Infrastructure
                     Nome = "Carmelita",
                     Cognome = "Kleehuhler",
                     Username = "ckleehuhler0",
-                    Ruolo = "User"
+                    Ruolo = "Developer"
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
                     Email = "sgowrie1@amazon.com",
-                    Password = "$2a$04$ZoH0ul/L.YTCAIz9WmazMe.tHC5s9soNbxq5vyv5QXV845IiN4mNq", 
+                    Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
                     Nome = "Stace",
                     Cognome = "Gowrie",
                     Username = "sgowrie1",
-                    Ruolo = "User"
+                    Ruolo = "Developer"
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
                     Email = "vdenmead2@mozilla.org",
-                    Password = "$2a$04$T1PK56EZ5h/moAeCEFhc0egNZLoB8lrYsTw4G2FPURBaGQoqNzz8m", 
+                    Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
                     Nome = "Valry",
                     Cognome = "Denmead",
                     Username = "vdenmead2",
-                    Ruolo = "User"
+                    Ruolo = "Developer"
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
                     Email = "dbalwin3@biglobe.ne.jp",
-                    Password = "$2a$04$hQ.9pXMdRlu4HUCShaFNiuH95207.YKIJrE6lYXtD/hf5dEwGIwti", 
+                    Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
                     Nome = "Daven",
                     Cognome = "Balwin",
                     Username = "dbalwin3",
-                    Ruolo = "Manager"
+                    Ruolo = "ResponsabileInterno"
                 },
                 new User
                 {
                     Id = Guid.NewGuid(),
                     Email = "fhallede4@themeforest.net",
-                    Password = "$2a$04$6b5J1MvETageDvIKaW6jkuYqLdV5nm6soxKNokrCtZzr1nIyehts2", 
+                    Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
                     Nome = "Franzen",
                     Cognome = "Hallede",
                     Username = "fhallede4",
-                    Ruolo = "Manager"
+                    Ruolo = "ResponsabileEsterno"
                 });
 
 
