@@ -25,11 +25,11 @@ namespace Template.Web.Features.AreaPersonale
                 },
                 RendicontoSettimana = new List<RendicontoGiornaliero>
                 {
-                    new() { Giorno = "Lunedì", OrarioInizio = "09:00", OrarioFine = "17:00" },
-                    new() { Giorno = "Martedì", OrarioInizio = "09:15", OrarioFine = "17:15" },
-                    new() { Giorno = "Mercoledì", OrarioInizio = "09:00", OrarioFine = "17:00" },
-                    new() { Giorno = "Giovedì", OrarioInizio = "09:30", OrarioFine = "17:30" },
-                    new() { Giorno = "Venerdì", OrarioInizio = "09:00", OrarioFine = "16:00" },
+                    new() { Giorno = "Lunedì", Data = "21/04/25", OrarioInizio = "09:00", OrarioFine = "17:00" },
+                    new() { Giorno = "Martedì", Data = "22/04/25", OrarioInizio = "09:15", OrarioFine = "17:15" },
+                    new() { Giorno = "Mercoledì", Data = "23/04/25", OrarioInizio = "09:00", OrarioFine = "17:00" },
+                    new() { Giorno = "Giovedì", Data = "24/04/25", OrarioInizio = "09:30", OrarioFine = "17:30" },
+                    new() { Giorno = "Venerdì", Data = "25/04/25", OrarioInizio = "09:00", OrarioFine = "16:00" },
                 },
                 OreTotali = 38
             };
