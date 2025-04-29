@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
 using Template.Services.Shared;
@@ -12,6 +13,7 @@ using Template.Web.Areas;
 namespace Template.Web.Features.Task
 
 {
+    [Authorize(Roles = "ResponsabileInterno,ResponsabileEsterno")]
     public partial class TaskController : AuthenticatedBaseController
     {
         private readonly SharedService _sharedService;

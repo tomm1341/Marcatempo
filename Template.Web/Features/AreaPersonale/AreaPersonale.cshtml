@@ -96,18 +96,29 @@
                 <thead>
                     <tr>
                         <th>Giorno</th>
+                        <th>Data</th>
                         <th>Inizio</th>
                         <th>Fine</th>
                         <th>Ore</th>
                     </tr>
                 </thead>
                 <tbody id="rendicontoBody">
-                    <!-- Inserito via JS -->
+                    @foreach (var r in Model.RendicontoSettimana)
+                    {
+                        var ore = (TimeSpan.Parse(r.OrarioFine) - TimeSpan.Parse(r.OrarioInizio)).TotalHours;
+                        <tr data-giorno="@r.Giorno">
+                            <td>@r.Giorno</td>
+                            <td>@r.Data</td>
+                            <td>@r.OrarioInizio</td>
+                            <td>@r.OrarioFine</td>
+                            <td class="ore">@ore.ToString("0.##")</td>
+                        </tr>
+                    }
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3"><strong>Totale</strong></td>
-                        <td id="oreTotali">0</td>
+                        <td colspan="4"><strong>Totale</strong></td>
+                        <td id="oreTotali">@Model.OreTotali</td>
                     </tr>
                 </tfoot>
             </table>

@@ -59,6 +59,7 @@ namespace Template.Services.Shared
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public string Username { get; set; }
+        public string Ruolo { get; set; }
     }
 
     public class CheckLoginCredentialsQuery
@@ -169,7 +170,8 @@ namespace Template.Services.Shared
                 Email = user.Email,
                 Nome = user.Nome,
                 Cognome = user.Cognome,
-                Username = user.Username
+                Username = user.Username,
+                Ruolo = user.Ruolo
             };
         }
     }
