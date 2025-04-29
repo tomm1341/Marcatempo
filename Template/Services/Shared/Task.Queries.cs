@@ -40,6 +40,20 @@ namespace Template.Services.Shared
         public string NomeAssegnatario { get; set; }
     }
 
+    public class AssignedTaskQuery
+    {
+        public Guid UserId { get; set; }
+    }
+
+    public class AssignedTaskDTO
+    {
+        public Guid Id { get; set; }
+        public string Descrizione { get; set; }
+        public DateTime Scadenza { get; set; }
+        public string Stato { get; set; }
+    }
+
+
     public partial class SharedService
     {
         public async Task<IEnumerable<GetAllTasksQuery>> GetAllTasksAsync()
@@ -92,6 +106,23 @@ namespace Template.Services.Shared
                           NomeAssegnatario = $"{user.Nome} {user.Cognome}" // Merge di nome e cognome in un solo campo per comodità
                       })
                 .ToListAsync();
+        }
+            /// <summary>
+            /// Restituisce tutti i task il cui IdAssegnatario corrisponde all'utente passato
+            /// </summary>
+            public async Task<IEnumerable<AssignedTaskDTO>> Query(AssignedTaskQuery qry)
+            {
+                return await _dbContext.Tasks
+                    .Where(t => t.IdAssegnatario == qry.UserId)
+                    .Select(t => new AssignedTaskDTO
+                    {
+                        Id = t.Id,
+                        Descrizione = t.Descrizione,
+                        Scadenza = t.DataScadenza,
+                        Stato = t.Stato
+                    })
+                    .ToListAsync();
+            
         }
     }
 }
