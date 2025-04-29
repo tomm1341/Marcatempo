@@ -170,7 +170,8 @@ namespace Template.Services.Shared
                 Email = user.Email,
                 Nome = user.Nome,
                 Cognome = user.Cognome,
-                Username = user.Username
+                Username = user.Username,
+                Ruolo = user.Ruolo
             };
         }
     }
