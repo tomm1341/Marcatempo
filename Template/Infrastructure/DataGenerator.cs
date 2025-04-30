@@ -14,9 +14,9 @@ namespace Template.Infrastructure
                 return;   // Data was already seeded
             }
 
-           /* // Rimuove tutti gli utenti esistenti (uncomment only for testing)
-            context.Users.RemoveRange(context.Users);
-            context.SaveChanges();*/
+            /* // Rimuove tutti gli utenti esistenti (uncomment only for testing)
+             context.Users.RemoveRange(context.Users);
+             context.SaveChanges();*/
 
             context.Users.AddRange(
                 new User
@@ -75,35 +75,61 @@ namespace Template.Infrastructure
         }
 
 
-        //************ INITIALIZING TASKS (PROBABLY TO BE REMOVED IN PRODUCTION) *************
         public static void InitializeTasks(TemplateDbContext context)
         {
-            if (context.Tasks.Any())
-                return; // Data already present
+            /*if (context.Tasks.Any())
+                return;*/
+
+             // Rimuove tutti gli utenti esistenti (uncomment only for testing)
+             context.Tasks.RemoveRange(context.Tasks);
+             context.SaveChanges();
+
+            // Recupera un utente qualsiasi come creatore (dinamico)
+            var creatore = context.Users.FirstOrDefault();
+            if (creatore == null)
+                throw new Exception("Nessun utente trovato per assegnare i task.");
 
             context.Tasks.AddRange(
-
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.NewGuid(), //DA RIGUARDARE (non si può mettere a null)
-                    Stato = "Assegnabile",
-                    Titolo = "Migrazione_Teams",
-                    Descrizione = "Questa è una descrizione"
-
+                    IdCreatore = creatore.Id,
+                    Stato = "InAttesa",
+                    Titolo = "Migrazione Teams",
+                    Descrizione = "Effettuare la migrazione dei canali Teams del reparto marketing.",
+                    Tipologia = "Interno",
+                    Priorità = 0,
+                    DataCreazione = DateTime.Now,
+                    DataScadenza = DateTime.Today.AddDays(5)
                 },
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.NewGuid(), //DA RIGUARDARE (non si può mettere a null)
-                    Stato = "Assegnato",
-                    Titolo = "Questo è un task",
-                    Descrizione = "Questa è una descrizione"
-
+                    IdCreatore = creatore.Id,
+                    Stato = "InAttesa",
+                    Titolo = "Sviluppo Landing Page",
+                    Descrizione = "Creare una landing page responsive per la campagna primavera.",
+                    Tipologia = "Esterno",
+                    Priorità = 1,
+                    DataCreazione = DateTime.Now,
+                    DataScadenza = DateTime.Today.AddDays(10)
+                },
+                new Task
+                {
+                    Id = Guid.NewGuid(),
+                    IdCreatore = creatore.Id,
+                    Stato = "InAttesa",
+                    Titolo = "Fix bug autenticazione",
+                    Descrizione = "Correggere errore sul login con credenziali errate.",
+                    Tipologia = "Interno",
+                    Priorità = 2,
+                    DataCreazione = DateTime.Now,
+                    DataScadenza = DateTime.Today.AddDays(3)
                 }
+            );
 
-                );
             context.SaveChanges();
         }
+
     }
 }

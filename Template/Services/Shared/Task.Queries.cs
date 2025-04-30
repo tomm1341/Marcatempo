@@ -27,6 +27,9 @@ namespace Template.Services.Shared
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataScadenza { get; set; }
+        public DateTime DataCreazione { get; set; }
+        public Guid IdCreatore { get; set; }
+
 
     }
 
@@ -84,7 +87,9 @@ namespace Template.Services.Shared
                     Stato = t.Stato,
                     Tipologia = t.Tipologia,
                     Descrizione = t.Descrizione,
-                    DataScadenza = t.DataScadenza
+                    DataScadenza = t.DataScadenza,
+                    IdCreatore = t.IdCreatore,
+                    DataCreazione = t.DataCreazione
                 })
                 .ToListAsync();
         }
