@@ -1,32 +1,26 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using Template.Services.Shared;
+﻿using System;
 
 namespace Template.Web.Features.Disponibili
 {
-    // Enum per definire i tipi di tipologia
     public enum TipologiaEvento
     {
-        Interna,  // Evento interno
-        Esterna   // Evento esterno
+        Interna,
+        Esterna
     }
 
-    // Enum per definire le priorità degli eventi
     public enum PrioritaEvento
     {
-        Alta,   // Alta priorità
-        Media,  // Media priorità
-        Bassa   // Bassa priorità
+        Alta,
+        Media,
+        Bassa
     }
 
     public class DisponibiliViewModel
     {
-        public string Descrizione { get; set; }  // Descrizione dell'evento
-        public TipologiaEvento Tipologia { get; set; }  // Tipologia dell'evento (Interna o Esterna)
-        public PrioritaEvento Priorità { get; set; }  // Priorità dell'evento (Alta, Media, Bassa)
-
-        public DateTime? Scadenza { get; set; }  // Scadenza dell'evento (opzionale)
-
-        
+        public Guid Id { get; set; } 
+        public string Descrizione { get; set; }
+        public TipologiaEvento Tipologia { get; set; }
+        public PrioritaEvento Priorità { get; set; }
+        public DateTime? Scadenza { get; set; }
     }
 }
