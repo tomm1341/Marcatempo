@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Template.Web.Features.AreaPersonale
 {
-    public partial class AreaPersonaleController : Controller
+    public partial class AreaPersonaleController :AuthenticatedBaseController 
     {
         [HttpGet]
         public virtual IActionResult AreaPersonale()
