@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Template.Web.Areas;
 using System.Threading.Tasks;
+
 
 namespace Template.Web.Features.AreaPersonale
 {
