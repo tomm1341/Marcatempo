@@ -8,7 +8,7 @@ namespace Template.Web.Features.Dettagli
     public class DettagliViewModel
     {
         public Guid TaskId { get; set; }
-        public Guid IdAssegnatario { get; set; }
+        public Guid? IdAssegnatario { get; set; }
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Descrizione { get; set; } // Descrizione dell'evento
