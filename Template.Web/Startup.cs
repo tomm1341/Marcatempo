@@ -1,11 +1,11 @@
-﻿//using Template.Web.Hubs;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.IO;
@@ -20,13 +20,12 @@ namespace Template.Web
     public class Startup
     {
         public IConfiguration Configuration { get; }
-
-        public IWebHostEnvironment Env { get; set; }
+        public IWebHostEnvironment Env { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Env = env;
             Configuration = configuration;
+            Env = env;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -35,21 +34,21 @@ namespace Template.Web
 
             services.AddDbContext<TemplateDbContext>(options =>
             {
-                options.UseInMemoryDatabase(databaseName: "Template");
+                options.UseInMemoryDatabase("Template");
             });
 
-            // SERVICES FOR AUTHENTICATION
             services.AddSession();
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            {
-                options.LoginPath = "/Login/Login";
-                options.LogoutPath = "/Login/Logout";
-            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options =>
+                    {
+                        options.LoginPath = "/Login/Login";
+                        options.LogoutPath = "/Login/Logout";
+                    });
 
             var builder = services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization(options =>
-                {                        // Enable loading SharedResource for ModelLocalizer
+                {
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResource));
                 });
@@ -73,76 +72,64 @@ namespace Template.Web
                 options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
             });
 
-            // SIGNALR FOR COLLABORATIVE PAGES
             services.AddSignalR();
 
-            // CONTAINER FOR ALL EXTRA CUSTOM SERVICES
             Container.RegisterTypes(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Configure the HTTP request pipeline.
-            if (!env.IsDevelopment())
+            //  Developer exception page per mostrare errori a schermo
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
             {
                 app.UseExceptionHandler("/Home/Error");
-
-                // Https redirection only in production
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
 
-            // Localization support if you want to
+            
             app.UseRequestLocalization(SupportedCultures.CultureNames);
 
             app.UseRouting();
-
-            // Adding authentication to pipeline
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
+            
             var node_modules = new CompositePhysicalFileProvider(Directory.GetCurrentDirectory(), "node_modules");
             var areas = new CompositePhysicalFileProvider(Directory.GetCurrentDirectory(), "Areas");
             var compositeFp = new CustomCompositeFileProvider(env.WebRootFileProvider, node_modules, areas);
             env.WebRootFileProvider = compositeFp;
             app.UseStaticFiles();
 
-            // Inizializza i dati in memoria
+            
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<TemplateDbContext>();
-                DataGenerator.InitializeTasks(context); // ✅ Chiama il tuo seed
+                DataGenerator.InitializeTasks(context);
             }
 
+            // Endpoints
             app.UseEndpoints(endpoints =>
             {
-                // ROUTING PER HUB
+                //  SignalR
                 endpoints.MapHub<TemplateHub>("/templateHub");
 
-                // NON CI SERVE -> endpoints.MapAreaControllerRoute("Example", "Example", "Example/{controller=Users}/{action=Index}/{id?}");
+                //  ROUTE PRINCIPALE
+                endpoints.MapControllerRoute(
+                    name: "Task",
+                    pattern: "{controller=Task}/{action=Task}/{id?}");
 
-                // 1️ Il login è la pagina di default (visibile a tutti)
-                endpoints.MapControllerRoute("default", "{controller=Login}/{action=Login}");
-
-
-                // 3 Pagina Storico, accessibile solo agli utenti autenticati
+                //  Altre rotte
                 endpoints.MapControllerRoute("Storico", "{controller=Storico}/{action=Storico}");
-
-                // Pagina creazione task, accessibile solo se autenticato e dai Responsabili
-                endpoints.MapControllerRoute("Task", "{controller=Task}/{action=Task}");
-
-                // Pagina task disponibili
                 endpoints.MapControllerRoute("Disponibili", "{controller=Disponibili}/{action=Disponibili}");
-
-                // Pagina dettagli task
                 endpoints.MapControllerRoute("Dettagli", "{controller=Dettagli}/{action=Dettagli}");
-
-                // Pagina area personale
                 endpoints.MapControllerRoute("AreaPersonale", "{controller=AreaPersonale}/{action=AreaPersonale}");
             });
-
-
         }
     }
 
@@ -153,10 +140,8 @@ namespace Template.Web
 
         static SupportedCultures()
         {
-            CultureNames = new[] { "it-it" };
+            CultureNames = new[] { "it-IT" };
             Cultures = CultureNames.Select(c => new CultureInfo(c)).ToArray();
-
-            //NB: attenzione nel progetto a settare correttamente <NeutralLanguage>it-IT</NeutralLanguage>
         }
     }
 }
