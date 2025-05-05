@@ -18,6 +18,9 @@ namespace Template.Web.Areas
     {
         public AuthenticatedBaseController() { }
 
+        //protected Guid CurrentUserId => Identita?.IdUtenteCorrente ?? Guid.Empty;
+
+
         protected IdentitaViewModel Identita
         {
             get
