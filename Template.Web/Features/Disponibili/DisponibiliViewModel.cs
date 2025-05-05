@@ -20,6 +20,7 @@ namespace Template.Web.Features.Disponibili
     {
         public Guid Id { get; set; } 
         public string Descrizione { get; set; }
+        public string Titolo { get; set; }
         public TipologiaEvento Tipologia { get; set; }
         public PrioritaEvento Priorità { get; set; }
         public DateTime? Scadenza { get; set; }

@@ -38,6 +38,7 @@ namespace Template.Web.Features.Disponibili
                 list.Add(new DisponibiliViewModel
                 {
                     Id = t.Id, // ✅ ID reale del task dal DB
+                    Titolo = t.Titolo,
                     Descrizione = t.Descrizione,
                     Tipologia = tipologia,
                     Priorità = priorita,
