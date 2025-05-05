@@ -8,7 +8,7 @@ namespace Template.Services.Shared
 {
     public class CreateTaskCommand // DTO (solo i campi che vengono passati dal frontend)
     {
-        public int Priorità { get; set; }
+        public string Priorità { get; set; }
         public string Stato { get; set; }
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
