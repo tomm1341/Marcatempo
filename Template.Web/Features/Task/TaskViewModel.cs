@@ -1,7 +1,4 @@
 ﻿using System;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using Template.Services.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Template.Web.Features.Task
@@ -14,6 +11,12 @@ namespace Template.Web.Features.Task
         public string Titolo { get; set; }
 
         public string Descrizione { get; set; }
+
+        [Required]
+        public string Tipologia { get; set; }
+
+        [Required]
+        public string Priorità { get; set; } // valore numerico 0/1/2 in formato string
 
         [Required]
         public DateTime DataScadenza { get; set; }
@@ -29,26 +32,14 @@ namespace Template.Web.Features.Task
             Id = task.Id;
             Titolo = task.Titolo;
             Descrizione = task.Descrizione;
-            DataScadenza = task.DataScadenza;
+            Tipologia = task.Tipologia;
+            Priorità = task.Priorità.ToString();
             Stato = task.Stato;
-            IdCreatore = task.IdCreatore;
+            DataScadenza = task.DataScadenza;
             DataCreazione = task.DataCreazione;
+            IdCreatore = task.IdCreatore;
         }
+
+    
     }
 }
-
-//        public AddOrUpdateTaskCommand ToAddOrUpdateTaskCommand()
-//        {
-//            return new AddOrUpdateTaskCommand
-//            {
-//                Id = this.Id,
-//                Titolo = this.Titolo,
-//                Descrizione = this.Descrizione,
-//                Stato = this.Stato,
-//                DataScadenza = this.DataScadenza,
-//                IdCreatore = this.IdCreatore,
-//                DataCreazione = this.DataCreazione
-//            };
-//        }
-//    }
-//}

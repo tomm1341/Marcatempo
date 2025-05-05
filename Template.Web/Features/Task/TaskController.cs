@@ -105,7 +105,7 @@ namespace Template.Web.Features.Task
 
             //Alerts.AddSuccess(this, "Task eliminato");
 
-            return RedirectToAction(Actions.Task());
+            return RedirectToAction(result: Actions.Task());
         }
     }
 }

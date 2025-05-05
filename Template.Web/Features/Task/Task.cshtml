@@ -38,7 +38,8 @@
                 <form autocomplete="off" method="post" class="onit-form-sm" action="@Url.Action("Edit", "Task", new { area = "Features", id = Model.Id })" id="edit-form">
                     <input id="edit-form-submitter" class="d-none" type="submit" />
                     <fieldset class="pb-3">
-                        <legend class="info mt-4 mb-4">Dati del Task</legend> 
+                        <legend class="info mt-4 mb-4">Dati del Task</legend>
+
                         <!-- Titolo -->
                         <div class="form-group mb-3">
                             <label for="Titolo">Titolo</label>
@@ -55,7 +56,7 @@
                             </select>
                         </div>
 
-                        <!-- Tipologia DA RIVEDERE-->
+                        <!-- Tipologia -->
                         <div class="form-group mb-3">
                             <label for="Tipologia">Tipologia</label>
                             <select v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia">
@@ -64,7 +65,14 @@
                             </select>
                         </div>
 
-                      
+                        <!-- Stato -->
+                        <div class="form-group mb-3">
+                            <label for="Stato">Stato</label>
+                            <select v-model="task.Stato" class="form-control form-control-sm" id="Stato">
+                                <option value="InAttesa">In Attesa</option>
+                                
+                            </select>
+                        </div>
 
                         <!-- Data di Scadenza -->
                         <div class="form-group mb-3">
@@ -82,7 +90,9 @@
                             <textarea v-model="task.Descrizione" class="form-control form-control-sm" id="Descrizione" rows="4"></textarea>
                         </div>
 
-                        <!-- Pulsante Salva (posizionato sotto il titolo) -->
+                       
+
+                        <!-- Pulsante Salva -->
                         <div class="text-right mt-3">
                             <button type="button" class="btn btn-success px-4" onclick="document.getElementById('edit-form-submitter').click()">
                                 <span class="d-inline d-sm-none"><i class="fa-solid fa-floppy-disk"></i></span>
@@ -112,12 +122,10 @@
 @section scripts {
     <script src="/js/bundle-vue.js" asp-append-version="true"></script>
     <script src="~/Areas/Example/Tasks/Edit.js" asp-append-version="true"></script>
-
-    @* <script src="~/node_modules/@microsoft/signalr/dist/browser/signalr.js" asp-append-version="true"></script> *@
     <script src="~/js/signalRConnectionManager.js" asp-append-version="true"></script>
 
     <script type="application/json" id="Seed_JSON">
-        @* @Html.Raw(Model.ToJson()) *@
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model))
     </script>
 
     <script type="text/javascript">
@@ -140,13 +148,12 @@
                     const creazione = new Date(this.task.DataCreazione);
                     const scadenza = new Date(this.task.DataScadenza);
 
-                    // Controlla se la data di creazione è dopo la scadenza
                     if (creazione > scadenza) {
                         this.dateError = true;
                         return;
                     }
 
-                    if (this.task.Titolo && this.task.Priorità && this.task.Tipologia && this.task.Descrizione && this.task.DataScadenza && !this.dateError) {
+                    if (this.task.Titolo && this.task.Priorità && this.task.Tipologia && this.task.Stato && this.task.Descrizione && this.task.DataScadenza && !this.dateError) {
                         document.getElementById('edit-form-submitter').click();
                     }
                 }
