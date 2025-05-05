@@ -8,35 +8,41 @@ using System;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Template.Web.Areas;
+using Template.Infrastructure;
+using Microsoft.Extensions.Localization;
+using Template.Web.Features.Login;
 
 namespace Template.Web.Features.Dettagli
 {
     public partial class DettagliController : AuthenticatedBaseController
     {
         private readonly TemplateDbContext _dbContext;
+        private readonly SharedService _sharedService;
 
         public DettagliController(TemplateDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-
-        [HttpGet]
-        public async virtual Task<IActionResult> Dettagli()
-        {
-            // Placeholder con dati finti
-            List<DettagliViewModel> list = new()
+            [HttpGet]
+            public async virtual Task<IActionResult> Details(Guid id)
             {
-                new DettagliViewModel
-                {
-                    Descrizione = "Task 1",
-                    Stato = "In Lavorazione",
-                    Priorità = "Alta",
-                    Scadenza = DateTime.Today.AddDays(3)
-                },
-                
-            };
+                var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
-            return View(list);
+                var vm = new DettagliViewModel
+                {
+                    TaskId = dto.Id,
+                    Titolo = dto.Titolo,
+                    Stato = dto.Stato,
+                    Tipologia = dto.Tipologia,
+                    Descrizione = dto.Descrizione,
+                    Priorità = dto.Priorità,
+                    Creazione = dto.DataCreazione,
+                    Scadenza = dto.DataScadenza,
+                    IdAssegnatario = dto.IdAssegnatario
+                };
+
+                return View("~/Features/Dettagli/Dettagli.cshtml", vm);
+            }
         }
     }
-}
+

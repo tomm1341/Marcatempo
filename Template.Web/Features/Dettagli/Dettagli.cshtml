@@ -1,4 +1,4 @@
-﻿@model List<Template.Web.Features.Dettagli.DettagliViewModel>
+﻿@model Template.Web.Features.Dettagli.DettagliViewModel
 @inject Template.Services.Shared.SharedService SharedService
 @{
     ViewData["Title"] = "Dettagli Task";
@@ -23,33 +23,33 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <div class="container mt-5">
-    @foreach (var task in Model)
-    {
-        <div class="mb-4 p-4 border rounded shadow-sm bg-light">
-            <h2 class="mb-3">Dettagli Task</h2>
+    <div class="mb-4 p-4 border rounded shadow-sm bg-light">
+        <h2 class="mb-3">Dettagli Task</h2>
 
-            <span class="badge px-3 py-2 @GetStatoBadgeClass(task.Stato)">
-                @task.Stato
-            </span>
+        <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">
+            @Model.Stato
+        </span>
 
-            <div class="d-flex justify-content-between align-items-center mt-4">
-                <h5 class="mb-0">Dipendente incaricato</h5>
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h5 class="mb-0">Dipendente incaricato</h5>
 
-                <div class="text-end">
-                    <div class="fw-bold small">Livello di priorità</div>
-                    <div class="@GetPrioritaBadgeClass(task.Priorità)">
-                        @task.Priorità
-                    </div>
-                    <div class="bg-black text-white px-3 py-1 mt-2 rounded">
-                        @task.Scadenza.ToString("dd/MM/yyyy")
-                    </div>
+            <div class="text-end">
+                <div class="fw-bold small">Livello di priorità</div>
+                <div class="@GetPrioritaBadgeClass(Model.Priorità.ToString())">
+                    @Model.Priorità
+                </div>
+                <div class="bg-black text-white px-3 py-1 mt-2 rounded">
+                    @Model.Scadenza.ToString("dd/MM/yyyy")
                 </div>
             </div>
-
-            <div class="mt-3 p-3 bg-secondary-subtle border border-dark-subtle rounded" style="min-height: 150px;">
-                <strong>Descrizione</strong>
-                <p class="mt-2">@task.Descrizione</p>
-            </div>
         </div>
+
+        <div class="mt-3 p-3 bg-secondary-subtle border border-dark-subtle rounded" style="min-height: 150px;">
+            <strong>Descrizione</strong>
+            <p class="mt-2">@Model.Descrizione</p>
+        </div>
+    </div>
+</div>
+
     }
 </div>

@@ -19,7 +19,7 @@ namespace Template.Services.Shared
         public Guid? IdAssegnatario { get; set; } = null; // L'utente che prende in carico il task, inizialmente null
 
         [Required]
-        public int Priorità { get; set;} // Alta, media, bassa
+        public string Priorità { get; set;} // Alta, media, bassa
 
         [Required]
         [StatoValido(new[] { "InAttesa", "InLavorazione", "Completato" })]

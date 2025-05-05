@@ -22,16 +22,12 @@ namespace Template.Services.Shared
     public class GetAvailableTasksQuery
     {
         public Guid Id { get; set; }
-
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Stato { get; set; }
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataScadenza { get; set; }
-        public DateTime DataCreazione { get; set; }
-        public Guid IdCreatore { get; set; }
-
 
     }
 
@@ -58,6 +54,23 @@ namespace Template.Services.Shared
         public string Stato { get; set; }
     }
 
+    public class TaskDetailQuery
+    {
+        public Guid Id { get; set; }
+    }
+
+    public class TaskDetailDTO
+    {
+        public Guid Id { get; set; }
+        public string Titolo { get; set; }
+        public string Stato { get; set; }
+        public string Tipologia { get; set; }
+        public string Descrizione { get; set; }
+        public string Priorità { get; set; }
+        public DateTime DataCreazione { get; set; }
+        public DateTime DataScadenza { get; set; }
+        public Guid? IdAssegnatario { get; set; }
+    }
 
     public partial class SharedService
     {
@@ -71,7 +84,7 @@ namespace Template.Services.Shared
                     Stato = t.Stato,
                     Tipologia = t.Tipologia,
                     Descrizione = t.Descrizione,
-                    Priorità = t.Priorità.ToString(),
+                    Priorità = t.Priorità,
                     DataCreazione = t.DataCreazione,
                     DataScadenza = t.DataScadenza
                 })
@@ -86,13 +99,11 @@ namespace Template.Services.Shared
                 {
                     Id = t.Id,
                     Titolo = t.Titolo,
-                    Priorità = t.Priorità.ToString(),
+                    Priorità = t.Priorità,
                     Stato = t.Stato,
                     Tipologia = t.Tipologia,
                     Descrizione = t.Descrizione,
-                    DataScadenza = t.DataScadenza,
-                    IdCreatore = t.IdCreatore,
-                    DataCreazione = t.DataCreazione
+                    DataScadenza = t.DataScadenza
                 })
                 .ToListAsync();
         }
@@ -131,6 +142,27 @@ namespace Template.Services.Shared
                     })
                     .ToListAsync();
             
+        }
+        public async Task<TaskDetailDTO> Query(TaskDetailQuery qry)
+        {
+            var t = await _dbContext.Tasks
+                .Where(x => x.Id == qry.Id)
+                .Select(x => new TaskDetailDTO
+                {
+                    Id = x.Id,
+                    Titolo = x.Titolo,
+                    Stato = x.Stato,
+                    Tipologia = x.Tipologia,
+                    Descrizione = x.Descrizione,
+                    Priorità = x.Priorità,
+                    DataCreazione = x.DataCreazione,
+                    DataScadenza = x.DataScadenza,
+                    IdAssegnatario = x.IdAssegnatario
+                })
+                .FirstOrDefaultAsync();
+
+            if (t == null) throw new ArgumentException("Task non trovato");
+            return t;
         }
     }
 }
