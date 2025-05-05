@@ -4,16 +4,17 @@ namespace Template.Web.Features.Disponibili
 {
     public enum TipologiaEvento
     {
-        Interna,
-        Esterna
+        Interno,
+        Esterno
     }
 
     public enum PrioritaEvento
     {
-        Alta,
-        Media,
-        Bassa
+        Bassa = 0,
+        Media = 1,
+        Alta = 2
     }
+
 
     public class DisponibiliViewModel
     {

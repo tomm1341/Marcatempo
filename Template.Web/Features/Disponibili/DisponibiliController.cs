@@ -37,12 +37,13 @@ namespace Template.Web.Features.Disponibili
 
                 list.Add(new DisponibiliViewModel
                 {
-                    Id = Guid.NewGuid(), // Se hai un ID reale da usare, sostituiscilo
+                    Id = t.Id, // ✅ ID reale del task dal DB
                     Descrizione = t.Descrizione,
                     Tipologia = tipologia,
                     Priorità = priorita,
                     Scadenza = t.DataScadenza
                 });
+
             }
 
             return View(list);
@@ -54,6 +55,7 @@ namespace Template.Web.Features.Disponibili
                 .Where(t => t.Stato == "InAttesa")
                 .Select(t => new GetAvailableTasksQuery
                 {
+                    Id = t.Id,
                     Titolo = t.Titolo,
                     Priorità = t.Priorità.ToString(),
                     Stato = t.Stato,

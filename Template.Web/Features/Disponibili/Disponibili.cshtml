@@ -27,6 +27,14 @@
                 <tbody>
                     @foreach (var task in Model)
                     {
+                        var prioritaClass = task.Priorità switch
+                        {
+                            PrioritaEvento.Alta => "danger",
+                            PrioritaEvento.Media => "warning",
+                            PrioritaEvento.Bassa => "light",
+                            _ => "secondary"
+                        };
+
                         <tr>
                             <td>
                                 <i class="bi bi-info-circle text-primary me-2"></i>
@@ -35,25 +43,17 @@
                                 </a>
                             </td>
                             <td>
-                                <span class="badge bg-@(task.Tipologia == TipologiaEvento.Esterna ? "primary" : "secondary")">
-                                    @task.Tipologia
+                                <span class="badge bg-@(task.Tipologia == TipologiaEvento.Esterno ? "primary" : "secondary")">
+                                    @(task.Tipologia == TipologiaEvento.Esterno ? "Esterno" : "Interno")
                                 </span>
                             </td>
                             <td>
-                                @{
-                                    var prioritaClass = task.Priorità switch
-                                    {
-                                        PrioritaEvento.Alta => "danger",
-                                        PrioritaEvento.Media => "warning",
-                                        _ => "light"
-                                    };
-                                }
                                 <span class="badge text-bg-@prioritaClass fw-semibold">
                                     @task.Priorità
                                 </span>
                             </td>
                             <td>
-                                @task.Scadenza.ToString()
+                                @task.Scadenza?.ToString("dd/MM/yyyy")
                             </td>
                         </tr>
                     }
