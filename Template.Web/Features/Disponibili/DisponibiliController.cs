@@ -3,70 +3,73 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Template.Web.Areas;
-using Template.Web.Features.Task;
 using Template.Web.Infrastructure;
-using Template.Services;
-using System.Linq;
 using Template.Services.Shared;
 
 namespace Template.Web.Features.Disponibili
 {
-    
     public partial class DisponibiliController : AuthenticatedBaseController
     {
-        private readonly TemplateDbContext _dbContext;
+        private readonly SharedService _sharedService;
 
-        public DisponibiliController(TemplateDbContext dbContext)
+        public DisponibiliController(SharedService sharedService)
         {
-            _dbContext = dbContext;
+            _sharedService = sharedService;
         }
 
         [HttpGet]
         public virtual async Task<IActionResult> Disponibili()
         {
-            var tasks = await GetAvailableTasksAsync();
+            // 1. Carica i task "InAttesa" dal servizio
+            var tasks = await _sharedService.GetAvailableTasksAsync();
 
-            var list = new List<DisponibiliViewModel>();
-
-            foreach (var t in tasks)
-            {
-                Enum.TryParse(t.Tipologia, true, out TipologiaEvento tipologia);
-                Enum.TryParse(t.Priorità, true, out PrioritaEvento priorita);
-
-                list.Add(new DisponibiliViewModel
+            // 2. Mappa sui ViewModel
+            var list = tasks
+                .Select(t =>
                 {
-                    Id = t.Id, // ✅ ID reale del task dal DB
-                    Titolo = t.Titolo,
-                    Descrizione = t.Descrizione,
-                    Tipologia = tipologia,
-                    Priorità = priorita,
-                    Scadenza = t.DataScadenza
-                });
-
-            }
+                    Enum.TryParse(t.Tipologia, true, out TipologiaEvento tipologia);
+                    Enum.TryParse(t.Priorità, true, out PrioritaEvento priorita);
+                    return new DisponibiliViewModel
+                    {
+                        Id = t.Id,
+                        Titolo = t.Titolo,
+                        Descrizione = t.Descrizione,
+                        Tipologia = tipologia,
+                        Priorità = priorita,
+                        Scadenza = t.DataScadenza
+                    };
+                })
+                .ToList();
 
             return View(list);
         }
 
-        private async Task<IEnumerable<GetAvailableTasksQuery>> GetAvailableTasksAsync()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> PrendiInCarico(Guid taskId)
         {
-            return await _dbContext.Tasks
-                .Where(t => t.Stato == "InAttesa")
-                .Select(t => new GetAvailableTasksQuery
-                {
-                    Id = t.Id,
-                    Titolo = t.Titolo,
-                    Priorità = t.Priorità.ToString(),
-                    Stato = t.Stato,
-                    Tipologia = t.Tipologia,
-                    Descrizione = t.Descrizione,
-                    DataScadenza = t.DataScadenza,
-                    IdCreatore = t.IdCreatore,
-                    DataCreazione = t.DataCreazione
-                })
-                .ToListAsync();
+            // Prende l'utente corrente
+            var userId = Identita.IdUtenteCorrente;
+            Console.WriteLine($"Assegnatario: {Identita.IdUtenteCorrente}");
+
+
+            if (userId == Guid.Empty)
+            {
+                return BadRequest("Utente corrente non valido.");
+            }
+
+            // Esegue il comando lato backend
+            var message = await _sharedService.Handle(new PresaInCaricoTask
+            {
+                TaskId = taskId,
+                IdAssegnatario = userId
+            });
+
+            TempData["Success"] = message;
+            return RedirectToAction(nameof(Disponibili));
         }
     }
 }
