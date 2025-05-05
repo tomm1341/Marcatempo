@@ -21,6 +21,8 @@ namespace Template.Services.Shared
 
     public class GetAvailableTasksQuery
     {
+        public Guid Id { get; set; }
+
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Stato { get; set; }
@@ -82,6 +84,7 @@ namespace Template.Services.Shared
                 .Where(t => t.Stato == "InAttesa")
                 .Select(t => new GetAvailableTasksQuery
                 {
+                    Id = t.Id,
                     Titolo = t.Titolo,
                     Priorità = t.Priorità.ToString(),
                     Stato = t.Stato,
