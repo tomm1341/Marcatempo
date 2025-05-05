@@ -1,9 +1,7 @@
-﻿@model Template.Web.Features.Task.TaskViewModel
+﻿@model Template.Services.Shared.CreateTaskCommand
 
 @{
-    ViewData["Title"] = Model.Id != null
-        ? "Modifica Task - " + Model.Titolo
-        : "Creazione Nuovo Task";
+    ViewData["Title"] = "Creazione Nuovo Task";
 }
 
 @section pageTitle {
@@ -11,23 +9,6 @@
         <div class="navbar-brand text-truncate">
             @ViewData["Title"]
         </div>
-        @if (Model.Id != null)
-        {
-            <div class="dropdown ms-auto">
-                <button class="btn btn-light ms-2" type="button" id="dropdownMenuAzioni" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Altre azioni">
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuAzioni">
-                    <h6 class="dropdown-header">Azioni</h6>
-                    <button class="dropdown-item text-danger" type="button" onclick="document.getElementById('delete-form').submit();">
-                        <i class="fa-solid fa-trash"></i>&nbsp;Elimina
-                    </button>
-                    <form hidden autocomplete="off" id="delete-form" method="post" action="@Url.Action("Delete", "Task", new { area = "Features", id = Model.Id })">
-                        <input type="hidden" asp-for="Id" />
-                    </form>
-                </div>
-            </div>
-        }
     </nav>
 }
 
@@ -35,62 +16,57 @@
     <div class="container-lg">
         <div class="row justify-content-center">
             <div class="col-12 col-md-6 col-lg-8" style="margin: 0 auto;">
-                <form autocomplete="off" method="post" class="onit-form-sm" action="@Url.Action("Edit", "Task", new { area = "Features", id = Model.Id })" id="edit-form">
+                <form method="post" action="@Url.Action("Create", "Task", new { area = "Features" })" class="onit-form-sm" id="create-form">
+
                     <input id="edit-form-submitter" class="d-none" type="submit" />
+
                     <fieldset class="pb-3">
                         <legend class="info mt-4 mb-4">Dati del Task</legend>
 
                         <!-- Titolo -->
                         <div class="form-group mb-3">
                             <label for="Titolo">Titolo</label>
-                            <input v-model="task.Titolo" class="form-control form-control-sm" id="Titolo" />
+                            <input name="Titolo" v-model="task.Titolo" class="form-control form-control-sm" id="Titolo" />
                         </div>
 
                         <!-- Priorità -->
                         <div class="form-group mb-3">
                             <label for="Priorità">Priorità</label>
-                            <select v-model="task.Priorità" class="form-control form-control-sm" id="Priorità">
-                                <option value="Alta">Alta</option>
-                                <option value="Media">Media</option>
-                                <option value="Bassa">Bassa</option>
+                            <select name="Priorità" v-model="task.Priorità" class="form-control form-control-sm" id="Priorità">
+                                <option value="2">Alta</option>
+                                <option value="1">Media</option>
+                                <option value="0">Bassa</option>
                             </select>
                         </div>
 
                         <!-- Tipologia -->
                         <div class="form-group mb-3">
                             <label for="Tipologia">Tipologia</label>
-                            <select v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia">
-                                <option value="Interna">Interno</option>
-                                <option value="Esterna">Esterno</option>
+                            <select name="Tipologia" v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia">
+                                <option value="Interno">Interno</option>
+                                <option value="Esterno">Esterno</option>
                             </select>
                         </div>
 
                         <!-- Stato -->
                         <div class="form-group mb-3">
                             <label for="Stato">Stato</label>
-                            <select v-model="task.Stato" class="form-control form-control-sm" id="Stato">
+                            <select name="Stato" v-model="task.Stato" class="form-control form-control-sm" id="Stato">
                                 <option value="InAttesa">In Attesa</option>
-                                
                             </select>
                         </div>
 
                         <!-- Data di Scadenza -->
                         <div class="form-group mb-3">
                             <label for="DataScadenza">Data di Scadenza</label>
-                            <input v-model="task.DataScadenza"
-                                   :min="task.DataCreazione"
-                                   type="date"
-                                   class="form-control form-control-sm"
-                                   id="DataScadenza" />
+                            <input name="DataScadenza" v-model="task.DataScadenza" type="date" class="form-control form-control-sm" id="DataScadenza" />
                         </div>
 
                         <!-- Descrizione -->
                         <div class="form-group mb-3">
                             <label for="Descrizione">Descrizione</label>
-                            <textarea v-model="task.Descrizione" class="form-control form-control-sm" id="Descrizione" rows="4"></textarea>
+                            <textarea name="Descrizione" v-model="task.Descrizione" class="form-control form-control-sm" id="Descrizione" rows="4"></textarea>
                         </div>
-
-                       
 
                         <!-- Pulsante Salva -->
                         <div class="text-right mt-3">
@@ -99,22 +75,9 @@
                                 <span class="d-none d-sm-inline"><i class="fa-solid fa-floppy-disk"></i>&nbsp;Salva</span>
                             </button>
                         </div>
-
                     </fieldset>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <div class="text-center">
-        <div id="lostConnection" class="d-none text-white">
-            <h3>Connessione persa</h3>
-            <p><i class="fa fa-circle-o-notch fa-spin"></i>&nbsp;Tentativo di riconnessione...</p>
-        </div>
-        <div id="lostConnectionManualRetry" class="d-none text-white">
-            <h3>Impossibile riconnettersi</h3>
-            <p>Ricarica la pagina manualmente</p>
-            <button class="btn btn-primary" onclick="location.reload(true)"><i class="fa fa-refresh"></i>&nbsp;Ricarica</button>
         </div>
     </div>
 </div>
@@ -145,7 +108,7 @@
                     this.formSubmitted = true;
                     this.dateError = false;
 
-                    const creazione = new Date(this.task.DataCreazione);
+                    const creazione = new Date();
                     const scadenza = new Date(this.task.DataScadenza);
 
                     if (creazione > scadenza) {
@@ -153,7 +116,7 @@
                         return;
                     }
 
-                    if (this.task.Titolo && this.task.Priorità && this.task.Tipologia && this.task.Stato && this.task.Descrizione && this.task.DataScadenza && !this.dateError) {
+                    if (this.task.Titolo && this.task.Priorità !== null && this.task.Tipologia && this.task.Stato && this.task.Descrizione && this.task.DataScadenza && !this.dateError) {
                         document.getElementById('edit-form-submitter').click();
                     }
                 }

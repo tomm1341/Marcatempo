@@ -5,107 +5,54 @@ using System;
 using System.Threading.Tasks;
 using Template.Services.Shared;
 using Template.Web.Infrastructure;
-using Template.Web.SignalR;
-using Template.Web.SignalR.Hubs.Events;
-using Template.Web.Features.Task;
 using Template.Web.Areas;
 
 namespace Template.Web.Features.Task
-
 {
     [Authorize(Roles = "ResponsabileInterno,ResponsabileEsterno")]
     public partial class TaskController : AuthenticatedBaseController
     {
         private readonly SharedService _sharedService;
-        private readonly IPublishDomainEvents _publisher;
         private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
 
-        public TaskController(SharedService sharedService, IPublishDomainEvents publisher, IStringLocalizer<SharedResource> sharedLocalizer)
+        public TaskController(SharedService sharedService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             _sharedService = sharedService;
-            _publisher = publisher;
             _sharedLocalizer = sharedLocalizer;
 
-            ModelUnbinderHelpers.ModelUnbinders.Add(typeof(TaskViewModel), new SimplePropertyModelUnbinder());
+            ModelUnbinderHelpers.ModelUnbinders.Add(typeof(CreateTaskCommand), new SimplePropertyModelUnbinder());
         }
 
         [HttpGet]
-        public virtual async Task<IActionResult> Task(TaskViewModel model)
+        public virtual IActionResult Task()
         {
-
-            return View(model);
+            return View(new CreateTaskCommand
+            {
+                Stato = "InAttesa"
+            });
         }
 
-
-        [HttpGet]
-        public virtual IActionResult New()
-        {
-            return RedirectToAction(Actions.Edit());
-        }
-
-        [HttpGet]
-        public virtual async Task<IActionResult> Edit(Guid? id)
-        {
-            var model = new TaskViewModel();
-
-            //if (id.HasValue)
-            //{
-            //    model.SetTask(await _sharedService.Query(new TaskDetailQuery
-            //    {
-            //        Id = id.Value,
-            //    }));
-            //}
-
-            return View(model);
-        }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Edit(TaskViewModel model)
+        public virtual async Task<IActionResult> Create(CreateTaskCommand command)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        model.Id = await _sharedService.Handle(model.ToAddOrUpdateTaskCommand());
+            if (!ModelState.IsValid)
+                return View("Task", command);
 
-            //        Alerts.AddSuccess(this, "Task salvato correttamente");
+            try
+            {
+                command.Id = Guid.NewGuid();
+                command.Stato = "InAttesa"; // assicurati che venga mostrato in Disponibili
 
-            //        await _publisher.Publish(new NewMessageEvent
-            //        {
-            //            IdGroup = model.Id.Value,
-            //            IdUser = CurrentUserId, // metodo dal base controller
-            //            IdMessage = Guid.NewGuid()
-            //        });
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        ModelState.AddModelError(string.Empty, e.Message);
-            //    }
-            //}
+                await _sharedService.Handle(command, CurrentUserId);
 
-            //if (!ModelState.IsValid)
-            //{
-            //    Alerts.AddError(this, "Errore nel salvataggio");
-            //}
-
-            return RedirectToAction(Actions.Edit(model.Id));
-        }
-
-        [HttpPost]
-        public virtual async Task<IActionResult> Delete(Guid id)
-        {
-            //var task = await _sharedService.Query(new TaskDetailQuery { Id = id });
-
-            //if (task.IdCreatore != CurrentUserId)
-            //{
-            //    return Unauthorized();
-            //}
-
-            //await _sharedService.Handle(new DeleteTaskCommand { Id = id });
-
-            //Alerts.AddSuccess(this, "Task eliminato");
-
-            return RedirectToAction(result: Actions.Task());
+                return RedirectToAction("Disponibili", "Disponibili");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View("Task", command);
+            }
         }
     }
 }
