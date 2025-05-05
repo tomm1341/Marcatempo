@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Template.Infrastructure;
 using Template.Services;
 using Template.Web.Infrastructure;
 using Template.Web.SignalR.Hubs;
@@ -106,6 +107,13 @@ namespace Template.Web
             var compositeFp = new CustomCompositeFileProvider(env.WebRootFileProvider, node_modules, areas);
             env.WebRootFileProvider = compositeFp;
             app.UseStaticFiles();
+
+            // Inizializza i dati in memoria
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<TemplateDbContext>();
+                DataGenerator.InitializeTasks(context); // ✅ Chiama il tuo seed
+            }
 
             app.UseEndpoints(endpoints =>
             {
