@@ -18,7 +18,11 @@ namespace Template.Web.Areas
     {
         public AuthenticatedBaseController() { }
 
-        //protected Guid CurrentUserId => Identita?.IdUtenteCorrente ?? Guid.Empty;
+        protected Guid CurrentUserId =>
+     Identita?.IdUtenteCorrente != Guid.Empty
+         ? Identita.IdUtenteCorrente
+         : throw new UnauthorizedAccessException("Utente non autenticato.");
+
 
 
         protected IdentitaViewModel Identita
