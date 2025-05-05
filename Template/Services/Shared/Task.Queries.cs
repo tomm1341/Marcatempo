@@ -22,11 +22,13 @@ namespace Template.Services.Shared
     public class GetAvailableTasksQuery
     {
         public Guid Id { get; set; }
+        public Guid IdCreatore { get; set; }
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Stato { get; set; }
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
+        public DateTime DataCreazione { get; set; }  
         public DateTime DataScadenza { get; set; }
 
     }
