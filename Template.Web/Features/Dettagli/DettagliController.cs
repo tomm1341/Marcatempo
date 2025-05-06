@@ -19,9 +19,10 @@ namespace Template.Web.Features.Dettagli
         private readonly TemplateDbContext _dbContext;
         private readonly SharedService _sharedService;
 
-        public DettagliController(TemplateDbContext dbContext)
+        public DettagliController(TemplateDbContext dbContext, SharedService sharedService)
         {
             _dbContext = dbContext;
+            _sharedService = sharedService;
         }
             [HttpGet]
             public async virtual Task<IActionResult> Details(Guid id)
