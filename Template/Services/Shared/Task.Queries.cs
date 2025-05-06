@@ -51,9 +51,14 @@ namespace Template.Services.Shared
     public class AssignedTaskDTO
     {
         public Guid Id { get; set; }
-        public string Descrizione { get; set; }
-        public DateTime Scadenza { get; set; }
+        public Guid IdCreatore { get; set; }
+        public string Titolo { get; set; }
+        public string Tipologia { get; set; }
         public string Stato { get; set; }
+        public string Priorità { get; set; }
+        public string Descrizione { get; set; }
+        public DateTime DataCreazione { get; set; }
+        public DateTime DataScadenza { get; set; }
     }
 
     public class TaskDetailQuery
@@ -138,9 +143,14 @@ namespace Template.Services.Shared
                     .Select(t => new AssignedTaskDTO
                     {
                         Id = t.Id,
+                        IdCreatore = t.IdCreatore,
+                        Titolo = t.Titolo,
+                        Stato = t.Stato,
+                        Tipologia = t.Tipologia,
                         Descrizione = t.Descrizione,
-                        Scadenza = t.DataScadenza,
-                        Stato = t.Stato
+                        Priorità = t.Priorità,
+                        DataCreazione = t.DataCreazione,
+                        DataScadenza = t.DataScadenza
                     })
                     .ToListAsync();
             
