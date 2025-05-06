@@ -1,8 +1,6 @@
 ﻿@model Template.Web.Features.Dettagli.DettagliViewModel
 
-@{
-    ViewData["Title"] = "Dettagli Task";
-
+@functions {
     string GetStatoBadgeClass(string stato) => stato switch
     {
         "In Lavorazione" => "bg-warning text-dark",
@@ -26,65 +24,86 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <!-- Header con Titolo e Stato -->
+            <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="card-title">@Model.Titolo</h1>
+                @if (Model.IsOwner)
+                {
+                    <input asp-for="Titolo" class="form-control form-control-lg fw-bold" />
+                }
+                else
+                {
+                    <h1 class="card-title">@Model.Titolo</h1>
+                }
                 <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">
                     @Model.Stato
                 </span>
             </div>
 
-            <div class="row">
-                <!-- Colonna sinistra: Priorità e Scadenza -->
-                <div class="col-md-4 mb-4">
-                    <div class="mb-3">
-                        <h6 class="text-uppercase text-muted small">Priorità</h6>
+            <form asp-action="SaveDetails" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="TaskId" />
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label small text-muted">Priorità</label>
                         <div class="@GetPrioritaBadgeClass(Model.Priorità)">
                             @Model.Priorità
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <h6 class="text-uppercase text-muted small">Scadenza</h6>
+
+                        <label class="form-label small text-muted mt-3">Scadenza</label>
                         <div class="bg-dark text-white px-3 py-2 rounded">
                             @Model.Scadenza.ToString("dd/MM/yyyy")
                         </div>
-                    </div>
-                    <div>
-                        <h6 class="text-uppercase text-muted small">Creato il</h6>
+
+                        <label class="form-label small text-muted mt-3">Creato il</label>
                         <div class="text-secondary">
                             @Model.Creazione.ToString("dd/MM/yyyy HH:mm")
                         </div>
-                    </div>
-                </div>
 
-                <!-- Colonna destra: Descrizione e Assegnatario -->
-                <div class="col-md-8">
-                    <div class="mb-4 p-3 bg-light border rounded">
-                        <h6 class="text-uppercase text-muted small">Descrizione</h6>
-                        <p class="mt-2 mb-0">@Model.Descrizione</p>
+                        <label class="form-label small text-muted mt-3">Creatore</label>
+                        <div class="text-secondary">
+                            @Model.NomeCreatore
+                        </div>
+
+                        <label class="form-label small text-muted mt-3">Tipologia</label>
+                        <div class="text-secondary">
+                            @Model.Tipologia
+                        </div>
                     </div>
 
-                    <div>
-                        <h6 class="text-uppercase text-muted small">Dipendente incaricato</h6>
-                        @if (Model.IdAssegnatario.HasValue)
+                    <div class="col-md-8">
+                        <label class="form-label small text-muted">Descrizione</label>
+                        @if (Model.IsOwner)
                         {
-                            <!-- Qui potresti mostrare nome/cognome se li hai nel ViewModel -->
-                            <p class="mb-0">@Model.IdAssegnatario</p>
+                            <textarea asp-for="Descrizione" class="form-control" rows="5"></textarea>
                         }
                         else
                         {
-                            <p class="text-muted fst-italic">Nessun assegnatario</p>
+                            <p>@Model.Descrizione</p>
+                        }
+
+                        @if (Model.IsOwner)
+                        {
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-save me-1"></i> Salva modifiche
+                                </button>
+                                <button formaction="@Url.Action("ChangeStatus", "Dettagli", new { id = Model.TaskId, stato = "Completato" })"
+                                        class="btn btn-primary ms-2">
+                                    <i class="bi bi-check-circle me-1"></i> Completa Task
+                                </button>
+                            </div>
                         }
                     </div>
                 </div>
-            </div>
+            </form>
 
-            <!-- Pulsante indietro -->
             <div class="mt-4">
                 <a asp-action="Disponibili" asp-controller="Disponibili" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i> Torna a Task Disponibili
+                    <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
             </div>
+
         </div>
     </div>
 </div>
