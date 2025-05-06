@@ -42,7 +42,7 @@ namespace Template.Web.Features.Task
             try
             {
                 command.Id = Guid.NewGuid();
-                command.Stato = "InAttesa"; // assicurati che venga mostrato in Disponibili
+                command.Stato = "InAttesa"; 
 
                 await _sharedService.Handle(command, CurrentUserId);
 
