@@ -1,16 +1,7 @@
 ﻿@model Template.Services.Shared.CreateTaskCommand
+@inject Template.Services.Shared.SharedService SharedService
 
-@{
-    ViewData["Title"] = "Creazione Nuovo Task";
-}
 
-@section pageTitle {
-    <nav class="navbar navbar-expand navbar-light flex-wrap ms-3">
-        <div class="navbar-brand text-truncate">
-            @ViewData["Title"]
-        </div>
-    </nav>
-}
 
 <div id="task-form">
     <div class="container-lg">
@@ -21,7 +12,7 @@
                     <input id="edit-form-submitter" class="d-none" type="submit" />
 
                     <fieldset class="pb-3">
-                        <legend class="info mt-4 mb-4">Dati del Task</legend>
+                        <legend class="info mt-4 mb-4">Crea Task</legend>
 
                         <!-- Titolo -->
                         <div class="form-group mb-3">
