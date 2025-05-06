@@ -61,7 +61,7 @@ namespace Template.Infrastructure
                 },
                 new User
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), // ID: 466cd207-e0dd-4206-9bda-fba2eb7f2a17
                     Email = "fhallede4@themeforest.net",
                     Password = "M0Cuk9OsrcS/rTLGf5SY6DUPqU2rGc1wwV2IL88GVGo=", // SHA-256 of text "Prova"
                     Nome = "Franzen",
@@ -90,7 +90,7 @@ namespace Template.Infrastructure
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.Parse("b3a42cfa-5f32-47e3-b6a4-1d9c4e6a1234"),
+                    IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Bassa",
                     Stato = "InAttesa",
@@ -103,7 +103,7 @@ namespace Template.Infrastructure
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.Parse("a1f9e8b7-91f0-4f3a-9c3a-99f4e2a1b567"),
+                    IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Media",
                     Stato = "InAttesa",
@@ -116,7 +116,7 @@ namespace Template.Infrastructure
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.Parse("bb2e5d4a-33a3-4db2-8576-1ab4f5d09123"),
+                    IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Alta",
                     Stato = "InAttesa",
@@ -129,10 +129,10 @@ namespace Template.Infrastructure
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.Parse("ccdfcce7-934f-4ea1-9ba4-8b7c7b6c5678"),
-                    IdAssegnatario = Guid.Parse("d3e55c00-3456-4a93-b643-9ddc4fa0efab"),
+                    IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
+                    IdAssegnatario = null,
                     Priorità = "Media",
-                    Stato = "InLavorazione",
+                    Stato = "InAttesa",
                     Titolo = "Preparare presentazione per il cliente",
                     Tipologia = "Esterno",
                     Descrizione = "Creare slide PowerPoint per illustrare le funzionalità del nuovo prodotto.",
@@ -142,8 +142,8 @@ namespace Template.Infrastructure
                 new Task
                 {
                     Id = Guid.NewGuid(),
-                    IdCreatore = Guid.Parse("f7bb8c1e-8a17-4a0b-b1b5-9d2b0b1e2345"),
-                    IdAssegnatario = Guid.Parse("a8c1a8e3-1234-4567-b3bb-98765e4f1234"),
+                    IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
+                    IdAssegnatario = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     Priorità = "Bassa",
                     Stato = "Completato",
                     Titolo = "Verifica backup mensile",
