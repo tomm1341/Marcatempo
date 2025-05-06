@@ -27,9 +27,9 @@ namespace Template.Web.Features.Login
             _sharedLocalizer = sharedLocalizer;
         }
 
-        private ActionResult LoginAndRedirect(UserDetailDTO utente, string returnUrl, bool rememberMe)
+        private async Task<ActionResult> LoginAndRedirect(UserDetailDTO utente, string returnUrl, bool rememberMe)
         {
-            // Creazione dei claims
+            // Creating claims
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, utente.Id.ToString()),
@@ -40,26 +40,33 @@ namespace Template.Web.Features.Login
                 new Claim(ClaimTypes.Role, utente.Ruolo)
             };
 
-            // Debug: stampa dei claims in console per il controllo
-            foreach (var claim in claims)
-            {
-                Console.WriteLine($"Claim: {claim.Type} - {claim.Value}");
-            }
+            // (facoltativo) Debug dei claim
+            // _logger.LogInformation("Claims user: {@claims}", claims);
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
 
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties
-            {
-                ExpiresUtc = (rememberMe) ? DateTimeOffset.UtcNow.AddMonths(3) : null,
-                IsPersistent = rememberMe,
-            });
+            var principal = new ClaimsPrincipal(identity);
 
-            // Se c'è un returnUrl valido, redirigi, altrimenti alla AreaPersonale
-            if (string.IsNullOrWhiteSpace(returnUrl) == false)
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    ExpiresUtc = rememberMe
+                        ? DateTimeOffset.UtcNow.AddMonths(3)
+                        : (DateTimeOffset?)null,
+                    IsPersistent = rememberMe,
+                });
+
+            // Redirect
+            if (!string.IsNullOrWhiteSpace(returnUrl))
                 return Redirect(returnUrl);
 
             return RedirectToAction("AreaPersonale", "AreaPersonale");
         }
+
 
         [HttpGet]
         public virtual IActionResult Login(string returnUrl)
@@ -95,7 +102,7 @@ namespace Template.Web.Features.Login
                     });
 
                     // Se l'utente è valido esegue il login e reindirizza
-                    return LoginAndRedirect(utente, model.ReturnUrl, model.RememberMe);
+                    return await LoginAndRedirect(utente, model.ReturnUrl, model.RememberMe);
                 }
                 catch (LoginException e)
                 {
