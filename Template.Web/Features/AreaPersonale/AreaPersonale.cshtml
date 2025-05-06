@@ -72,18 +72,24 @@
         {
             <div class="col-12 mb-3">
                 <div class="d-flex flex-column flex-md-row align-items-md-center p-3 border rounded bg-white shadow-sm">
-                    <div class="flex-grow-1 mb-2 mb-md-0">@task.Descrizione</div>
-                    <div class="px-3 py-2 bg-dark text-white rounded me-md-2">@task.Scadenza.ToString("dd/MM/yyyy")</div>
+
+                    <div class="flex-grow-1 mb-2 mb-md-0">
+                        <strong>@task.Descrizione</strong>
+                    </div>
+
+                    <div class="px-3 py-2 bg-@task.StatoColore text-white rounded me-md-2">
+                        @task.DataScadenza.ToString("dd/MM/yyyy")
+                    </div>
+
                     <div class="me-md-2"><i class="bi bi-info-circle"></i></div>
-                    <div class="me-md-2" style="width: 20px; height: 20px; border-radius: 50%; background-color: @task.StatoColore;"></div>
-                    <button class="btn btn-primary btn-sm">Completa</button>
+
+                    <button class="btn btn-primary btn-sm"
+                            onclick="location.href='@Url.Action("Details", "Dettagli", new { id = task.Id })'">
+                        Completa
+                    </button>
                 </div>
             </div>
         }
-    </div>
-
-    <div class="my-4">
-        <a class="btn btn-dark" href="@Url.Action("Storico", "Storico")">Storico task</a>
     </div>
 
 

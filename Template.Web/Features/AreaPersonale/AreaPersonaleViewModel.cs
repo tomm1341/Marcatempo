@@ -5,9 +5,16 @@ namespace Template.Web.Features.AreaPersonale
 {
     public class TaskItemViewModel
     {
+        public Guid Id { get; set; }
+        public Guid IdCreatore { get; set; }
+        public string Titolo { get; set; }
+        public string Tipologia { get; set; }
+        public string Stato { get; set; }
+        public string Priorità { get; set; }
         public string Descrizione { get; set; }
-        public DateTime Scadenza { get; set; }
-        public string StatoColore { get; set; } // es. "green", "yellow", "gray"
+        public DateTime DataCreazione { get; set; }
+        public DateTime DataScadenza { get; set; }
+        public string StatoColore { get; set; } // bootstrap color: "warning", "success", ecc.
     }
 
     public class RendicontoGiornaliero
