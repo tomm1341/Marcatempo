@@ -81,5 +81,25 @@ namespace Template.Web.Features.AreaPersonale
                 "ResponsabileEsterno" => "Responsabile Esterno",
                 _ => role
             };
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async virtual Task<IActionResult> CompletaTask(Guid id)
+        {
+            // Ottieni l'ID utente corrente (opzionale, se vuoi loggare chi completa)
+            var userId = Identita.IdUtenteCorrente;
+
+            // Esegui il comando per cambiare stato
+            var newState = await _sharedService.Handle(new ChangeTaskStatusCommand
+            {
+                Id = id,
+                Stato = "Completato"
+            });
+
+            TempData["Success"] = $"Task {id} contrassegnato come '{newState}'.";
+
+            return RedirectToAction(nameof(AreaPersonale));
+        }
+
     }
 }
