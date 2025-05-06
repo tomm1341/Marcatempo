@@ -69,11 +69,13 @@ namespace Template.Services.Shared
     public class TaskDetailDTO
     {
         public Guid Id { get; set; }
+        public Guid IdCreatore { get; set; }
         public string Titolo { get; set; }
         public string Stato { get; set; }
         public string Tipologia { get; set; }
         public string Descrizione { get; set; }
         public string Priorità { get; set; }
+        public string NomeCreatore { get; set; }
         public DateTime DataCreazione { get; set; }
         public DateTime DataScadenza { get; set; }
         public Guid? IdAssegnatario { get; set; }
@@ -139,7 +141,7 @@ namespace Template.Services.Shared
             public async Task<IEnumerable<AssignedTaskDTO>> Query(AssignedTaskQuery qry)
             {
                 return await _dbContext.Tasks
-                    .Where(t => t.IdAssegnatario == qry.UserId)
+                    .Where(t => t.IdAssegnatario == qry.UserId && t.Stato == "InLavorazione")
                     .Select(t => new AssignedTaskDTO
                     {
                         Id = t.Id,
@@ -162,6 +164,7 @@ namespace Template.Services.Shared
                 .Select(x => new TaskDetailDTO
                 {
                     Id = x.Id,
+                    IdCreatore = x.IdCreatore,
                     Titolo = x.Titolo,
                     Stato = x.Stato,
                     Tipologia = x.Tipologia,
@@ -169,7 +172,11 @@ namespace Template.Services.Shared
                     Priorità = x.Priorità,
                     DataCreazione = x.DataCreazione,
                     DataScadenza = x.DataScadenza,
-                    IdAssegnatario = x.IdAssegnatario
+                    IdAssegnatario = x.IdAssegnatario,
+                    NomeCreatore = _dbContext.Users
+                                    .Where(u => u.Id == x.IdCreatore)
+                                    .Select(u => u.Nome + " " + u.Cognome)
+                                    .FirstOrDefault()
                 })
                 .FirstOrDefaultAsync();
 
