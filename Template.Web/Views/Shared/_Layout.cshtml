@@ -4,10 +4,18 @@
     Layout = "_LayoutHtml";
     var version = System.Reflection.Assembly.GetAssembly(typeof(Startup)).GetName().Version;
     var identitaCorrente = (Template.Web.Areas.IdentitaViewModel)ViewData[Template.Web.Areas.IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY];
+
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    var isVisiblePage = (controller?.Equals("Task", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Task", StringComparison.OrdinalIgnoreCase) == true)
+                     || (controller?.Equals("Dettagli", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Dettagli", StringComparison.OrdinalIgnoreCase) == true)
+                     || (controller?.Equals("Storico", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Storico", StringComparison.OrdinalIgnoreCase) == true)
+                     || (controller?.Equals("Disponibili", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Disponibili", StringComparison.OrdinalIgnoreCase) == true);
+
+    var showBackButton = isVisiblePage
+                      && !(controller?.Equals("Login", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Login", StringComparison.OrdinalIgnoreCase) == true)
+                      && !(controller?.Equals("AreaPersonale", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("AreaPersonale", StringComparison.OrdinalIgnoreCase) == true);
 }
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 
 @section metas {
     @RenderSection("metas", false)
@@ -19,30 +27,24 @@
 
 <div id="pageId" class="onit-page mx-5 mt-3">
     <div class="onit-page-sticky-top" id="onit-page-sticky-top">
-        <nav class="navbar navbar-expand-lg navbar-dark onit-page-menu">
+        <nav class="navbar navbar-expand-lg navbar-dark onit-page-menu px-3 px-lg-4">
             <div class="container-fluid">
-                <!-- Logo -->
-                <a class="navbar-brand" href="/">
-                    <img class="onit-suites-logo" src="~/images/app-logo.png" />
-                </a>
+                <div class="d-flex align-items-center justify-content-between w-100">
+                    <!-- Logo -->
+                    <a class="navbar-brand me-3" href="/">
+                        <img class="onit-suites-logo" src="~/images/app-logo.png" alt="Logo" />
+                    </a>
 
-                <!-- Toggler -->
-                <button class="navbar-toggler navbar-toggler-dark ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa-solid fa-bars text-black"></i>
-                </button>
+                    <!-- Toggler -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa-solid fa-bars fs-3 text-dark"></i>
+                    </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </div>
 
-                    <!-- DESKTOP MENU -->
-                    <ul class="navbar-nav mx-auto d-none d-lg-flex">
-                        
-                    </ul>
-
-                    <!-- MOBILE MENU -->
-                    <ul class="navbar-nav w-50 d-lg-none mt-5">
-                        
-                    </ul>
-
+                <!-- Collapse content -->
+                <div class="collapse navbar-collapse mt-2" id="navbarSupportedContent">
                     <!-- USER SECTION -->
                     <ul class="navbar-nav ms-auto onit-page-menu-user">
                         @if (identitaCorrente != null)
@@ -60,9 +62,9 @@
                                 </div>
                             </li>
 
-                            <!-- Mobile: pulsante uniforme -->
-                            <li class="nav-item d-lg-none w-50">
-                                <a class="btn btn-sm btn-dark w-50 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
+                            <!-- Mobile logout -->
+                            <li class="nav-item d-lg-none w-100">
+                                <a class="btn btn-sm btn-dark w-100 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
                                     <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
                                 </a>
                             </li>
@@ -71,6 +73,16 @@
                 </div>
             </div>
         </nav>
+
+        <!-- Pulsante sotto il logo -->
+        @if (showBackButton)
+        {
+            <div class="px-3 px-lg-4 pt-2 pb-2">
+                <a class="btn btn-outline-dark" href="@Url.Action("AreaPersonale", "AreaPersonale")">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Torna all'Area Personale
+                </a>
+            </div>
+        }
 
         @RenderSection("pageTitle", false)
     </div>
@@ -86,6 +98,24 @@
 @section scripts {
     <script type="text/javascript">
         @this.RenderAlertsWithToastify()
+
+        // Chiude il menu mobile al click su qualsiasi link o bottone
+        document.addEventListener('DOMContentLoaded', function () {
+            const navbarCollapse = document.getElementById('navbarSupportedContent');
+            const navLinks = navbarCollapse.querySelectorAll('a, button');
+
+            navLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (window.innerWidth < 992) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                        if (bsCollapse) {
+                            bsCollapse.hide();
+                        }
+                    }
+                });
+            });
+        });
     </script>
+
     @RenderSection("scripts", false)
 }
