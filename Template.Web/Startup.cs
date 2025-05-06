@@ -121,8 +121,8 @@ namespace Template.Web
 
                 //  ROUTE PRINCIPALE
                 endpoints.MapControllerRoute(
-                    name: "Task",
-                    pattern: "{controller=Task}/{action=Task}/{id?}");
+                    name: "AreaPersonale",
+                    pattern: "{controller=AreaPersonale}/{action=AreaPersonale}/{id?}");
 
                 //  Altre rotte
                 endpoints.MapControllerRoute("Storico", "{controller=Storico}/{action=Storico}");
