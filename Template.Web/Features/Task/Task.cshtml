@@ -5,25 +5,24 @@
 
 <div id="task-form">
     <div class="container-lg">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center ">
             <div class="col-12 col-md-6 col-lg-8" style="margin: 0 auto;">
-                <form method="post" action="@Url.Action("Create", "Task", new { area = "Features" })" class="onit-form-sm" id="create-form">
-
+                <form method="post" action="@Url.Action("Create", "Task", new { area = "Features" })" class="onit-form-sm border rounded p-4 bg-light" id="create-form">
                     <input id="edit-form-submitter" class="d-none" type="submit" />
-
                     <fieldset class="pb-3">
                         <legend class="info mt-4 mb-4">Crea Task</legend>
 
                         <!-- Titolo -->
                         <div class="form-group mb-3">
                             <label for="Titolo">Titolo</label>
-                            <input name="Titolo" v-model="task.Titolo" class="form-control form-control-sm" id="Titolo" />
+                            <input name="Titolo" v-model="task.Titolo" class="form-control form-control-sm" id="Titolo" required />
                         </div>
 
                         <!-- Priorità -->
                         <div class="form-group mb-3">
                             <label for="Priorità">Priorità</label>
-                            <select name="Priorità" v-model="task.Priorità" class="form-control form-control-sm" id="Priorità">
+                            <select name="Priorità" v-model="task.Priorità" class="form-control form-control-sm" id="Priorità" required>
+                                <option value="">Seleziona</option>
                                 <option value="2">Alta</option>
                                 <option value="1">Media</option>
                                 <option value="0">Bassa</option>
@@ -33,7 +32,8 @@
                         <!-- Tipologia -->
                         <div class="form-group mb-3">
                             <label for="Tipologia">Tipologia</label>
-                            <select name="Tipologia" v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia">
+                            <select name="Tipologia" v-model="task.Tipologia" class="form-control form-control-sm" id="Tipologia" required>
+                                <option value="">Seleziona</option>
                                 <option value="Interno">Interno</option>
                                 <option value="Esterno">Esterno</option>
                             </select>
@@ -42,7 +42,8 @@
                         <!-- Stato -->
                         <div class="form-group mb-3">
                             <label for="Stato">Stato</label>
-                            <select name="Stato" v-model="task.Stato" class="form-control form-control-sm" id="Stato">
+                            <select name="Stato" v-model="task.Stato" class="form-control form-control-sm" id="Stato" required>
+                                <option value="">Seleziona</option>
                                 <option value="InAttesa">In Attesa</option>
                             </select>
                         </div>
@@ -50,13 +51,13 @@
                         <!-- Data di Scadenza -->
                         <div class="form-group mb-3">
                             <label for="DataScadenza">Data di Scadenza</label>
-                            <input name="DataScadenza" v-model="task.DataScadenza" type="date" class="form-control form-control-sm" id="DataScadenza" />
+                            <input name="DataScadenza" v-model="task.DataScadenza" type="date" class="form-control form-control-sm" id="DataScadenza" required />
                         </div>
 
                         <!-- Descrizione -->
                         <div class="form-group mb-3">
                             <label for="Descrizione">Descrizione</label>
-                            <textarea name="Descrizione" v-model="task.Descrizione" class="form-control form-control-sm" id="Descrizione" rows="4"></textarea>
+                            <textarea name="Descrizione" v-model="task.Descrizione" class="form-control form-control-sm" id="Descrizione" rows="4" required></textarea>
                         </div>
 
                         <!-- Pulsante Salva -->
@@ -68,6 +69,8 @@
                         </div>
                     </fieldset>
                 </form>
+
+
             </div>
         </div>
     </div>
