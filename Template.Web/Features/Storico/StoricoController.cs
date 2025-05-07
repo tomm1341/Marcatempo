@@ -21,71 +21,28 @@ namespace Template.Web.Features.Storico
         }
 
         [HttpGet]
-        public async virtual Task<IActionResult> Storico()
+        public virtual async Task<IActionResult> Storico()
         {
-            //var userEmail = User.Identity.Name; // Get user email
+            var tasksCompletati = await _dbContext.Tasks
+                .Where(task => task.Stato == "Completato")
+                .Select(task => new StoricoViewModel
+                {
+                    Id = task.Id,
+                    Titolo = task.Titolo,
+                    Stato = task.Stato,
+                    Descrizione = task.Descrizione,
+                    Tipologia = task.Tipologia == "Interna" ? TipologiaEvento.Interna : TipologiaEvento.Esterna,
+                    Priorità = task.Priorità,
+                    DataScadenza = task.DataScadenza
+                })
+                .ToListAsync();
 
-            //if (string.IsNullOrEmpty(userEmail))
-            //{
-            //    Console.WriteLine("User.Identity.Name è null o vuoto");
-            //}
-            //else
-            //{
-            //    Console.WriteLine($"User.Identity.Name: {userEmail}");
-            //}
+            if (!tasksCompletati.Any())
+            {
+                return NotFound("Nessun task completato trovato.");
+            }
 
-            //var user = await _dbContext.Users
-            //    .Where(x => x.Email == userEmail)
-            //    .Select(x => x.Id)
-            //    .FirstOrDefaultAsync();
-
-            //if (user == null)
-            //{
-            //    return NotFound("Utente non trovato");
-            //}
-
-            //// Retrieves only the completed user task from history
-            //var allData = await _dbContext.Users
-            //    .Where(x => x.Email == userEmail)
-            //    .Select(x => new
-            //    {
-            //        x.Id,
-            //        x.Nome,
-            //        x.Role,
-            //        Events = x.Events
-            //            .Where(e => e.Stato == "Completato")  // Filter events where state is "Completato"
-            //            .Select(e => new
-            //            {
-            //                e.Descrizione,
-            //                e.Tipologia,                          
-            //                e.Stato
-            //            })
-            //            .ToList()
-            //    })
-            //    .ToListAsync();
-
-            //if (allData == null || !allData.Any())
-            //{
-            //    return NotFound("Nessun task completato trovato.");
-            //}
-
-            //// Create the template for the view
-            //var model = allData.Select(userData => new StoricoViewModel
-            //{
-            //    Nome = userData.Nome,               
-            //    Ruolo = userData.Role,
-            //    Email = userEmail,               
-            //    Events = userData.Events.Select(e => new Event
-            //    {
-            //        Tipologia = e.Tipologia,
-            //        Descrizione = e.Descrizione,
-            //        Stato = e.Stato
-            //    }).ToList()
-            //}).ToList();
-
-            List<StoricoViewModel> list = [new() { Descrizione = "Task 1", Tipologia = TipologiaEvento.Interna }, new() { Descrizione = "Task 2", Tipologia = TipologiaEvento.Esterna }];
-
-            return View(list);
+            return View(tasksCompletati);
         }
     }
 }

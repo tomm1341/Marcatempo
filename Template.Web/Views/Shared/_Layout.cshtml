@@ -25,13 +25,13 @@
     @RenderSection("styles", false)
 }
 
-<div id="pageId" class="onit-page mx-5 mt-3">
+<div id="pageId" class="onit-page px-3 sm:px-5 mt-3">
     <div class="onit-page-sticky-top" id="onit-page-sticky-top">
-        <nav class="navbar navbar-expand-lg navbar-dark onit-page-menu px-3 px-lg-4">
+        <nav class="navbar navbar-expand-lg navbar-dark onit-page-menu px-2 sm:px-4 lg:px-5">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between w-100">
                     <!-- Logo -->
-                    <a class="navbar-brand me-3" href="/">
+                    <a class="navbar-brand ms-1 sm:ms-3" href="/">
                         <img class="onit-suites-logo" src="~/images/app-logo.png" alt="Logo" />
                     </a>
 
@@ -40,7 +40,6 @@
                             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fa-solid fa-bars fs-3 text-dark"></i>
                     </button>
-
                 </div>
 
                 <!-- Collapse content -->
@@ -49,7 +48,7 @@
                     <ul class="navbar-nav ms-auto onit-page-menu-user">
                         @if (identitaCorrente != null)
                         {
-                            <!-- Desktop dropdown con immagine -->
+                            <!-- Desktop dropdown -->
                             <li class="nav-item dropdown d-none d-lg-block">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />
@@ -63,8 +62,8 @@
                             </li>
 
                             <!-- Mobile logout -->
-                            <li class="nav-item d-lg-none w-100">
-                                <a class="btn btn-sm btn-dark w-100 text-start my-1" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
+                            <li class="nav-item d-lg-none text-end w-100 my-2">
+                                <a class="btn btn-sm btn-dark" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
                                     <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
                                 </a>
                             </li>
@@ -77,7 +76,7 @@
         <!-- Pulsante sotto il logo -->
         @if (showBackButton)
         {
-            <div class="px-3 px-lg-4 pt-2 pb-2">
+            <div class="px-3 sm:px-5 pt-2 pb-2">
                 <a class="btn btn-outline-dark" href="@Url.Action("AreaPersonale", "AreaPersonale")">
                     <i class="fa-solid fa-arrow-left me-1"></i> Torna all'Area Personale
                 </a>
