@@ -14,10 +14,14 @@ namespace Template.Web.Features.Storico
 
     public class StoricoViewModel
     {
-        public string Descrizione { get; set; }   // Descrizione dell'evento
-        public TipologiaEvento Tipologia { get; set; }  // Tipologia dell'evento (Interna o Esterna)
-        public string Priorità { get; set; }   // Priorità dell'evento
-        
+        public Guid Id { get; set; }
+
+        public string Stato { get; set; }
+        public string Titolo { get; set; }
+        public string Descrizione { get; set; }
+        public TipologiaEvento Tipologia { get; set; }
+        public string Priorità { get; set; }
+        public DateTime DataScadenza { get; set; }
     }
 }
     
