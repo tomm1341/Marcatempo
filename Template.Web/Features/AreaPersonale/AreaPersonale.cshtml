@@ -9,7 +9,7 @@
 
 
 <div class="container-fluid px-3 px-sm-4 px-md-4 mt-4">
-    <h2 class="mb-4">Area Personale</h2>
+    <h1 class="mb-4">Area Personale</h1>
 
     @* Messaggio di successo o errore *@
     @if (TempData["Success"] != null)
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Task -->
-    <h5 class="mb-3">Task in lavorazione</h5>
+    <h3 class="mb-3">Task in lavorazione</h3>
     <div class="row">
         @foreach (var task in Model.TaskInLavorazione)
         {
