@@ -48,25 +48,43 @@ namespace Template.Web.Features.Dettagli
 
                 return View("~/Features/Dettagli/Dettagli.cshtml", vm);
             }
-        /* QUERY DI MODIFICA
+
             [HttpPost]
-            public async Task<IActionResult> CompletaTask(DettagliViewModel model)
+            [ValidateAntiForgeryToken]
+            public async virtual Task<IActionResult> AddRendiconto(RendicontoDTO model)
             {
-                var task = await _dbContext.Tasks.FindAsync(model.TaskId);
-                if (task == null) return NotFound();
+                // Solo owner può aggiungere rendiconto
+                if (model.IdUtente != CurrentUserId)
+                    return Forbid();
 
-                // Solo assegnatario può modificare
-                if (task.IdAssegnatario != UserId) return Forbid();
+                // Il comando si occupa di validare orari e data
+                var newId = await _sharedService.Handle(
+                    dto: model,
+                    IdUtente: model.IdUtente,
+                    IdTask: model.IdTask,
+                    OraInizio: model.OraInizio,
+                    OraFine: model.OraFine
+                );
 
-                task.Descrizione = model.Descrizione;
-                task.OreLavorate = model.OreLavorate;
-                task.Stato = "Completato";
+                TempData["Success"] = "Rendiconto salvato con ID " + newId;
+                return RedirectToAction(nameof(Details), new { id = model.IdTask });
+            }
 
-                await _dbContext.SaveChangesAsync();
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async virtual Task<IActionResult> ChangeStatus(Guid id, string stato)
+            {
+                // Cambia solo lo stato
+                await _sharedService.Handle(new ChangeTaskStatusCommand
+                {
+                    Id = id,
+                    Stato = stato
+                });
 
-                return RedirectToAction("Details", new { id = task.Id });
-            }*/
+                return RedirectToAction(nameof(Details), new { id });
+            }
+        }
 
-    }
 }
+
 

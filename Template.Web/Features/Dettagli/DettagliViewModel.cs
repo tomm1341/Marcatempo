@@ -19,7 +19,12 @@ namespace Template.Web.Features.Dettagli
         public DateTime Creazione { get; set; }
         public DateTime Scadenza { get; set; } 
         public string Stato { get; set; } 
-        public string OreLavorate { get; set; }
+
+
+        // PROPRIETÀ PER IL RENDICONTO
+        public DateTime Data { get; set; }
+        public int OraInizio { get; set; }
+        public int OraFine { get; set; }
 
         public bool IsOwner { get; set; } // Utilizzato per gestione view
     }
