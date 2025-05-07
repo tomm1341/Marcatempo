@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,6 +81,22 @@ namespace Template.Services.Shared
         public DateTime DataScadenza { get; set; }
         public Guid? IdAssegnatario { get; set; }
     }
+
+
+        public class ChangeTaskDescriptionCommand
+        {
+            public Guid Id { get; set; }
+
+            public string Descrizione { get; set; }
+
+            public ChangeTaskDescriptionCommand(Guid id, string descrizione)
+            {
+                Id = id;
+                Descrizione = descrizione;
+            }
+        }
+    
+
 
     public partial class SharedService
     {
@@ -183,5 +200,19 @@ namespace Template.Services.Shared
             if (t == null) throw new ArgumentException("Task non trovato");
             return t;
         }
+
+        public async Task<string> Handle(ChangeTaskDescriptionCommand cmd)
+        {
+            var task = await _dbContext.Tasks.FindAsync(cmd.Id);
+            if (task == null)
+                throw new KeyNotFoundException($"Task con Id {cmd.Id} non trovato.");
+
+            task.Descrizione = cmd.Descrizione;
+            _dbContext.Tasks.Update(task);
+            await _dbContext.SaveChangesAsync();
+
+            return task.Descrizione;
+        }
+
     }
 }

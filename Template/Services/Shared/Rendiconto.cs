@@ -9,7 +9,9 @@ namespace Template.Services.Shared
     public class Rendiconto
     {
         [Key]
+        public Guid Id { get; set; }
         public Guid IdUtente { get; set; }
+        public Guid IdTask { get; set; }
 
         public DateTime Data { get; set; } // Data del giorno corrente
 
