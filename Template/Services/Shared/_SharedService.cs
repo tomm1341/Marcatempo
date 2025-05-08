@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Template.Services.Shared;
 
 namespace Template.Services.Shared
@@ -50,6 +53,22 @@ namespace Template.Services.Shared
             await _dbContext.SaveChangesAsync();
 
             return nuovoRendId;
+        }
+        public async virtual Task<IEnumerable<RendicontoDTO>> GetRendicontoByTaskAsync(Guid taskId)
+        {
+            return await _dbContext.Rendiconto
+                .Where(r => r.IdTask == taskId)
+                .Select(r => new RendicontoDTO
+                {
+                    IdRendiconto = r.Id,
+                    IdUtente = r.IdUtente,
+                    IdTask = r.IdTask,
+                    OreLavorate = r.OreLavorate,
+                    Data = r.Data,
+                    OraInizio = r.OraInizio,
+                    OraFine = r.OraFine
+                })
+                .ToListAsync();
         }
     }
 }
