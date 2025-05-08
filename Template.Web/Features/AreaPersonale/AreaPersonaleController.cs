@@ -18,7 +18,7 @@ namespace Template.Web.Features.AreaPersonale
             _sharedService = sharedService;
         }
 
-        [HttpGet]
+/*        [HttpGet]
         public async virtual Task<IActionResult> AreaPersonale1()
         {
             var userId = Identita.IdUtenteCorrente;
@@ -72,7 +72,7 @@ namespace Template.Web.Features.AreaPersonale
             };
 
             return View(model);
-        }
+        }*/
 
         private string FormatRole(string role) =>
             role switch
@@ -122,7 +122,6 @@ namespace Template.Web.Features.AreaPersonale
                 }
             }).ToList();
 
-            // 2) Leggi rendiconto reale dal DB
             var rendDtos = await _sharedService.GetRendicontoByUserAsync(userId);
             var rendiconto = rendDtos.Select(r => new RendicontoGiornaliero
             {
