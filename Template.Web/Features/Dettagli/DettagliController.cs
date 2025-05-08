@@ -24,30 +24,49 @@ namespace Template.Web.Features.Dettagli
             _dbContext = dbContext;
             _sharedService = sharedService;
         }
-            [HttpGet]
-            public async virtual Task<IActionResult> Details(Guid id)
+
+
+        [HttpGet]
+        public async virtual Task<IActionResult> Details(Guid id)
+        {
+            var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
+
+            // Carico il VM di base
+            var vm = new DettagliViewModel
             {
-                var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
+                TaskId = dto.Id,
+                Titolo = dto.Titolo,
+                Stato = dto.Stato,
+                Tipologia = dto.Tipologia,
+                Descrizione = dto.Descrizione,
+                Priorità = dto.Priorità,
+                Creazione = dto.DataCreazione,
+                Scadenza = dto.DataScadenza,
+                IdAssegnatario = dto.IdAssegnatario,
+                IdCreatore = dto.IdCreatore,
+                NomeCreatore = dto.NomeCreatore,
+                IsOwner = dto.IdAssegnatario.HasValue && dto.IdAssegnatario.Value == CurrentUserId
+            };
 
-                var vm = new DettagliViewModel
+            if (vm.IsOwner)
+            {
+                var rendList = await _sharedService.GetRendicontoByTaskAsync(id);
+                var last = rendList
+                    .Where(r => r.IdUtente == CurrentUserId)
+                    .OrderBy(r => r.Data).ThenBy(r => r.OraInizio)
+                    .LastOrDefault();
+
+                if (last != null)
                 {
-                    TaskId = dto.Id,
-                    Titolo = dto.Titolo,
-                    Stato = dto.Stato,
-                    Tipologia = dto.Tipologia,
-                    Descrizione = dto.Descrizione,
-                    Priorità = dto.Priorità,
-                    Creazione = dto.DataCreazione,
-                    Scadenza = dto.DataScadenza,
-                    IdAssegnatario = dto.IdAssegnatario,
-                    IdCreatore = dto.IdCreatore,
-                    NomeCreatore = dto.NomeCreatore,
-
-                    IsOwner = dto.IdAssegnatario.HasValue && dto.IdAssegnatario.Value == CurrentUserId // Controlla se l'utente è owner del task
-                };
-
-                return View("~/Features/Dettagli/Dettagli.cshtml", vm);
+                    vm.Data = last.Data;
+                    vm.OraInizio = last.OraInizio;
+                    vm.OraFine = last.OraFine;
+                }
             }
+
+            return View("~/Features/Dettagli/Dettagli.cshtml", vm);
+        }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         public async virtual Task<IActionResult> SaveDetails(DettagliViewModel model)
