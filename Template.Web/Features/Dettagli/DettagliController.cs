@@ -49,41 +49,43 @@ namespace Template.Web.Features.Dettagli
                 return View("~/Features/Dettagli/Dettagli.cshtml", vm);
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async virtual Task<IActionResult> AddRendiconto(RendicontoDTO model)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async virtual Task<IActionResult> SaveDetails(DettagliViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("Details", model);
+
+            // Prepara DTO solo se sono compilati
+            RendicontoDTO rendDto = null;
+            if (model.Data != default && model.OraFine > model.OraInizio)
             {
-                // Solo owner può aggiungere rendiconto
-                if (model.IdUtente != CurrentUserId)
-                    return Forbid();
-
-                // Il comando si occupa di validare orari e data
-                var newId = await _sharedService.Handle(
-                    dto: model,
-                    IdUtente: model.IdUtente,
-                    IdTask: model.IdTask,
-                    OraInizio: model.OraInizio,
-                    OraFine: model.OraFine
-                );
-
-                TempData["Success"] = "Rendiconto salvato con ID " + newId;
-                return RedirectToAction(nameof(Details), new { id = model.IdTask });
-            }
-
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async virtual Task<IActionResult> ChangeStatus(Guid id, string stato)
-            {
-                // Cambia solo lo stato
-                await _sharedService.Handle(new ChangeTaskStatusCommand
+                rendDto = new RendicontoDTO
                 {
-                    Id = id,
-                    Stato = stato
-                });
-
-                return RedirectToAction(nameof(Details), new { id });
+                    IdUtente = CurrentUserId,
+                    IdTask = model.TaskId,
+                    Data = model.Data,
+                    OraInizio = model.OraInizio,
+                    OraFine = model.OraFine
+                };
             }
+
+            // Chiamo l'orchestratore
+            var newRendId = await _sharedService.UpdateTaskAndRendicontoAsync(
+                model.TaskId,
+                model.Descrizione,
+                rendDto,
+                CurrentUserId);
+
+            TempData["Success"] = newRendId.HasValue
+                ? "Descrizione e ore salvate."
+                : "Descrizione salvata.";
+
+            // Torno alla pagina di dettaglio
+            return RedirectToAction(nameof(Details), new { id = model.TaskId });
         }
+
+
+    }
 
 }
 

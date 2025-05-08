@@ -20,117 +20,100 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-<div class="container">
+<div class="container mt-5 mb-5">
     <div class="card shadow-sm">
         <div class="card-body">
 
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="card-title">@Model.Titolo</h1>
-                <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">
-                    @Model.Stato
-                </span>
+                <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">@Model.Stato</span>
             </div>
 
-            <form asp-action="SaveDetails" method="post">
+            <!-- Unified form for details and rendiconto -->
+            <form asp-action="SaveDetails" asp-controller="Dettagli" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="TaskId" />
-
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <label class="form-label small text-muted">Priorità</label>
-                        <div class="@GetPrioritaBadgeClass(Model.Priorità)">
-                            @Model.Priorità
+                <div class="row g-4">
+                    <!-- Sidebar info -->
+                    <div class="col-12 col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Priorità</label>
+                            <div class="@GetPrioritaBadgeClass(Model.Priorità)">@Model.Priorità</div>
                         </div>
-
-                        <label class="form-label small text-muted mt-3">Scadenza</label>
-                        <div class="bg-dark text-white px-3 py-2 rounded">
-                            @Model.Scadenza.ToString("dd/MM/yyyy")
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Scadenza</label>
+                            <div class="bg-dark text-white px-3 py-2 rounded">
+                                @Model.Scadenza.ToString("dd/MM/yyyy")
+                            </div>
                         </div>
-
-                        <label class="form-label small text-muted mt-3">Creato il</label>
-                        <div class="text-secondary">
-                            @Model.Creazione.ToString("dd/MM/yyyy HH:mm")
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Creato il</label>
+                            <div class="text-secondary">@Model.Creazione.ToString("dd/MM/yyyy HH:mm")</div>
                         </div>
-
-                        <label class="form-label small text-muted mt-3">Creatore</label>
-                        <div class="text-secondary">
-                            @Model.NomeCreatore
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Creatore</label>
+                            <div class="text-secondary">@Model.NomeCreatore</div>
                         </div>
-
-                        <label class="form-label small text-muted mt-3">Tipologia</label>
-                        <div class="text-secondary">
-                            @Model.Tipologia
+                        <div>
+                            <label class="form-label small text-muted">Tipologia</label>
+                            <div class="text-secondary">@Model.Tipologia</div>
                         </div>
                     </div>
-
-                    <div class="col-md-8">
-                        <label class="form-label small text-muted">Descrizione</label>
+                    <!-- Main content -->
+                    <div class="col-12 col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Descrizione</label>
+                            @if (Model.IsOwner)
+                            {
+                                <textarea asp-for="Descrizione" class="form-control" rows="5"></textarea>
+                            }
+                            else
+                            {
+                                <p>@Model.Descrizione</p>
+                            }
+                        </div>
                         @if (Model.IsOwner)
                         {
-                            <textarea asp-for="Descrizione" class="form-control" rows="5"></textarea>
+                            <hr />
+                            <h5 class="small text-muted">Rendiconto ore lavorate</h5>
+                            <div class="row g-3 mb-3">
+                                <div class="col-12 col-md-4">
+                                    <label class="form-label">Data completamento</label>
+                                    <input asp-for="Data" type="date" class="form-control" value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd"))" />
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <label class="form-label">Ora inizio</label>
+                                    <input asp-for="OraInizio" type="number" min="0" max="23" class="form-control" />
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <label class="form-label">Ora fine</label>
+                                    <input asp-for="OraFine" type="number" min="0" max="23" class="form-control" />
+                                </div>
+                            </div>
                         }
-                        else
-                        {
-                            <p>@Model.Descrizione</p>
-                        }
-
                     </div>
                 </div>
-            </form>
-
-            @if (Model.IsOwner)
-            {
-                <hr />
-                <h5 class="mt-4">Rendiconto ore lavorate</h5>
-                <form asp-action="AddRendiconto" method="post">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="IdUtente" value="@User.FindFirst("sub")?.Value" />
-                    <input type="hidden" name="IdTask" value="@Model.TaskId" />
-
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Data completamento</label>
-                            <input type="date" name="Data" class="form-control" required
-                                   value="@DateTime.Today.ToString("yyyy-MM-dd")" />
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Ora inizio</label>
-                            <input type="number" name="OraInizio" min="0" max="23" class="form-control" required />
-                        </div>
-                        <div class="col-md-2">
-                            <label class="form-label">Ora fine</label>
-                            <input type="number" name="OraFine" min="0" max="23" class="form-control" required />
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-outline-success">
-                            <i class="bi bi-clock-history me-1"></i> Registra Ore
+                @if (Model.IsOwner)
+                {
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save me-1"></i> Salva modifiche
+                        </button>
+                        <button formaction="@Url.Action("ChangeStatus", "Dettagli", new { id = Model.TaskId, stato = "Completato" })"
+                                formmethod="post" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Completa Task
                         </button>
                     </div>
-                </form>
-            }
+                }
+            </form>
 
+            <!-- Back Button -->
             <div class="mt-4">
                 <a asp-action="Disponibili" asp-controller="Disponibili" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
-
-            @if (Model.IsOwner)
-            {
-                <div class="float-end">
-                    <button type="submit" class="btn btn-success">
-                        <i class="bi bi-save me-1"></i> Salva modifiche
-                    </button>
-                    <button formaction="@Url.Action("ChangeStatus", "Dettagli", new { id = Model.TaskId, stato = "Completato" })"
-                            class="btn btn-primary ms-2">
-                        <i class="bi bi-check-circle me-1"></i> Completa Task
-                    </button>
-                </div>
-            }
             </div>
-
         </div>
     </div>
 </div>
