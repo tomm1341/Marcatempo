@@ -70,7 +70,7 @@ namespace Template.Web.Features.Dettagli
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async virtual Task<IActionResult> SaveDettagli(DettagliViewModel model)
+        public async virtual Task<IActionResult> SaveDetails(DettagliViewModel model)
         {
             if (!ModelState.IsValid)
                 return View("Dettagli", model);
