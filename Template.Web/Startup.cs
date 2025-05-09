@@ -43,6 +43,9 @@ namespace Template.Web
                     {
                         options.LoginPath = "/Login/Login";
                         options.LogoutPath = "/Login/Logout";
+                        options.LogoutPath = "/Login/Logout";
+                        options.AccessDeniedPath = "/Login/AccessDenied";
+
                     });
 
             var builder = services.AddMvc()
@@ -98,8 +101,9 @@ namespace Template.Web
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseStatusCodePagesWithReExecute("/Login/NotFound", "?statusCode={0}");
 
-            
+
             var node_modules = new CompositePhysicalFileProvider(Directory.GetCurrentDirectory(), "node_modules");
             var areas = new CompositePhysicalFileProvider(Directory.GetCurrentDirectory(), "Areas");
             var compositeFp = new CustomCompositeFileProvider(env.WebRootFileProvider, node_modules, areas);
