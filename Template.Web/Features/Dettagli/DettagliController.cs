@@ -74,7 +74,10 @@ namespace Template.Web.Features.Dettagli
             if (!ModelState.IsValid)
                 return View("Details", model);
 
-            // Prepara DTO solo se sono compilati
+            if (model.IdAssegnatario != CurrentUserId)
+                return Forbid();
+
+            // Prepara DTO solo se ci sono dati di rendiconto
             RendicontoDTO rendDto = null;
             if (model.Data != default && model.OraFine > model.OraInizio)
             {
@@ -88,18 +91,16 @@ namespace Template.Web.Features.Dettagli
                 };
             }
 
-            // Chiamo l'orchestratore
+            // CHIAMATA ORCHESTRATORE: nota il quarto parametro = CurrentUserId
             var newRendId = await _sharedService.UpdateTaskAndRendicontoAsync(
                 model.TaskId,
                 model.Descrizione,
-                rendDto,
-                CurrentUserId);
+                rendDto);
 
             TempData["Success"] = newRendId.HasValue
                 ? "Descrizione e ore salvate."
                 : "Descrizione salvata.";
 
-            // Torno alla pagina di dettaglio
             return RedirectToAction(nameof(Details), new { id = model.TaskId });
         }
 

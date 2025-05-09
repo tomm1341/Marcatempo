@@ -33,6 +33,7 @@
             <!-- Unified form for details and rendiconto -->
             <form asp-action="SaveDetails" asp-controller="Dettagli" method="post">
                 @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="IdAssegnatario" />
                 <input type="hidden" asp-for="TaskId" />
                 <div class="row g-4">
                     <!-- Sidebar info -->
