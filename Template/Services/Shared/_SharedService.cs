@@ -17,43 +17,58 @@ namespace Template.Services.Shared
         }
 
         // The following code is used to handle the 'Salva modifiche' button in Dettagli
-        public async Task<Guid?> UpdateTaskAndRendicontoAsync(
+        public async virtual Task<Guid?> UpdateTaskAndRendicontoAsync(
             Guid taskId,
             string nuovaDescrizione,
-            RendicontoDTO rendDto,
-            Guid currentUserId)
+            RendicontoDTO rendDto)
         {
             var task = await _dbContext.Tasks.FindAsync(taskId);
             if (task == null)
                 throw new ArgumentException("Task non trovato");
-            if (task.IdAssegnatario != currentUserId)
-                throw new UnauthorizedAccessException("Non sei autorizzato");
             task.Descrizione = nuovaDescrizione;
             _dbContext.Tasks.Update(task);
 
-            Guid? nuovoRendId = null;
+            Guid? rendId = null;
+
             if (rendDto != null
                 && rendDto.OraFine > rendDto.OraInizio
                 && rendDto.Data.Date <= DateTime.Today)
             {
-                var rend = new Rendiconto
+                var existing = await _dbContext.Rendiconto
+                    .FirstOrDefaultAsync(r =>
+                        r.IdTask == taskId &&
+                        r.IdUtente == rendDto.IdUtente &&
+                        r.Data == rendDto.Data.Date);
+
+                if (existing != null)
                 {
-                    Id = Guid.NewGuid(),
-                    IdUtente = currentUserId,
-                    IdTask = taskId,
-                    OreLavorate = rendDto.OraFine - rendDto.OraInizio,
-                    Data = rendDto.Data.Date,
-                    OraInizio = rendDto.OraInizio,
-                    OraFine = rendDto.OraFine
-                };
-                nuovoRendId = rend.Id;
-                _dbContext.Rendiconto.Add(rend);
+                    existing.OraInizio = rendDto.OraInizio;
+                    existing.OraFine = rendDto.OraFine;
+                    existing.OreLavorate = rendDto.OraFine - rendDto.OraInizio;
+                    _dbContext.Rendiconto.Update(existing);
+                    rendId = existing.Id;
+                }
+                else
+                {
+                    var rend = new Rendiconto
+                    {
+                        Id = Guid.NewGuid(),
+                        IdUtente = rendDto.IdUtente,
+                        IdTask = taskId,
+                        Data = rendDto.Data.Date,
+                        OraInizio = rendDto.OraInizio,
+                        OraFine = rendDto.OraFine,
+                        OreLavorate = rendDto.OraFine - rendDto.OraInizio
+                    };
+                    _dbContext.Rendiconto.Add(rend);
+                    rendId = rend.Id;
+                }
             }
 
             await _dbContext.SaveChangesAsync();
-
-            return nuovoRendId;
+            return rendId;
         }
+
         public async virtual Task<IEnumerable<RendicontoDTO>> GetRendicontoByTaskAsync(Guid taskId)
         {
             return await _dbContext.Rendiconto
