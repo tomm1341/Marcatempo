@@ -11,6 +11,7 @@ using Template.Web.Areas;
 using Template.Infrastructure;
 using Microsoft.Extensions.Localization;
 using Template.Web.Features.Login;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Template.Web.Features.Dettagli
 {
@@ -27,7 +28,7 @@ namespace Template.Web.Features.Dettagli
 
 
         [HttpGet]
-        public async virtual Task<IActionResult> Details(Guid id)
+        public async virtual Task<IActionResult> Dettagli(Guid id)
         {
             var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
@@ -69,15 +70,14 @@ namespace Template.Web.Features.Dettagli
 
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async virtual Task<IActionResult> SaveDetails(DettagliViewModel model)
+        public async virtual Task<IActionResult> SaveDettagli(DettagliViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("Details", model);
+                return View("Dettagli", model);
 
             if (model.IdAssegnatario != CurrentUserId)
                 return Forbid();
 
-            // Prepara DTO solo se ci sono dati di rendiconto
             RendicontoDTO rendDto = null;
             if (model.Data != default && model.OraFine > model.OraInizio)
             {
@@ -91,7 +91,6 @@ namespace Template.Web.Features.Dettagli
                 };
             }
 
-            // CHIAMATA ORCHESTRATORE: nota il quarto parametro = CurrentUserId
             var newRendId = await _sharedService.UpdateTaskAndRendicontoAsync(
                 model.TaskId,
                 model.Descrizione,
@@ -101,9 +100,45 @@ namespace Template.Web.Features.Dettagli
                 ? "Descrizione e ore salvate."
                 : "Descrizione salvata.";
 
-            return RedirectToAction(nameof(Details), new { id = model.TaskId });
+            return RedirectToAction(nameof(Dettagli), new { id = model.TaskId });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async virtual Task<IActionResult> MarkAsCompleted(Guid id)
+        {
+            // 1) Verifico che l’utente sia effettivamente assegnatario  
+            var task = await _dbContext.Tasks.FindAsync(id);
+            if (task == null)
+            {
+                TempData["Error"] = "Task non trovato.";
+                return RedirectToAction(nameof(Dettagli), new { id });
+            }
+            if (task.IdAssegnatario != CurrentUserId)
+            {
+                TempData["Error"] = "Non sei autorizzato a modificare questo task.";
+                return RedirectToAction(nameof(Dettagli), new { id });
+            }
+
+            // 2) Controllo che esista almeno una voce di rendiconto per questo task + utente
+            var hasRendiconto = await _dbContext.Rendiconto
+                .AnyAsync(r => r.IdTask == id && r.IdUtente == CurrentUserId);
+            if (!hasRendiconto)
+            {
+                TempData["Error"] = "Devi prima dichiarare le ore lavorate per poter completare il task.";
+                return RedirectToAction(nameof(Dettagli), new { id });
+            }
+
+            // 3) Eseguo il comando per marcare come completato
+            var message = await _sharedService.Handle(new MarkTaskAsCompleted
+            {
+                TaskId = id,
+                IdUtente = CurrentUserId
+            });
+
+            TempData["Success"] = message;
+            return RedirectToAction(nameof(Dettagli), new { id });
+        }
 
     }
 

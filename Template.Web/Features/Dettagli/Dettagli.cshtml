@@ -17,30 +17,42 @@
     };
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
 
 <div class="container mt-5 mb-5">
     <div class="card shadow-sm">
         <div class="card-body">
 
+            <!-- Alert placeholder per client-side -->
+            <div id="clientAlert"></div>
+
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="card-title">@Model.Titolo</h1>
-                <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">@Model.Stato</span>
+                <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">
+                    @Model.Stato
+                </span>
             </div>
 
-            <!-- Unified form for details and rendiconto -->
-            <form asp-action="SaveDetails" asp-controller="Dettagli" method="post">
+            <!-- Form unico per descrizione + rendiconto -->
+            <form id="saveForm"
+                  asp-action="SaveDetails"
+                  asp-controller="Dettagli"
+                  method="post">
                 @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="IdAssegnatario" />
                 <input type="hidden" asp-for="TaskId" />
+                <input type="hidden" asp-for="IdAssegnatario" />
+
                 <div class="row g-4">
-                    <!-- Sidebar info -->
+                    <!-- Colonna sinistra: info statiche -->
                     <div class="col-12 col-md-4">
+                        <!-- ... (stessi campi di prima) ... -->
                         <div class="mb-3">
                             <label class="form-label small text-muted">Priorità</label>
-                            <div class="@GetPrioritaBadgeClass(Model.Priorità)">@Model.Priorità</div>
+                            <div class="@GetPrioritaBadgeClass(Model.Priorità)">
+                                @Model.Priorità
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted">Scadenza</label>
@@ -50,7 +62,9 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted">Creato il</label>
-                            <div class="text-secondary">@Model.Creazione.ToString("dd/MM/yyyy HH:mm")</div>
+                            <div class="text-secondary">
+                                @Model.Creazione.ToString("dd/MM/yyyy HH:mm")
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted">Creatore</label>
@@ -61,60 +75,130 @@
                             <div class="text-secondary">@Model.Tipologia</div>
                         </div>
                     </div>
-                    <!-- Main content -->
+
+                    <!-- Colonna destra: form modificabili -->
                     <div class="col-12 col-md-8">
                         <div class="mb-3">
                             <label class="form-label small text-muted">Descrizione</label>
                             @if (Model.IsOwner)
                             {
-                                <textarea asp-for="Descrizione" class="form-control" rows="5"></textarea>
+                                <textarea asp-for="Descrizione"
+                                          class="form-control"
+                                          rows="5"
+                                          id="descrizioneInput"
+                                          data-orig-descrizione="@Model.Descrizione">
+                    </textarea>
                             }
                             else
                             {
                                 <p>@Model.Descrizione</p>
                             }
                         </div>
+
                         @if (Model.IsOwner)
                         {
                             <hr />
                             <h5 class="small text-muted">Rendiconto ore lavorate</h5>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-4">
-                                    <label class="form-label">Data completamento</label>
-                                    <input asp-for="Data" type="date" class="form-control" value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd"))" />
+                                    <label class="form-label small text-muted">Data completamento</label>
+                                    <input asp-for="Data"
+                                           type="date"
+                                           class="form-control"
+                                           id="dataInput"
+                                           data-orig-data="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")"
+                                           value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label">Ora inizio</label>
-                                    <input asp-for="OraInizio" type="number" min="0" max="23" class="form-control" />
+                                    <label class="form-label small text-muted">Ora inizio</label>
+                                    <input asp-for="OraInizio"
+                                           type="number"
+                                           min="0" max="23"
+                                           class="form-control"
+                                           id="inizioInput"
+                                           data-orig-inizio="@Model.OraInizio" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label">Ora fine</label>
-                                    <input asp-for="OraFine" type="number" min="0" max="23" class="form-control" />
+                                    <label class="form-label small text-muted">Ora fine</label>
+                                    <input asp-for="OraFine"
+                                           type="number"
+                                           min="0" max="23"
+                                           class="form-control"
+                                           id="fineInput"
+                                           data-orig-fine="@Model.OraFine" />
                                 </div>
                             </div>
                         }
                     </div>
                 </div>
+
                 @if (Model.IsOwner)
                 {
                     <div class="d-flex justify-content-end gap-2 mt-4">
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-save me-1"></i> Salva modifiche
                         </button>
-                        <button formaction="@Url.Action("ChangeStatus", "Dettagli", new { id = Model.TaskId, stato = "Completato" })"
-                                formmethod="post" class="btn btn-primary">
-                            <i class="bi bi-check-circle me-1"></i> Completa Task
-                        </button>
+
+                        <!-- Form separato dentro la stessa riga -->
+                        <form id="completeForm"
+                              asp-action="MarkAsCompleted"
+                              asp-controller="Dettagli"
+                              method="post"
+                              class="m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.TaskId" />
+                            <button id="completeButton" type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i> Completa Task
+                            </button>
+                        </form>
                     </div>
                 }
             </form>
 
             <!-- Back Button -->
             <div class="mt-4">
-                <a asp-action="Disponibili" asp-controller="Disponibili" class="btn btn-outline-secondary">
+                <a asp-action="Disponibili"
+                   asp-controller="Disponibili"
+                   class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        // In-app alert function (inserisce un alert bootstrap nella pagina)
+        function showClientAlert(message, type = 'warning') {
+          const container = document.getElementById('clientAlert');
+          container.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+              ${message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
+            </div>`;
+        }
+
+        // Prima di inviare "Completa Task", controlla modifiche non salvate
+        document.getElementById('completeButton').addEventListener('click', function (e) {
+          const descr = document.getElementById('descrizioneInput');
+          const data  = document.getElementById('dataInput');
+          const ini   = document.getElementById('inizioInput');
+          const fin   = document.getElementById('fineInput');
+
+          const changed =
+            (descr && descr.value     !== descr.dataset.origDescrizione) ||
+            (data  && data.value      !== data.dataset.origData)      ||
+            (ini   && ini.value       !== ini.dataset.origInizio)    ||
+            (fin   && fin.value       !== fin.dataset.origFine);
+
+          if (changed) {
+            e.preventDefault();
+            showClientAlert(
+              "Ci sono modifiche non salvate. Salvale prima di completare il task.",
+              'warning'
+            );
+          }
+        });
+    </script>
+}
