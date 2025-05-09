@@ -1,14 +1,11 @@
 ﻿@model Template.Web.Features.AreaPersonale.AreaPersonaleViewModel
-@inject Template.Services.Shared.SharedService SharedService
 @{
     ViewData["Title"] = "Area Personale";
-
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
-<div class="container-fluid px-3 px-sm-4 px-md-4 mt-4">
+<div class="container-fluid px-3 px-sm-4 px-md-4 mt-4 mb-5">
     <h1 class="mb-4">Area Personale</h1>
 
     @* Messaggio di successo o errore *@
@@ -48,7 +45,7 @@
                         @task.Descrizione
                     </div>
                     <div class="px-3 py-2 bg-@task.StatoColore text-white rounded me-md-2">
-                       Scadenza: @task.DataScadenza.ToString("dd/MM/yyyy")
+                        Scadenza: @task.DataScadenza.ToString("dd/MM/yyyy")
                     </div>
                     <div class="me-md-2"><i class="bi bi-info-circle"></i></div>
                     <a asp-controller="Dettagli"
@@ -62,64 +59,51 @@
         }
     </div>
 
-    <div class="my-4 d-flex flex-wrap gap-2">
+    <div class="mt-4 mb-5 d-flex flex-wrap gap-2">
         <a class="btn btn-dark" href="@Url.Action("Storico", "Storico")">Storico task</a>
         <a class="btn btn-primary" href="@Url.Action("Disponibili", "Disponibili")">Task Disponibili</a>
         <a class="btn btn-outline-dark" href="@Url.Action("Task", "Task")">Crea Task</a>
     </div>
 
-    <!-- Rendiconto -->
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <h5>Rendiconto settimanale</h5>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Giorno</th>
-                        <th>Data</th>
-                        <th>Inizio</th>
-                        <th>Fine</th>
-                        <th>Ore</th>
-                    </tr>
-                </thead>
-                <tbody id="rendicontoBody">
-                    @foreach (var r in Model.RendicontoSettimana)
-                    {
-                        var ore = (TimeSpan.Parse(r.OrarioFine) - TimeSpan.Parse(r.OrarioInizio)).TotalHours;
-                        <tr data-giorno="@r.Giorno">
-                            <td>@r.Giorno</td>
-                            <td>@r.Data</td>
-                            <td>@r.OrarioInizio</td>
-                            <td>@r.OrarioFine</td>
-                            <td class="ore">@ore.ToString("0.##")</td>
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4"><strong>Totale</strong></td>
-                        <td id="oreTotali">@Model.OreTotali</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+    <hr />
 
-        <!-- Inserimento orari -->
-        <div class="col-md-6">
-            <h6 class="mb-3">Aggiungi orario lavorativo</h6>
-            <div class="mb-3">
-                <label for="inputGiorno" class="form-label">Giorno (data)</label>
-                <input type="date" class="form-control" id="inputGiorno">
+    <!-- Rendiconto dettagliato -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h5>Rendiconto ore lavorate</h5>
+            <div class="table-responsive mt-4">
+                <table class="table table-bordered table-hover align-middle rounded">
+                    <thead class="table">
+                        <tr>
+                            <th>Giorno</th>
+                            <th>Data</th>
+                            <th>Task</th>
+                            <th>Inizio</th>
+                            <th>Fine</th>
+                            <th>Ore</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.RendicontoLogs)
+                        {
+                            <tr>
+                                <td>@r.Giorno</td>
+                                <td>@r.Data</td>
+                                <td>@r.TitoloTask</td>
+                                <td>@r.OrarioInizio</td>
+                                <td>@r.OrarioFine</td>
+                                <td>@r.OreLavorate</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Totale ore</strong></td>
+                            <td><strong>@Model.OreTotali</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
-            <div class="mb-3">
-                <label for="inputInizio" class="form-label">Ora inizio</label>
-                <input type="time" class="form-control" id="inputInizio">
-            </div>
-            <div class="mb-3">
-                <label for="inputFine" class="form-label">Ora fine</label>
-                <input type="time" class="form-control" id="inputFine">
-            </div>
-            <button class="btn btn-success w-100" onclick="aggiungiOaggiornaRiga()">Aggiungi / aggiorna</button>
         </div>
     </div>
 </div>

@@ -18,61 +18,6 @@ namespace Template.Web.Features.AreaPersonale
             _sharedService = sharedService;
         }
 
-/*        [HttpGet]
-        public async virtual Task<IActionResult> AreaPersonale1()
-        {
-            var userId = Identita.IdUtenteCorrente;
-
-            // 1) Prendo dal DB i task assegnati all'utente
-            var assignedDtos = await _sharedService.Query(new AssignedTaskQuery
-            {
-                UserId = userId
-            });
-
-            // 2) Mappo i DTO sul ViewModel
-            var taskItems = assignedDtos
-                .Select(dto => new TaskItemViewModel
-                {
-                    Id = dto.Id,
-                    Titolo = dto.Titolo,
-                    Descrizione = dto.Descrizione,
-                    DataScadenza = dto.DataScadenza,
-                    Stato = dto.Stato,
-                    StatoColore = dto.Stato switch
-                    {
-                        "InLavorazione" => "warning",
-                        "Completato" => "success",
-                        _ => "secondary"
-                    }
-                })
-                .ToList();
-
-            // 3) (Ancora mock) Rendiconto settimanale e ore totali
-            var rendiconto = new List<RendicontoGiornaliero>
-            {
-                new() { Giorno="Lunedì",   Data="21/04/25", OrarioInizio="09:00", OrarioFine="17:00" },
-                new() { Giorno="Martedì",  Data="22/04/25", OrarioInizio="09:15", OrarioFine="17:15" },
-                new() { Giorno="Mercoledì",Data="23/04/25", OrarioInizio="09:00", OrarioFine="17:00" },
-                new() { Giorno="Giovedì",  Data="24/04/25", OrarioInizio="09:30", OrarioFine="17:30" },
-                new() { Giorno="Venerdì",  Data="25/04/25", OrarioInizio="09:00", OrarioFine="16:00" },
-            };
-            var totaleOre = rendiconto
-                .Sum(r => (TimeSpan.Parse(r.OrarioFine) - TimeSpan.Parse(r.OrarioInizio)).TotalHours);
-
-            // 4) Costruisco e ritorno il ViewModel
-            var model = new AreaPersonaleViewModel
-            {
-                UserId = userId,
-                Nome = Identita.NomeUtenteCorrente,
-                Cognome = Identita.CognomeUtenteCorrente,
-                Ruolo = FormatRole(Identita.RuoloUtenteCorrente),
-                TaskInLavorazione = taskItems,
-                RendicontoSettimana = rendiconto,
-                OreTotali = (int)totaleOre
-            };
-
-            return View(model);
-        }*/
 
         private string FormatRole(string role) =>
             role switch
@@ -122,16 +67,25 @@ namespace Template.Web.Features.AreaPersonale
                 }
             }).ToList();
 
+            // 2) Rendiconti con Task associato
             var rendDtos = await _sharedService.GetRendicontoByUserAsync(userId);
-            var rendiconto = rendDtos.Select(r => new RendicontoGiornaliero
+
+            // Recupero anche i task per mappare i titoli nel rendiconto
+            var allTasks = assignedDtos.ToDictionary(t => t.Id, t => t.Titolo);
+
+            var rendicontoLogs = rendDtos.Select(r => new RendicontoLogViewModel
             {
                 Giorno = r.Data.ToString("dddd", new System.Globalization.CultureInfo("it-IT")),
                 Data = r.Data.ToString("dd/MM/yyyy"),
                 OrarioInizio = r.OraInizio.ToString("00") + ":00",
-                OrarioFine = r.OraFine.ToString("00") + ":00"
-            }).ToList();
+                OrarioFine = r.OraFine.ToString("00") + ":00",
+                TitoloTask = allTasks.ContainsKey(r.IdTask) ? allTasks[r.IdTask] : "Task sconosciuto",
+                OreLavorate = r.OreLavorate
+            }).OrderBy(r => DateTime.ParseExact(r.Data, "dd/MM/yyyy", null)).ToList();
 
             var totaleOre = rendDtos.Sum(r => r.OreLavorate);
+
+            // 3) ViewModel finale
             var model = new AreaPersonaleViewModel
             {
                 UserId = userId,
@@ -139,12 +93,12 @@ namespace Template.Web.Features.AreaPersonale
                 Cognome = Identita.CognomeUtenteCorrente,
                 Ruolo = FormatRole(Identita.RuoloUtenteCorrente),
                 TaskInLavorazione = taskItems,
-                RendicontoSettimana = rendiconto,
+                RendicontoLogs = rendicontoLogs,
                 OreTotali = (int)totaleOre
             };
 
             return View(model);
-
         }
+
     }
 }

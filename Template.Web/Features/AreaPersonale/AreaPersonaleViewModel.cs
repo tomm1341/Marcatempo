@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Template.Web.Features.AreaPersonale
 {
@@ -17,12 +17,18 @@ namespace Template.Web.Features.AreaPersonale
         public string StatoColore { get; set; } // bootstrap color: "warning", "success", ecc.
     }
 
-    public class RendicontoGiornaliero
+    /// <summary>
+    /// ViewModel per ogni riga di rendiconto nella tabella in AreaPersonale.
+    /// </summary>
+    public class RendicontoLogViewModel
     {
-        public string Giorno { get; set; }
-        public string Data { get; set; } // DA CAMBIARE IL TIPO IN DateTime
+        public string Giorno { get; set; }         // es. “Lunedì”
+        public string Data { get; set; }           // “dd/MM/yyyy”
+        public string TitoloTask { get; set; }     // Descrizione o titolo del task
+        public int OreLavorate { get; set; }
         public string OrarioInizio { get; set; }
         public string OrarioFine { get; set; }
+
     }
 
     public class AreaPersonaleViewModel
@@ -31,8 +37,14 @@ namespace Template.Web.Features.AreaPersonale
         public string Nome { get; set; }
         public string Cognome { get; set; }
         public string Ruolo { get; set; }
+
         public List<TaskItemViewModel> TaskInLavorazione { get; set; }
-        public List<RendicontoGiornaliero> RendicontoSettimana { get; set; }
+
+        /// <summary>
+        /// Lista di tutte le voci di rendiconto giorno per giorno con il task e le ore.
+        /// </summary>
+        public List<RendicontoLogViewModel> RendicontoLogs { get; set; }
+
         public int OreTotali { get; set; }
     }
 }
