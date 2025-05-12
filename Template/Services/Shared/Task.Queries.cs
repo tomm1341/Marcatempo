@@ -76,12 +76,24 @@ namespace Template.Services.Shared
         public string Tipologia { get; set; }
         public string Descrizione { get; set; }
         public string Priorità { get; set; }
+        public string NomeAssegnatario { get; set; }
         public string NomeCreatore { get; set; }
         public DateTime DataCreazione { get; set; }
         public DateTime DataScadenza { get; set; }
         public Guid? IdAssegnatario { get; set; }
     }
 
+    public class GetIntestatarioFromIdDTO
+    {
+        public Guid TaskId { get; set; }
+        public Guid IdAssegnatario { get; set; }
+
+        public class User {
+            public Guid UserId { get; set; }
+            public string Nome { get; set; }
+            public string Cognome { get; set; }
+        }
+    }
 
         public class ChangeTaskDescriptionCommand
         {
@@ -96,7 +108,7 @@ namespace Template.Services.Shared
             }
         }
     
-
+      
 
     public partial class SharedService
     {
@@ -213,6 +225,20 @@ namespace Template.Services.Shared
 
             return task.Descrizione;
         }
+
+        public async Task<string> GetAssigneeNameByTaskAsync(Guid taskId)
+        {
+            var fullName = await (
+                from t in _dbContext.Tasks
+                where t.Id == taskId && t.IdAssegnatario != null
+                join u in _dbContext.Users
+                    on t.IdAssegnatario equals u.Id
+                select u.Nome + " " + u.Cognome
+            ).FirstOrDefaultAsync();
+
+            return fullName;
+        }
+
 
     }
 }
