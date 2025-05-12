@@ -24,7 +24,6 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <!-- Alert placeholder per client-side -->
             <div id="clientAlert"></div>
 
             <!-- Header -->
@@ -35,7 +34,6 @@
                 </span>
             </div>
 
-            <!-- Form unico per descrizione + rendiconto -->
             <form id="saveForm"
                   asp-action="SaveDetails"
                   asp-controller="Dettagli"
@@ -45,9 +43,7 @@
                 <input type="hidden" asp-for="IdAssegnatario" />
 
                 <div class="row g-4">
-                    <!-- Colonna sinistra: info statiche -->
                     <div class="col-12 col-md-4">
-                        <!-- ... (stessi campi di prima) ... -->
                         <div class="mb-3">
                             <label class="form-label small text-muted">Priorità</label>
                             <div class="@GetPrioritaBadgeClass(Model.Priorità)">
@@ -76,7 +72,6 @@
                         </div>
                     </div>
 
-                    <!-- Colonna destra: form modificabili -->
                     <div class="col-12 col-md-8">
                         <div class="mb-3">
                             <label class="form-label small text-muted">Descrizione</label>
@@ -139,7 +134,6 @@
                             <i class="bi bi-save me-1"></i> Salva modifiche
                         </button>
 
-                        <!-- Form separato dentro la stessa riga -->
                         <form id="completeForm"
                               asp-action="MarkAsCompleted"
                               asp-controller="Dettagli"
@@ -169,7 +163,6 @@
 
 @section scripts {
     <script>
-        // In-app alert function (inserisce un alert bootstrap nella pagina)
         function showClientAlert(message, type = 'warning') {
           const container = document.getElementById('clientAlert');
           container.innerHTML = `
@@ -179,7 +172,6 @@
             </div>`;
         }
 
-        // Prima di inviare "Completa Task", controlla modifiche non salvate
         document.getElementById('completeButton').addEventListener('click', function (e) {
           const descr = document.getElementById('descrizioneInput');
           const data  = document.getElementById('dataInput');

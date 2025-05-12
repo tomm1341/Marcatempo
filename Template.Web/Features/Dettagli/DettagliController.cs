@@ -32,7 +32,6 @@ namespace Template.Web.Features.Dettagli
         {
             var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
-            // Carico il VM di base
             var vm = new DettagliViewModel
             {
                 TaskId = dto.Id,
@@ -46,6 +45,7 @@ namespace Template.Web.Features.Dettagli
                 IdAssegnatario = dto.IdAssegnatario,
                 IdCreatore = dto.IdCreatore,
                 NomeCreatore = dto.NomeCreatore,
+
                 IsOwner = dto.IdAssegnatario.HasValue && dto.IdAssegnatario.Value == CurrentUserId
             };
 
@@ -107,7 +107,6 @@ namespace Template.Web.Features.Dettagli
         [ValidateAntiForgeryToken]
         public async virtual Task<IActionResult> MarkAsCompleted(Guid id)
         {
-            // 1) Verifico che l’utente sia effettivamente assegnatario  
             var task = await _dbContext.Tasks.FindAsync(id);
             if (task == null)
             {
@@ -120,7 +119,6 @@ namespace Template.Web.Features.Dettagli
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            // 2) Controllo che esista almeno una voce di rendiconto per questo task + utente
             var hasRendiconto = await _dbContext.Rendiconto
                 .AnyAsync(r => r.IdTask == id && r.IdUtente == CurrentUserId);
             if (!hasRendiconto)
@@ -129,7 +127,6 @@ namespace Template.Web.Features.Dettagli
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            // 3) Eseguo il comando per marcare come completato
             var message = await _sharedService.Handle(new MarkTaskAsCompleted
             {
                 TaskId = id,
