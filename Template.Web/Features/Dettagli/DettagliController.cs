@@ -28,7 +28,7 @@ namespace Template.Web.Features.Dettagli
 
 
         [HttpGet]
-        public async virtual Task<IActionResult> Dettagli(Guid id)
+        public async virtual Task<IActionResult> Details(Guid id)
         {
             var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
@@ -73,7 +73,7 @@ namespace Template.Web.Features.Dettagli
         public async virtual Task<IActionResult> SaveDetails(DettagliViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("Dettagli", model);
+                return RedirectToAction(nameof(Details), new { id = model.TaskId });
 
             if (model.IdAssegnatario != CurrentUserId)
                 return Forbid();
@@ -100,7 +100,7 @@ namespace Template.Web.Features.Dettagli
                 ? "Descrizione e ore salvate."
                 : "Descrizione salvata.";
 
-            return RedirectToAction(nameof(Dettagli), new { id = model.TaskId });
+            return RedirectToAction(nameof(Details), new { id = model.TaskId });
         }
 
         [HttpPost]
@@ -112,12 +112,12 @@ namespace Template.Web.Features.Dettagli
             if (task == null)
             {
                 TempData["Error"] = "Task non trovato.";
-                return RedirectToAction(nameof(Dettagli), new { id });
+                return RedirectToAction(nameof(Details), new { id });
             }
             if (task.IdAssegnatario != CurrentUserId)
             {
                 TempData["Error"] = "Non sei autorizzato a modificare questo task.";
-                return RedirectToAction(nameof(Dettagli), new { id });
+                return RedirectToAction(nameof(Details), new { id });
             }
 
             // 2) Controllo che esista almeno una voce di rendiconto per questo task + utente
@@ -126,7 +126,7 @@ namespace Template.Web.Features.Dettagli
             if (!hasRendiconto)
             {
                 TempData["Error"] = "Devi prima dichiarare le ore lavorate per poter completare il task.";
-                return RedirectToAction(nameof(Dettagli), new { id });
+                return RedirectToAction(nameof(Details), new { id });
             }
 
             // 3) Eseguo il comando per marcare come completato
@@ -137,7 +137,7 @@ namespace Template.Web.Features.Dettagli
             });
 
             TempData["Success"] = message;
-            return RedirectToAction(nameof(Dettagli), new { id });
+            return RedirectToAction(nameof(Details), new { id });
         }
 
     }
