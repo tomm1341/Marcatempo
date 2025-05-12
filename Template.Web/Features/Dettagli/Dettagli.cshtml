@@ -7,7 +7,6 @@
         "Completato" => "bg-success text-white",
         _ => "bg-secondary text-white"
     };
-
     string GetPrioritaBadgeClass(string priorita) => priorita switch
     {
         "Alta" => "text-danger fw-bold",
@@ -24,9 +23,6 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <div id="clientAlert"></div>
-
-            <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="card-title">@Model.Titolo</h1>
                 <span class="badge px-3 py-2 @GetStatoBadgeClass(Model.Stato)">
@@ -34,9 +30,8 @@
                 </span>
             </div>
 
-            <form id="saveForm"
+            <form asp-controller="Dettagli"
                   asp-action="SaveDetails"
-                  asp-controller="Dettagli"
                   method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="TaskId" />
@@ -53,13 +48,13 @@
                         <div class="mb-3">
                             <label class="form-label small text-muted">Scadenza</label>
                             <div class="bg-dark text-white px-3 py-2 rounded">
-                                @Model.Scadenza.ToString("dd/MM/yyyy")
+                                @Model.Scadenza:dd/MM/yyyy
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted">Creato il</label>
                             <div class="text-secondary">
-                                @Model.Creazione.ToString("dd/MM/yyyy HH:mm")
+                                @Model.Creazione:dd/MM/yyyy HH:mm
                             </div>
                         </div>
                         <div class="mb-3">
@@ -79,10 +74,7 @@
                             {
                                 <textarea asp-for="Descrizione"
                                           class="form-control"
-                                          rows="5"
-                                          id="descrizioneInput"
-                                          data-orig-descrizione="@Model.Descrizione">
-                    </textarea>
+                                          rows="5"></textarea>
                             }
                             else
                             {
@@ -96,31 +88,27 @@
                             <h5 class="small text-muted">Rendiconto ore lavorate</h5>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-4">
-                                    <label class="form-label small text-muted">Data completamento</label>
+                                    <label class="form-label">Data completamento</label>
                                     <input asp-for="Data"
                                            type="date"
                                            class="form-control"
-                                           id="dataInput"
-                                           data-orig-data="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")"
-                                           value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
+                                           value="@(Model.Data != default
+                                                       ? Model.Data.ToString("yyyy-MM-dd")
+                                                       : DateTime.Today.ToString("yyyy-MM-dd"))" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label small text-muted">Ora inizio</label>
+                                    <label class="form-label">Ora inizio</label>
                                     <input asp-for="OraInizio"
                                            type="number"
                                            min="0" max="23"
-                                           class="form-control"
-                                           id="inizioInput"
-                                           data-orig-inizio="@Model.OraInizio" />
+                                           class="form-control" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label small text-muted">Ora fine</label>
+                                    <label class="form-label">Ora fine</label>
                                     <input asp-for="OraFine"
                                            type="number"
                                            min="0" max="23"
-                                           class="form-control"
-                                           id="fineInput"
-                                           data-orig-fine="@Model.OraFine" />
+                                           class="form-control" />
                                 </div>
                             </div>
                         }
@@ -134,25 +122,20 @@
                             <i class="bi bi-save me-1"></i> Salva modifiche
                         </button>
 
-                        <form id="completeForm"
-                              asp-action="MarkAsCompleted"
-                              asp-controller="Dettagli"
-                              method="post"
-                              class="m-0">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@Model.TaskId" />
-                            <button id="completeButton" type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle me-1"></i> Completa Task
-                            </button>
-                        </form>
+                        <button type="submit"
+                                formaction="@Url.Action("MarkAsCompleted", "Dettagli", new { id = Model.TaskId })"
+                                formmethod="post"
+                                class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Completa Task
+                        </button>
                     </div>
                 }
             </form>
 
-            <!-- Back Button -->
+            <!-- Torna indietro -->
             <div class="mt-4">
-                <a asp-action="Disponibili"
-                   asp-controller="Disponibili"
+                <a asp-controller="Disponibili"
+                   asp-action="Disponibili"
                    class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
@@ -160,37 +143,3 @@
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script>
-        function showClientAlert(message, type = 'warning') {
-          const container = document.getElementById('clientAlert');
-          container.innerHTML = `
-            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-              ${message}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
-            </div>`;
-        }
-
-        document.getElementById('completeButton').addEventListener('click', function (e) {
-          const descr = document.getElementById('descrizioneInput');
-          const data  = document.getElementById('dataInput');
-          const ini   = document.getElementById('inizioInput');
-          const fin   = document.getElementById('fineInput');
-
-          const changed =
-            (descr && descr.value     !== descr.dataset.origDescrizione) ||
-            (data  && data.value      !== data.dataset.origData)      ||
-            (ini   && ini.value       !== ini.dataset.origInizio)    ||
-            (fin   && fin.value       !== fin.dataset.origFine);
-
-          if (changed) {
-            e.preventDefault();
-            showClientAlert(
-              "Ci sono modifiche non salvate. Salvale prima di completare il task.",
-              'warning'
-            );
-          }
-        });
-    </script>
-}
