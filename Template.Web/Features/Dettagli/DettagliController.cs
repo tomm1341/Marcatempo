@@ -44,10 +44,22 @@ namespace Template.Web.Features.Dettagli
                 Scadenza = dto.DataScadenza,
                 IdAssegnatario = dto.IdAssegnatario,
                 IdCreatore = dto.IdCreatore,
+                NomeAssegnatario = dto.NomeAssegnatario,
                 NomeCreatore = dto.NomeCreatore,
 
                 IsOwner = dto.IdAssegnatario.HasValue && dto.IdAssegnatario.Value == CurrentUserId
             };
+
+            if (dto.IdAssegnatario.HasValue)
+            {
+                vm.NomeAssegnatario =
+                    await _sharedService.GetAssigneeNameByTaskAsync(id)
+                    ?? "—";
+            }
+            else
+            {
+                vm.NomeAssegnatario = "Nessun assegnatario";
+            }
 
             if (vm.IsOwner)
             {
