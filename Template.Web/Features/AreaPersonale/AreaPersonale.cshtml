@@ -29,6 +29,7 @@
         min-height: 120px;
         background-color: #f8f9fa;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        position: relative;
     }
 
         .calendar-cell strong {
@@ -44,6 +45,15 @@
     .active-view {
         font-weight: bold;
         text-decoration: underline;
+    }
+
+    /* colori personalizzati per ferie/permessi */
+    .bg-warning {
+        background-color: #fff3cd !important;
+    }
+
+    .bg-info {
+        background-color: #d1ecf1 !important;
     }
 </style>
 
@@ -86,7 +96,7 @@
                     <div class="flex-grow-1 mb-2 mb-md-0">
                         @task.Descrizione
                     </div>
-                    <div class="px-3 py-2 bg-@task.StatoColore text-white rounded me-md-2">
+                    <div class="px-3 py-2 bg-@task.StatoColore text-black rounded me-md-2">
                         Scadenza: @task.DataScadenza.ToString("dd/MM/yyyy")
                     </div>
                     <div class="me-md-2"><i class="bi bi-info-circle"></i></div>
@@ -108,11 +118,33 @@
     </div>
 
     <hr />
+    <!-- form ferie -->
+    <form asp-action="AggiungiFeriePermesso" method="post" class="mb-4">
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="data">Data</label>
+                <input type="date" name="data" class="form-control" required />
+            </div>
+            <div class="col-md-4">
+                <label for="tipo">Tipo</label>
+                <select name="tipo" class="form-control" required>
+                    <option value="">Seleziona</option>
+                    <option value="Ferie">Ferie</option>
+                    <option value="Permesso">Permesso</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary mt-2">Salva</button>
+            </div>
+        </div>
+    </form>
 
     <!-- Calendario rendiconto -->
     <div class="row mt-5">
         <div class="col-12">
-            <h5>Rendiconto ore lavorate</h5>
+            <h5>Rendiconto ore lavorate e giorni di ferie/permesso</h5>
 
             <div class="d-flex justify-content-between align-items-center my-3 flex-wrap gap-2">
                 <div>
@@ -137,15 +169,14 @@
         const logs = [
         @foreach (var r in Model.RendicontoLogs)
         {
-            <text>
-                    {
-                        data: "@DateTime.ParseExact(r.Data, "dd/MM/yyyy", null).ToString("yyyy-MM-dd")",
-                        task: "@r.TitoloTask",
-                        inizio: "@r.OrarioInizio",
-                        fine: "@r.OrarioFine",
-                        ore: @r.OreLavorate
-                    },
-            </text>
+            <text>{ data: "@DateTime.ParseExact(r.Data, "dd/MM/yyyy", null).ToString("yyyy-MM-dd")", task: "@r.TitoloTask", inizio: "@r.OrarioInizio", fine: "@r.OrarioFine", ore: @r.OreLavorate },</text>
+        }
+        ];
+
+        const daysOff = [
+        @foreach (var fp in Model.FeriePermessoLogs)
+        {
+            <text>{ date: "@DateTime.ParseExact(fp.Data, "dd/MM/yyyy", null).ToString("yyyy-MM-dd")", type: "@fp.Tipo" },</text>
         }
         ];
 
@@ -156,7 +187,6 @@
         const viewLabel = document.getElementById("viewLabel");
         const totalEl = document.getElementById("weeklyTotal");
 
-       
         function toLocalISO(date) {
             return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
         }
@@ -176,6 +206,7 @@
         function render() {
             calendarEl.innerHTML = '';
             totalEl.innerHTML = '';
+
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             const day = currentDate.getDate();
@@ -195,17 +226,12 @@
                 for (let i = 0; i < totalDays; i++) {
                     const current = new Date(calendarStart);
                     current.setDate(calendarStart.getDate() + i);
-                    const dateStr = toLocalISO(current); 
+                    const dateStr = toLocalISO(current);
                     const dailyLogs = logs.filter(l => l.data === dateStr);
-                    cells.push({
-                        date: current.getDate(),
-                        fullDate: dateStr,
-                        logs: dailyLogs,
-                        isOtherMonth: current.getMonth() !== month
-                    });
+                    const off = daysOff.find(d => d.date === dateStr);
+                    cells.push({ date: current.getDate(), fullDate: dateStr, logs: dailyLogs, offType: off?.type, isOtherMonth: current.getMonth() !== month });
                 }
-            }
-            else if (currentView === 'week') {
+            } else if (currentView === 'week') {
                 const start = new Date(currentDate);
                 start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
                 viewLabel.innerText = "Settimana di " + start.toLocaleDateString("it-IT");
@@ -216,18 +242,19 @@
                     d.setDate(start.getDate() + i);
                     const dateStr = toLocalISO(d);
                     const dailyLogs = logs.filter(l => l.data === dateStr);
+                    const off = daysOff.find(d => d.date === dateStr);
                     const ore = dailyLogs.reduce((sum, l) => sum + l.ore, 0);
                     weekTotal += ore;
-                    cells.push({ date: d.getDate(), fullDate: dateStr, logs: dailyLogs });
+                    cells.push({ date: d.getDate(), fullDate: dateStr, logs: dailyLogs, offType: off?.type });
                 }
 
                 totalEl.innerText = `Totale settimana: ${weekTotal}h`;
-            }
-            else if (currentView === 'day') {
+            } else if (currentView === 'day') {
                 const dateStr = toLocalISO(currentDate);
                 const dailyLogs = logs.filter(l => l.data === dateStr);
+                const off = daysOff.find(d => d.date === dateStr);
                 const ore = dailyLogs.reduce((sum, l) => sum + l.ore, 0);
-                cells.push({ date: currentDate.getDate(), fullDate: dateStr, logs: dailyLogs });
+                cells.push({ date: currentDate.getDate(), fullDate: dateStr, logs: dailyLogs, offType: off?.type });
                 viewLabel.innerText = `Giorno ${currentDate.toLocaleDateString("it-IT")}`;
                 totalEl.innerText = `Ore lavorate: ${ore}h`;
             }
@@ -235,13 +262,17 @@
             for (const cell of cells) {
                 const el = document.createElement("div");
                 el.classList.add("calendar-cell");
-
                 if (cell.isOtherMonth) el.classList.add("text-muted");
+                if (cell.offType === "Ferie") el.classList.add("bg-warning");
+                else if (cell.offType === "Permesso") el.classList.add("bg-info");
 
                 el.innerHTML = `<strong>${cell.date}</strong>`;
-                if (cell.logs.length === 0) {
+                if (cell.logs.length === 0 && !cell.offType) {
                     el.innerHTML += `<div class="text-muted small">Nessun task</div>`;
                 } else {
+                    if (cell.offType) {
+                        el.innerHTML += `<div class="small mt-1 fw-bold">${cell.offType}</div>`;
+                    }
                     let dailyTotal = 0;
                     cell.logs.forEach(log => {
                         el.innerHTML += `
@@ -252,7 +283,9 @@
                             </div>`;
                         dailyTotal += log.ore;
                     });
-                    el.innerHTML += `<div class="calendar-totale text-end text-primary">${dailyTotal}h</div>`;
+                    if (dailyTotal > 0) {
+                        el.innerHTML += `<div class="calendar-totale text-end text-primary">${dailyTotal}h</div>`;
+                    }
                 }
 
                 calendarEl.appendChild(el);
@@ -275,5 +308,4 @@
 
         setView('month');
     </script>
-
-
+</div>
