@@ -18,7 +18,6 @@ namespace Template.Web.Features.AreaPersonale
             _sharedService = sharedService;
         }
 
-
         private string FormatRole(string role) =>
             role switch
             {
@@ -85,7 +84,16 @@ namespace Template.Web.Features.AreaPersonale
 
             var totaleOre = rendDtos.Sum(r => r.OreLavorate);
 
-            // 3) ViewModel finale
+            // 3) Recupero le ferie/permessi
+            var feriePermessiDtos = await _sharedService.GetFeriePermessiByUserAsync(userId);
+
+            var feriePermessiLogs = feriePermessiDtos.Select(fp => new FeriePermessoLogViewModel
+            {
+                Data = fp.Data.ToString("dd/MM/yyyy"),
+                Tipo = fp.Tipo // "Ferie" o "Permesso"
+            }).ToList();
+
+            // 4) ViewModel finale
             var model = new AreaPersonaleViewModel
             {
                 UserId = userId,
@@ -94,11 +102,30 @@ namespace Template.Web.Features.AreaPersonale
                 Ruolo = FormatRole(Identita.RuoloUtenteCorrente),
                 TaskInLavorazione = taskItems,
                 RendicontoLogs = rendicontoLogs,
-                OreTotali = (int)totaleOre
+                OreTotali = (int)totaleOre,
+                FeriePermessoLogs = feriePermessiLogs // Aggiungi la lista delle ferie/permessi
             };
 
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async virtual Task<IActionResult> AggiungiFeriePermesso(DateTime data, string tipo)
+        {
+            var userId = Identita.IdUtenteCorrente;
+
+            try
+            {
+                await _sharedService.UpdateFeriePermessoAsync(userId, data, tipo);
+                TempData["Success"] = $"{tipo} inserito per il {data:dd/MM/yyyy}.";
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(AreaPersonale));
+        }
     }
-}
+    }
