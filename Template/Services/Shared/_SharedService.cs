@@ -16,7 +16,7 @@ namespace Template.Services.Shared
             _dbContext = dbContext;
         }
 
-        // The following code is used to handle the 'Salva modifiche' button in Dettagli
+        // Metodo per aggiornare un task e un rendiconto
         public async virtual Task<Guid?> UpdateTaskAndRendicontoAsync(
             Guid taskId,
             string nuovaDescrizione,
@@ -69,6 +69,7 @@ namespace Template.Services.Shared
             return rendId;
         }
 
+        // Metodo per recuperare i rendiconti di un task
         public async virtual Task<IEnumerable<RendicontoDTO>> GetRendicontoByTaskAsync(Guid taskId)
         {
             return await _dbContext.Rendiconto
@@ -82,6 +83,49 @@ namespace Template.Services.Shared
                     Data = r.Data,
                     OraInizio = r.OraInizio,
                     OraFine = r.OraFine
+                })
+                .ToListAsync();
+        }
+
+        // Nuovo metodo per aggiornare o salvare ferie/permessi
+        public async virtual Task<Guid?> UpdateFeriePermessoAsync(Guid userId, DateTime data, string tipo)
+        {
+            var feriePermesso = await _dbContext.FeriePermesso
+                .FirstOrDefaultAsync(fp => fp.UserId == userId && fp.Data.Date == data.Date);
+
+            if (feriePermesso != null)
+            {
+                // Se esiste già, aggiorna
+                feriePermesso.Tipo = tipo;
+                _dbContext.FeriePermesso.Update(feriePermesso);
+            }
+            else
+            {
+                // Se non esiste, crea un nuovo record
+                feriePermesso = new FeriePermesso
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    Data = data,
+                    Tipo = tipo  // "Ferie" o "Permesso"
+                };
+                _dbContext.FeriePermesso.Add(feriePermesso);
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return feriePermesso.Id;
+        }
+
+        // Nuovo metodo per recuperare tutte le ferie/permessi di un utente
+        public async virtual Task<IEnumerable<FeriePermessoDTO>> GetFeriePermessiByUserAsync(Guid userId)
+        {
+            return await _dbContext.FeriePermesso
+                .Where(fp => fp.UserId == userId)
+                .Select(fp => new FeriePermessoDTO
+                {
+                    UserId = fp.UserId,
+                    Data = fp.Data,
+                    Tipo = fp.Tipo // "Ferie" o "Permesso"
                 })
                 .ToListAsync();
         }
