@@ -33,7 +33,7 @@ namespace Template.Services.Shared
 
         public DateTime DataCreazione { get; set;} // Optional
 
-        public DateTime DataScadenza { get; set;} // Optional
+        public DateTime? DataScadenza { get; set;} // Optional
 
 
     }

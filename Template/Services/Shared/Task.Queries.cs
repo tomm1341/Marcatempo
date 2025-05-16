@@ -30,7 +30,7 @@ namespace Template.Services.Shared
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataCreazione { get; set; }  
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
 
     }
 
@@ -59,7 +59,7 @@ namespace Template.Services.Shared
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataCreazione { get; set; }
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
     }
 
     public class TaskDetailQuery
@@ -79,7 +79,7 @@ namespace Template.Services.Shared
         public string NomeAssegnatario { get; set; }
         public string NomeCreatore { get; set; }
         public DateTime DataCreazione { get; set; }
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
         public Guid? IdAssegnatario { get; set; }
     }
 

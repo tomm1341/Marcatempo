@@ -14,7 +14,7 @@ namespace Template.Services.Shared
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Descrizione { get; set; }
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
     }
 
     public class ChangeTaskStatusCommand
