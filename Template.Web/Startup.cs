@@ -131,7 +131,7 @@ namespace Template.Web
                 //  Altre rotte
                 endpoints.MapControllerRoute("Storico", "{controller=Storico}/{action=Storico}");
                 endpoints.MapControllerRoute("Disponibili", "{controller=Disponibili}/{action=Disponibili}");
-                endpoints.MapControllerRoute("Dettagli", "{controller=Dettagli}/{action=Dettagli}");
+                endpoints.MapControllerRoute("Dettagli", "{controller=Dettagli}/{action=Details}");
                 endpoints.MapControllerRoute("AreaPersonale", "{controller=AreaPersonale}/{action=AreaPersonale}");
             });
         }
