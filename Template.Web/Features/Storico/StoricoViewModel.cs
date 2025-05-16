@@ -21,7 +21,7 @@ namespace Template.Web.Features.Storico
         public string Descrizione { get; set; }
         public TipologiaEvento Tipologia { get; set; }
         public string Priorità { get; set; }
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
     }
 }
     
