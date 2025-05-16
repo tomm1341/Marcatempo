@@ -251,35 +251,57 @@
             }
 
             for (const cell of cells) {
-                const el = document.createElement("div");
-                el.classList.add("calendar-cell");
-                if (cell.isOtherMonth) el.classList.add("text-muted");
-                if (cell.offType === "Ferie") el.classList.add("bg-warning");
-                else if (cell.offType === "Permesso") el.classList.add("bg-info");
+            const el = document.createElement("div");
+            el.classList.add("calendar-cell");
 
-                el.innerHTML = `<strong>${cell.date}</strong>`;
-                if (cell.logs.length === 0 && !cell.offType) {
-                    el.innerHTML += `<div class="text-muted small">Nessun task</div>`;
-                } else {
-                    if (cell.offType) {
-                        el.innerHTML += `<div class="small mt-1 fw-bold">${cell.offType}</div>`;
-                    }
-                    let dailyTotal = 0;
-                    cell.logs.forEach(log => {
-                        el.innerHTML += `
-                            <div class="small mt-1">
-                                <div><strong>${log.task}</strong></div>
-                                <div>${log.inizio} - ${log.fine}</div>
-                                <div>${log.ore}h</div>
-                            </div>`;
-                        dailyTotal += log.ore;
-                    });
-                    if (dailyTotal > 0) {
-                        el.innerHTML += `<div class="calendar-totale text-end text-primary">${dailyTotal}h</div>`;
-                    }
+            const dateObj = new Date(cell.fullDate);
+            const dayOfWeek = dateObj.getDay(); // 0 = Domenica, 6 = Sabato
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            const isWorkday = !isWeekend;
+
+            if (cell.isOtherMonth) el.classList.add("text-muted");
+            if (cell.offType === "Ferie") el.classList.add("bg-warning");
+            else if (cell.offType === "Permesso") el.classList.add("bg-info");
+            else if (isWeekend) el.style.opacity = "0.3";
+
+            el.innerHTML = `<strong>${cell.date}</strong>`;
+
+            if (cell.logs.length === 0 && !cell.offType) {
+                el.innerHTML += `<div class="text-muted small">Nessun task</div>`;
+            } else {
+                if (cell.offType) {
+                    el.innerHTML += `<div class="small mt-1 fw-bold">${cell.offType}</div>`;
                 }
-                calendarEl.appendChild(el);
+
+                cell.logs.forEach(log => {
+                    el.innerHTML += `
+                        <div class="small mt-1">
+                            <div><strong>${log.task}</strong></div>
+                            <div>${log.inizio} - ${log.fine}</div>
+                            <div>${log.ore}h</div>
+                        </div>`;
+                });
             }
+
+            // Calcolo ore totali della giornata
+            const dailyTotal = cell.logs.reduce((sum, l) => sum + l.ore, 0);
+
+            // Visualizza in basso a destra il conteggio ore lavorate o mancanti
+            if (isWorkday && !cell.offType) {
+                if (dailyTotal >= 8) {
+                    el.innerHTML += `<div class="calendar-totale text-end text-success">${dailyTotal}h</div>`;
+                } else {
+                    const oreMancanti = 8 - dailyTotal;
+                    el.innerHTML += `<div class="calendar-totale text-end text-danger">-${oreMancanti}h</div>`;
+                }
+            } else if (dailyTotal > 0) {
+                el.innerHTML += `<div class="calendar-totale text-end text-primary">${dailyTotal}h</div>`;
+            }
+
+            calendarEl.appendChild(el);
+        }
+
+
         }
 
         document.getElementById("prevBtn").addEventListener("click", () => {
