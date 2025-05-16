@@ -18,7 +18,7 @@ namespace Template.Web.Features.Dettagli
 
         public string Priorità { get; set; } 
         public DateTime Creazione { get; set; }
-        public DateTime Scadenza { get; set; } 
+        public DateTime? Scadenza { get; set; } 
         public string Stato { get; set; } 
 
 

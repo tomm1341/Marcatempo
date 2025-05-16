@@ -68,7 +68,8 @@
                         <div class="mb-3">
                             <label class="form-label small text-muted">Scadenza</label>
                             <div class="bg-secondary text-white px-3 py-2 rounded">
-                                @Model.Scadenza.ToString("dd/MM/yyyy")
+                                @(Model.Scadenza.HasValue ? Model.Scadenza.Value.ToString("dd/MM/yyyy") : "Nessuna")
+
                             </div>
                         </div>
                         <div class="mb-3">
