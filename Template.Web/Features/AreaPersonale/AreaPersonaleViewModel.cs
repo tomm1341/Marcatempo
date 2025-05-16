@@ -46,5 +46,7 @@ namespace Template.Web.Features.AreaPersonale
         public List<RendicontoLogViewModel> RendicontoLogs { get; set; }
 
         public int OreTotali { get; set; }
+
+        public List<FeriePermessoLogViewModel> FeriePermessoLogs { get; set; }
     }
 }
