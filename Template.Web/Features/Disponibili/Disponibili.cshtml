@@ -39,7 +39,7 @@
                         <th>Tipologia</th>
                         <th>Priorità</th>
                         <th>Scadenza</th>
-                        <th>Azione</th>
+                        <th>Assegnazione</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,23 +67,19 @@
                                 @task.Descrizione
                             </td>
                             <td>
-                                <span class="badge bg-@(task.Tipologia == TipologiaEvento.Esterno ? "primary" : "secondary")">
-                                    @(task.Tipologia == TipologiaEvento.Esterno ? "Esterno" : "Interno")
-                                </span>
+                                @(task.Tipologia == TipologiaEvento.Esterno ? "Esterno" : "Interno")
                             </td>
                             <td>
-                                <span class="badge text-bg-@prioritaClass fw-semibold">
-                                    @task.Priorità
-                                </span>
+                                @task.Priorità
                             </td>
                             <td>
                                 @task.Scadenza?.ToString("dd/MM/yyyy")
                             </td>
-                            <td>
+                            <td class="text-nowrap">
                                 <form asp-action="PrendiInCarico" method="post" class="d-inline">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="taskId" value="@task.Id" />
-                                    <button type="submit" class="btn btn-success btn-sm">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="bi bi-check2-circle me-1"></i> Prendi in carico
                                     </button>
                                 </form>
