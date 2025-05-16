@@ -14,6 +14,7 @@ namespace Template.Web.Features.Dettagli
         public string Titolo { get; set; }
         public string Tipologia { get; set; }
         public string Descrizione { get; set; }
+        public string NomeAssegnatario { get; set; }
 
         public string Priorità { get; set; } 
         public DateTime Creazione { get; set; }

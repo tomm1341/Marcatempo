@@ -7,7 +7,6 @@
         "Completato" => "bg-success text-white",
         _ => "bg-secondary text-white"
     };
-
     string GetPrioritaBadgeClass(string priorita) => priorita switch
     {
         "Alta" => "text-danger fw-bold",
@@ -24,8 +23,23 @@
     <div class="card shadow-sm">
         <div class="card-body">
 
-            <!-- Alert placeholder per client-side -->
-            <div id="clientAlert"></div>
+            <!-- Alert area -->
+            <div id="clientAlert">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                else if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+            </div>
 
             <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -35,28 +49,25 @@
                 </span>
             </div>
 
-            <!-- Form unico per descrizione + rendiconto -->
+            <!-- SAVE form -->
             <form id="saveForm"
-                  asp-action="SaveDetails"
                   asp-controller="Dettagli"
+                  asp-action="SaveDetails"
                   method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="TaskId" />
                 <input type="hidden" asp-for="IdAssegnatario" />
 
                 <div class="row g-4">
-                    <!-- Colonna sinistra: info statiche -->
+                    <!-- Sidebar -->
                     <div class="col-12 col-md-4">
-                        <!-- ... (stessi campi di prima) ... -->
                         <div class="mb-3">
                             <label class="form-label small text-muted">Priorità</label>
-                            <div class="@GetPrioritaBadgeClass(Model.Priorità)">
-                                @Model.Priorità
-                            </div>
+                            <div class="@GetPrioritaBadgeClass(Model.Priorità)">@Model.Priorità</div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted">Scadenza</label>
-                            <div class="bg-dark text-white px-3 py-2 rounded">
+                            <div class="bg-secondary text-white px-3 py-2 rounded">
                                 @Model.Scadenza.ToString("dd/MM/yyyy")
                             </div>
                         </div>
@@ -70,24 +81,27 @@
                             <label class="form-label small text-muted">Creatore</label>
                             <div class="text-secondary">@Model.NomeCreatore</div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted">Preso in carico da</label>
+                            <div class="text-secondary">@Model.NomeAssegnatario</div>
+                        </div>
                         <div>
                             <label class="form-label small text-muted">Tipologia</label>
                             <div class="text-secondary">@Model.Tipologia</div>
                         </div>
                     </div>
 
-                    <!-- Colonna destra: form modificabili -->
+                    <!-- Main -->
                     <div class="col-12 col-md-8">
                         <div class="mb-3">
                             <label class="form-label small text-muted">Descrizione</label>
                             @if (Model.IsOwner)
                             {
                                 <textarea asp-for="Descrizione"
-                                          class="form-control"
-                                          rows="5"
                                           id="descrizioneInput"
-                                          data-orig-descrizione="@Model.Descrizione">
-                    </textarea>
+                                          data-orig="@Model.Descrizione"
+                                          class="form-control"
+                                          rows="5"></textarea>
                             }
                             else
                             {
@@ -103,29 +117,31 @@
                                 <div class="col-12 col-md-4">
                                     <label class="form-label small text-muted">Data completamento</label>
                                     <input asp-for="Data"
+                                           id="dataInput"
+                                           data-orig="@Model.Data.ToString("yyyy-MM-dd")"
                                            type="date"
                                            class="form-control"
-                                           id="dataInput"
-                                           data-orig-data="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")"
-                                           value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
+                                           value="@(Model.Data != default
+                                                ? Model.Data.ToString("yyyy-MM-dd")
+                                                : "")" />
                                 </div>
                                 <div class="col-6 col-md-4">
                                     <label class="form-label small text-muted">Ora inizio</label>
                                     <input asp-for="OraInizio"
-                                           type="number"
-                                           min="0" max="23"
-                                           class="form-control"
                                            id="inizioInput"
-                                           data-orig-inizio="@Model.OraInizio" />
+                                           data-orig="@Model.OraInizio"
+                                           type="number" min="0" max="23"
+                                           class="form-control"
+                                           value="@(Model.OraInizio)" />
                                 </div>
                                 <div class="col-6 col-md-4">
                                     <label class="form-label small text-muted">Ora fine</label>
                                     <input asp-for="OraFine"
-                                           type="number"
-                                           min="0" max="23"
-                                           class="form-control"
                                            id="fineInput"
-                                           data-orig-fine="@Model.OraFine" />
+                                           data-orig="@Model.OraFine"
+                                           type="number" min="0" max="23"
+                                           class="form-control"
+                                           value="@(Model.OraFine)" />
                                 </div>
                             </div>
                         }
@@ -135,70 +151,79 @@
                 @if (Model.IsOwner)
                 {
                     <div class="d-flex justify-content-end gap-2 mt-4">
+                        <!-- Salva -->
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-save me-1"></i> Salva modifiche
                         </button>
-
-                        <!-- Form separato dentro la stessa riga -->
-                        <form id="completeForm"
-                              asp-action="MarkAsCompleted"
-                              asp-controller="Dettagli"
-                              method="post"
-                              class="m-0">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@Model.TaskId" />
-                            <button id="completeButton" type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-circle me-1"></i> Completa Task
-                            </button>
-                        </form>
+                        <!-- Completa -->
+                        <button id="completeButton"
+                                type="button"
+                                class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i> Completa Task
+                        </button>
                     </div>
                 }
             </form>
 
-            <!-- Back Button -->
+            <!-- Hidden form per completare -->
+            <form id="completeForm"
+                  asp-controller="Dettagli"
+                  asp-action="MarkAsCompleted"
+                  method="post" class="d-none">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.TaskId" />
+            </form>
+
+            <!-- Torna indietro -->
             <div class="mt-4">
-                <a asp-action="Disponibili"
-                   asp-controller="Disponibili"
+                <a asp-controller="Disponibili"
+                   asp-action="Disponibili"
                    class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
             </div>
+
         </div>
     </div>
 </div>
 
 @section scripts {
     <script>
-        // In-app alert function (inserisce un alert bootstrap nella pagina)
         function showClientAlert(message, type = 'warning') {
-          const container = document.getElementById('clientAlert');
-          container.innerHTML = `
-            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-              ${message}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
-            </div>`;
+            document.getElementById('clientAlert').innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>`;
         }
 
-        // Prima di inviare "Completa Task", controlla modifiche non salvate
-        document.getElementById('completeButton').addEventListener('click', function (e) {
-          const descr = document.getElementById('descrizioneInput');
-          const data  = document.getElementById('dataInput');
-          const ini   = document.getElementById('inizioInput');
-          const fin   = document.getElementById('fineInput');
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('completeButton');
+            if (!btn) return;
 
-          const changed =
-            (descr && descr.value     !== descr.dataset.origDescrizione) ||
-            (data  && data.value      !== data.dataset.origData)      ||
-            (ini   && ini.value       !== ini.dataset.origInizio)    ||
-            (fin   && fin.value       !== fin.dataset.origFine);
+            btn.addEventListener('click', e => {
+                const d   = document.getElementById('dataInput').value;
+                const i   = document.getElementById('inizioInput').value;
+                const f   = document.getElementById('fineInput').value;
+                const od  = document.getElementById('dataInput').dataset.orig;
+                const oi  = document.getElementById('inizioInput').dataset.orig;
+                const of  = document.getElementById('fineInput').dataset.orig;
+                const txt = document.getElementById('descrizioneInput');
+                const otxt= txt ? txt.dataset.orig : null;
 
-          if (changed) {
-            e.preventDefault();
-            showClientAlert(
-              "Ci sono modifiche non salvate. Salvale prima di completare il task.",
-              'warning'
-            );
-          }
+                if (!d || !i || !f) {
+                    showClientAlert("Inserisci prima l'orario di rendiconto.", 'warning');
+                    return;
+                }
+                if ((txt && txt.value !== otxt) ||
+                    (d !== od) ||
+                    (i !== oi) ||
+                    (f !== of)) {
+                    showClientAlert("Ci sono modifiche non salvate. Salvale prima di completare il task.", 'warning');
+                    return;
+                }
+                document.getElementById('completeForm').submit();
+            });
         });
     </script>
 }
