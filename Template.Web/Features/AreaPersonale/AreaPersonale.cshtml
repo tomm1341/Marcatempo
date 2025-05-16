@@ -91,7 +91,8 @@
                 <div class="d-flex flex-column flex-md-row align-items-md-center p-3 border rounded bg-white shadow-sm">
                     <div class="flex-grow-1 mb-2 mb-md-0">@task.Descrizione</div>
                     <div class="px-3 py-2 bg-@task.StatoColore text-black rounded me-md-2">
-                        Scadenza: @task.DataScadenza.ToString("dd/MM/yyyy")
+                        Scadenza: @(task.DataScadenza?.ToString("dd/MM/yyyy") ?? "Nessuna")
+
                     </div>
                     <div class="me-md-2"><i class="bi bi-info-circle"></i></div>
                     <a asp-controller="Dettagli"

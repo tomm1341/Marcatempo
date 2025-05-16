@@ -13,7 +13,7 @@ namespace Template.Web.Features.AreaPersonale
         public string Priorità { get; set; }
         public string Descrizione { get; set; }
         public DateTime DataCreazione { get; set; }
-        public DateTime DataScadenza { get; set; }
+        public DateTime? DataScadenza { get; set; }
         public string StatoColore { get; set; } // bootstrap color: "warning", "success", ecc.
     }
 
