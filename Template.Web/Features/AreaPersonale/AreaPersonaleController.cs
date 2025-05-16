@@ -111,14 +111,24 @@ namespace Template.Web.Features.AreaPersonale
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async virtual Task<IActionResult> AggiungiFeriePermesso(DateTime data, string tipo)
+        public async virtual Task<IActionResult> AggiungiFeriePermesso(DateTime dataInizio, DateTime dataFine, string tipo)
         {
             var userId = Identita.IdUtenteCorrente;
 
+            if (dataFine < dataInizio)
+            {
+                TempData["Error"] = "La data fine non può essere precedente alla data inizio.";
+                return RedirectToAction(nameof(AreaPersonale));
+            }
+
             try
             {
-                await _sharedService.UpdateFeriePermessoAsync(userId, data, tipo);
-                TempData["Success"] = $"{tipo} inserito per il {data:dd/MM/yyyy}.";
+                for (var giorno = dataInizio.Date; giorno <= dataFine.Date; giorno = giorno.AddDays(1))
+                {
+                    await _sharedService.UpdateFeriePermessoAsync(userId, giorno, tipo);
+                }
+
+                TempData["Success"] = $"{tipo} inserito per il periodo dal {dataInizio:dd/MM/yyyy} al {dataFine:dd/MM/yyyy}.";
             }
             catch (ArgumentException ex)
             {
@@ -127,5 +137,6 @@ namespace Template.Web.Features.AreaPersonale
 
             return RedirectToAction(nameof(AreaPersonale));
         }
+
     }
-    }
+}
