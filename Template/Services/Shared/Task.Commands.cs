@@ -76,7 +76,7 @@ namespace Template.Services.Shared
 
         public async Task<string> Handle(ChangeTaskStatusCommand cmd)
         {
-            var statiValidi = new[] { "InAttesa", "InLavorazione", "Completato", "Approvato", "Respinto" };
+            var statiValidi = new[] { "InAttesa", "InLavorazione", "Completato", "Validato", "Respinto" };
 
             if (!statiValidi.Contains(cmd.Stato))
             {
@@ -150,7 +150,7 @@ namespace Template.Services.Shared
             _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
 
-            return $"Task con ID {task.Id} è stato preso in carico da {user.Username}.";
+            return $"Task con titolo {task.Titolo} è stato preso in carico da {user.Username}.";
         }
 
         public async Task<string> Handle(MarkTaskAsCompleted cmd)
@@ -170,7 +170,7 @@ namespace Template.Services.Shared
             _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
 
-            return $"Task con ID {task.Id} è stato segnato come completato.";
+            return $"Task con titolo {task.Titolo} è stato segnato come completato.";
 
         }
     }
