@@ -62,40 +62,39 @@
                     <!-- Sidebar -->
                     <div class="col-12 col-md-4">
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Priorità</label>
+                            <label class="form-label small text-secondary">Priorità</label>
                             <div class="@GetPrioritaBadgeClass(Model.Priorità)">@Model.Priorità</div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Scadenza</label>
-                            <div class="bg-secondary text-white px-3 py-2 rounded">
+                            <label class="form-label small text-secondary">Scadenza</label>
+                            <div class="bg-secondary text-white px-3 py-2 rounded text-dark fw-semibold" style="max-width: 150px;">
                                 @(Model.Scadenza.HasValue ? Model.Scadenza.Value.ToString("dd/MM/yyyy") : "Nessuna")
-
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Creato il</label>
-                            <div class="text-secondary">
+                            <label class="form-label small text-secondary">Creato il</label>
+                            <div class="text-dark fw-semibold">
                                 @Model.Creazione.ToString("dd/MM/yyyy HH:mm")
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Creatore</label>
-                            <div class="text-secondary">@Model.NomeCreatore</div>
+                            <label class="form-label small text-secondary">Creatore</label>
+                            <div class="text-dark fw-semibold">@Model.NomeCreatore</div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Preso in carico da</label>
-                            <div class="text-secondary">@Model.NomeAssegnatario</div>
+                            <label class="form-label small text-secondary">Preso in carico da</label>
+                            <div class="text-dark fw-semibold">@Model.NomeAssegnatario</div>
                         </div>
                         <div>
-                            <label class="form-label small text-muted">Tipologia</label>
-                            <div class="text-secondary">@Model.Tipologia</div>
+                            <label class="form-label small text-secondary">Tipologia</label>
+                            <div class="text-dark fw-semibold">@Model.Tipologia</div>
                         </div>
                     </div>
 
                     <!-- Main -->
                     <div class="col-12 col-md-8">
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Descrizione</label>
+                            <label class="form-label small text-secondary">Descrizione</label>
                             @if (Model.IsOwner)
                             {
                                 <textarea asp-for="Descrizione"
@@ -106,7 +105,7 @@
                             }
                             else
                             {
-                                <p>@Model.Descrizione</p>
+                                <p class="text-dark fw-semibold">@Model.Descrizione</p>
                             }
                         </div>
 
@@ -116,32 +115,31 @@
                             <h5 class="small text-muted">Rendiconto ore lavorate</h5>
                             <div class="row g-3 mb-3">
                                 <div class="col-12 col-md-4">
-                                    <label class="form-label small text-muted">Data completamento</label>
+                                    <label class="form-label small text-secondary">Data completamento</label>
                                     <input asp-for="Data"
                                            id="dataInput"
                                            data-orig="@Model.Data.ToString("yyyy-MM-dd")"
                                            type="date"
-                                           class="form-control"
-                                           value="@(Model.Data != default
-                                                ? Model.Data.ToString("yyyy-MM-dd")
-                                                : "")" />
+                                           class="form-control text-dark fw-semibold"
+                                           style="max-width: 150px;"
+                                           value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label small text-muted">Ora inizio</label>
+                                    <label class="form-label small text-secondary">Ora inizio</label>
                                     <input asp-for="OraInizio"
                                            id="inizioInput"
                                            data-orig="@Model.OraInizio"
                                            type="number" min="0" max="23"
-                                           class="form-control"
+                                           class="form-control text-dark fw-semibold"
                                            value="@(Model.OraInizio)" />
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <label class="form-label small text-muted">Ora fine</label>
+                                    <label class="form-label small text-secondary">Ora fine</label>
                                     <input asp-for="OraFine"
                                            id="fineInput"
                                            data-orig="@Model.OraFine"
                                            type="number" min="0" max="23"
-                                           class="form-control"
+                                           class="form-control text-dark fw-semibold"
                                            value="@(Model.OraFine)" />
                                 </div>
                             </div>
@@ -203,14 +201,14 @@
             if (!btn) return;
 
             btn.addEventListener('click', e => {
-                const d   = document.getElementById('dataInput').value;
-                const i   = document.getElementById('inizioInput').value;
-                const f   = document.getElementById('fineInput').value;
-                const od  = document.getElementById('dataInput').dataset.orig;
-                const oi  = document.getElementById('inizioInput').dataset.orig;
-                const of  = document.getElementById('fineInput').dataset.orig;
+                const d = document.getElementById('dataInput').value;
+                const i = document.getElementById('inizioInput').value;
+                const f = document.getElementById('fineInput').value;
+                const od = document.getElementById('dataInput').dataset.orig;
+                const oi = document.getElementById('inizioInput').dataset.orig;
+                const of = document.getElementById('fineInput').dataset.orig;
                 const txt = document.getElementById('descrizioneInput');
-                const otxt= txt ? txt.dataset.orig : null;
+                const otxt = txt ? txt.dataset.orig : null;
 
                 if (!d || !i || !f) {
                     showClientAlert("Inserisci prima l'orario di rendiconto.", 'warning');
