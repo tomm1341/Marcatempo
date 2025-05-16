@@ -35,7 +35,7 @@
                         <th>Stato</th>
                         @if (isResp)
                         {
-                            <th>Azione</th>
+                            <th>Validazione</th>
                         }
                     </tr>
                 </thead>
@@ -62,7 +62,7 @@
                             <td>@task.DataScadenza</td>
                             <td>
                                 <span class="fw-semibold">
-                                    @if (task.Stato == "Approvato")
+                                    @if (task.Stato == "Validato")
                                     {
                                         <span class="text-success">@task.Stato</span>
                                     }

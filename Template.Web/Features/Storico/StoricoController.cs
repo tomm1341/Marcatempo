@@ -25,7 +25,7 @@ namespace Template.Web.Features.Storico
         public async virtual Task<IActionResult> Storico()
         {
             var tasksCompletati = await _dbContext.Tasks
-                .Where(task => task.Stato == "Completato" || task.Stato == "Approvato")
+                .Where(task => task.Stato == "Completato" || task.Stato == "Validato")
                 .Select(task => new StoricoViewModel
                 {
                     Id = task.Id,
@@ -56,10 +56,10 @@ namespace Template.Web.Features.Storico
             await _sharedService.Handle(new ChangeTaskStatusCommand
             {
                 Id = id,
-                Stato = "Approvato"
+                Stato = "Validato"
             });
 
-            TempData["Success"] = "Task approvato correttamente.";
+            TempData["Success"] = "Task validato correttamente.";
             return RedirectToAction(nameof(Storico));
         }
 
