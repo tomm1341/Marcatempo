@@ -9,7 +9,7 @@ using Template.Web.Areas;
 
 namespace Template.Web.Features.Task
 {
-    [Authorize(Roles = "ResponsabileInterno,ResponsabileEsterno")]
+    
     public partial class TaskController : AuthenticatedBaseController
     {
         private readonly SharedService _sharedService;

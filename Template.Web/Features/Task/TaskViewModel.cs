@@ -16,10 +16,10 @@ namespace Template.Web.Features.Task
         public string Tipologia { get; set; }
 
         [Required]
-        public string Priorità { get; set; } // valore numerico 0/1/2 in formato string
+        public string Priorità { get; set; } 
 
-        [Required]
-        public DateTime DataScadenza { get; set; }
+ 
+        public DateTime? DataScadenza { get; set; }
 
         public string Stato { get; set; } = "InAttesa";
 
