@@ -101,7 +101,7 @@ namespace Template.Web
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseStatusCodePagesWithReExecute("/Login/NotFound", "?statusCode={0}");
+            app.UseStatusCodePagesWithReExecute("/Features/NotFound", "?statusCode={0}");
 
 
             var node_modules = new CompositePhysicalFileProvider(Directory.GetCurrentDirectory(), "node_modules");
@@ -133,6 +133,10 @@ namespace Template.Web
                 endpoints.MapControllerRoute("Disponibili", "{controller=Disponibili}/{action=Disponibili}");
                 endpoints.MapControllerRoute("Dettagli", "{controller=Dettagli}/{action=Details}");
                 endpoints.MapControllerRoute("AreaPersonale", "{controller=AreaPersonale}/{action=AreaPersonale}");
+
+                // Default fallback
+                endpoints.MapFallbackToController("NotFound", "NotFound");
+
             });
         }
     }
