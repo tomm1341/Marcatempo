@@ -6,58 +6,58 @@
 
 <style>
     .calendar-grid {
-        display: grid;
-        gap: 10px;
+    display: grid;
+    gap: 10px;
     }
 
     .view-month {
-        grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     }
 
     .view-week {
-        grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     }
 
     .view-day {
-        grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
     }
 
     .calendar-cell {
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 10px;
-        min-height: 120px;
-        background-color: #f8f9fa;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px;
+    min-height: 120px;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    position: relative;
     }
 
-        .calendar-cell strong {
-            display: block;
-            margin-bottom: 5px;
-        }
+    .calendar-cell strong {
+    display: block;
+    margin-bottom: 5px;
+    }
 
     .calendar-totale {
-        margin-top: 10px;
-        font-weight: 600;
+    margin-top: 10px;
+    font-weight: 600;
     }
 
     .active-view {
-        font-weight: bold;
-        text-decoration: underline;
+    font-weight: bold;
+    text-decoration: underline;
     }
 
     .bg-warning {
-        background-color: #fff3cd !important;
+    background-color: #fff3cd !important;
     }
 
     .bg-info {
-        background-color: #d1ecf1 !important;
+    background-color: #d1ecf1 !important;
     }
 </style>
 
 <div class="container-fluid px-3 px-sm-4 px-md-4 mt-4 mb-5">
-    <h1 class="mb-4">Area Personale</h1>
+    <h1 class="mb-5 fw-bold">Area Personale</h1>
 
     @if (TempData["Success"] != null)
     {
@@ -74,16 +74,16 @@
         </div>
     }
 
-    <div class="row mb-4">
-        <div class="col-6 col-md-3">
-            <div class="bg-light p-2 rounded text-center">@Model.Nome @Model.Cognome</div>
-        </div>
-        <div class="col-6 col-md-3">
-            <div class="bg-light p-2 rounded text-center">@Model.Ruolo</div>
-        </div>
+    <!--<div class="row mb-4">
+    <div class="col-6 col-md-3">
+    <div class="bg-light p-2 rounded text-center">@Model.Nome @Model.Cognome</div>
     </div>
+    <div class="col-6 col-md-3">
+    <div class="bg-light p-2 rounded text-center">@Model.Ruolo</div>
+    </div>
+    </div>-->
 
-    <h3 class="mb-3">Task in lavorazione</h3>
+    <h4 class="mb-2 text-secondary">Task in lavorazione</h4>
     <div class="row">
         @foreach (var task in Model.TaskInLavorazione)
         {
@@ -96,16 +96,22 @@
                     </div>
                     <div class="me-md-2"><i class="bi bi-info-circle"></i></div>
                     <a asp-controller="Dettagli"
-                       asp-action="Details"
-                       asp-route-id="@task.Id"
-                       class="btn btn-primary btn-sm ms-auto">
+                    asp-action="Details"
+                    asp-route-id="@task.Id"
+                    class="btn btn-primary btn-sm ms-auto">
                         <i class="bi bi-gear-fill me-1"></i> Gestisci Task
                     </a>
                 </div>
             </div>
         }
+        @if (!Model.TaskInLavorazione.Any())
+        {
+           <div>
+               <p class="text-secondary text-opacity-50">Nessun task in lavorazione</p>
+           </div> 
+        }
     </div>
-
+   
     <div class="mt-4 mb-5 d-flex flex-wrap gap-2">
         <a class="btn btn-dark" href="@Url.Action("Storico", "Storico")">Storico task</a>
         <a class="btn btn-primary" href="@Url.Action("Disponibili", "Disponibili")">Task Disponibili</a>
@@ -113,7 +119,7 @@
     </div>
 
     <hr />
-    <h4 class="mb-3">Aggiunta ferie/permessi (seleziona intervallo date)</h4>
+    <h4 class="mb-3">Aggiunta ferie/permessi</h4>
     <form asp-action="AggiungiFeriePermesso" method="post" class="mb-4">
         @Html.AntiForgeryToken()
 
