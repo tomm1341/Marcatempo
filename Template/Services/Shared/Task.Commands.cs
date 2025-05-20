@@ -150,7 +150,7 @@ namespace Template.Services.Shared
             _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
 
-            return $"Task con titolo {task.Titolo} è stato preso in carico da {user.Username}.";
+            return $"Task con titolo \"{task.Titolo}\" è stato preso in carico da {user.Username}.";
         }
 
         public async Task<string> Handle(MarkTaskAsCompleted cmd)
