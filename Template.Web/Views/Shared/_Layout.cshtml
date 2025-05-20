@@ -15,6 +15,15 @@
     var showBackButton = isVisiblePage
                       && !(controller?.Equals("Login", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("Login", StringComparison.OrdinalIgnoreCase) == true)
                       && !(controller?.Equals("AreaPersonale", StringComparison.OrdinalIgnoreCase) == true && action?.Equals("AreaPersonale", StringComparison.OrdinalIgnoreCase) == true);
+
+
+    var formattedRole = "";
+        if (identitaCorrente != null && identitaCorrente.RuoloUtenteCorrente == "ResponsabileInterno")
+            formattedRole = "Responsabile Interno";
+        else if (identitaCorrente != null && identitaCorrente.RuoloUtenteCorrente == "ResponsabileEsterno")
+            formattedRole = "Responsabile Esterno";
+        else if (identitaCorrente != null)
+            formattedRole = "Developer";
 }
 
 @section metas {
@@ -35,43 +44,70 @@
                         <img class="onit-suites-logo" src="~/images/app-logo.png" alt="Logo" />
                     </a>
 
-                    <!-- Toggler -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- Toggler che apre l'offcanvas -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+                            aria-controls="offcanvasMenu" aria-expanded="false" aria-label="Toggle navigation">
                         <i class="fa-solid fa-bars fs-3 text-dark"></i>
                     </button>
                 </div>
 
-                <!-- Collapse content -->
-                <div class="collapse navbar-collapse mt-2" id="navbarSupportedContent">
-                    <!-- USER SECTION -->
-                    <ul class="navbar-nav ms-auto onit-page-menu-user">
-                        @if (identitaCorrente != null)
-                        {
-                            <!-- Desktop dropdown -->
-                            <li class="nav-item dropdown d-none d-lg-block">
-                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                                    <a class="dropdown-item" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
-                                        <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
+                <!-- Offcanvas menu -->
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body p-0">
+                        <ul class="navbar-nav ms-auto onit-page-menu-user px-3">
+                            @if (identitaCorrente != null)
+                            {
+                                <!-- Desktop dropdown (solo desktop) -->
+                                <li class="nav-item dropdown d-none d-lg-block">
+                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img class="user-profile-picture" src="@identitaCorrente.GravatarUrl" />
                                     </a>
-                                    <form autocomplete="off" method="post" action="@Url.Action(MVC.Login.Logout())" id="POST_LogOut" style="display:none;"></form>
-                                </div>
-                            </li>
+                                    <div class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                        <a class="dropdown-item fw-bold">
+                                            <i>@identitaCorrente.NomeUtenteCorrente</i>
+                                            <i> @identitaCorrente.CognomeUtenteCorrente</i>
+                                        </a>
+                                        <a class="dropdown-item">
+                                            <i>@formattedRole</i>
+                                        </a>
+                                        <hr class="dropdown-divider bg-white" />
+                                        <a class="dropdown-item" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
+                                            <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Logout"]
+                                        </a>
+                                        <form autocomplete="off" method="post" action="@Url.Action(MVC.Login.Logout())" id="POST_LogOut" style="display:none;"></form>
+                                    </div>
+                                </li>
 
-                            <!-- Mobile logout -->
-                            <li class="nav-item d-lg-none text-end w-100 my-2">
-                                <a class="btn btn-sm btn-dark" href="javascript:void(0)" onclick="document.getElementById('POST_LogOut').submit()">
-                                    <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Esci"]
-                                </a>
-                            </li>
-                        }
-                    </ul>
+                                <!-- Mobile logout (solo mobile) -->
+                                <li class="nav-item d-lg-none mt-3">
+                                <div class="mb-3">
+                                        <a href="@Url.Action("AreaPersonale", "AreaPersonale")" class="btn ">
+                                            <img src="~/images/home.png" />  
+                                        </a>
+                                </div>
+                                    <div class="card bg-secondary text-white p-3 rounded">
+                                        <div>
+                                            <strong>@identitaCorrente.NomeUtenteCorrente @identitaCorrente.CognomeUtenteCorrente</strong>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small>@formattedRole</small>
+                                        </div>
+                                        <button class="btn btn-outline-light w-100" type="button" onclick="document.getElementById('POST_LogOut').submit()">
+                                            <i class="fa-solid fa-right-from-bracket"></i>&nbsp;@SharedLocalizer["Logout"]
+                                        </button>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
+
 
         <!-- Pulsante sotto il logo -->
         @if (showBackButton)
