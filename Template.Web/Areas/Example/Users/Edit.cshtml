@@ -106,7 +106,6 @@
         @Html.Raw(Model.ToJson())
     </script>
     <script type="text/javascript">
-        // SOSTITUIRE @Model.Id con ID del gruppo
         var signalRManager = new SignalRConnectionManager("/templateHub", "@Model.Id", "JoinGroup", "LeaveGroup");
         signalRManager.registerEvents();
         signalRManager.startConnection();
