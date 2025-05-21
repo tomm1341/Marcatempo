@@ -76,7 +76,7 @@ namespace Template.Services.Shared
 
         public async Task<string> Handle(ChangeTaskStatusCommand cmd)
         {
-            var statiValidi = new[] { "InAttesa", "InLavorazione", "Completato", "Validato", "Respinto" };
+            var statiValidi = new[] { "DaFare", "InLavorazione", "Completato", "Validato", "Respinto" };
 
             if (!statiValidi.Contains(cmd.Stato))
             {
@@ -139,7 +139,7 @@ namespace Template.Services.Shared
                 throw new ArgumentException("Utente non trovato.");
             }
 
-            if (task.Stato != "InAttesa")
+            if (task.Stato != "DaFare")
             {
                 throw new InvalidOperationException("Il task può essere preso in carico solo se è nello stato 'In Attesa'.");
             }

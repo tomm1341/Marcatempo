@@ -78,12 +78,12 @@ namespace Template.Infrastructure
         //************ INITIALIZING TASKS (PROBABLY TO BE REMOVED IN PRODUCTION) *************
         public static void InitializeTasks(TemplateDbContext context)
         {
-           if (context.Tasks.Any())
-                return; // Data already present
+           /*if (context.Tasks.Any())
+                return; // Data already present*/
             
              // Rimuove tutti i task esistenti (uncomment only for testing)
-             /*context.Tasks.RemoveRange(context.Tasks);
-             context.SaveChanges();*/
+             context.Tasks.RemoveRange(context.Tasks);
+             context.SaveChanges();
 
             context.Tasks.AddRange(
 
@@ -93,7 +93,7 @@ namespace Template.Infrastructure
                     IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Bassa",
-                    Stato = "InAttesa",
+                    Stato = "DaFare",
                     Titolo = "Aggiornare il sistema operativo dei server",
                     Tipologia = "Interno",
                     Descrizione = "Programmare l'aggiornamento per evitare downtime durante l'orario lavorativo.",
@@ -106,7 +106,7 @@ namespace Template.Infrastructure
                     IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Media",
-                    Stato = "InAttesa",
+                    Stato = "DaFare",
                     Titolo = "Revisione policy di sicurezza",
                     Tipologia = "Interno",
                     Descrizione = "Analizzare e aggiornare le policy interne sulla sicurezza informatica.",
@@ -119,7 +119,7 @@ namespace Template.Infrastructure
                     IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Alta",
-                    Stato = "InAttesa",
+                    Stato = "DaFare",
                     Titolo = "Contattare fornitore per aggiornamento contratto",
                     Tipologia = "Esterno",
                     Descrizione = "Raccogliere preventivi e ridefinire i termini del contratto con il fornitore principale.",
@@ -132,7 +132,7 @@ namespace Template.Infrastructure
                     IdCreatore = Guid.Parse("466cd207-e0dd-4206-9bda-fba2eb7f2a17"),
                     IdAssegnatario = null,
                     Priorità = "Media",
-                    Stato = "InAttesa",
+                    Stato = "DaFare",
                     Titolo = "Preparare presentazione per il cliente",
                     Tipologia = "Esterno",
                     Descrizione = "Creare slide PowerPoint per illustrare le funzionalità del nuovo prodotto.",

@@ -22,7 +22,7 @@ namespace Template.Services.Shared
         public string Priorità { get; set;} // Alta, media, bassa
 
         [Required]
-        [StatoValido(new[] { "InAttesa", "InLavorazione", "Completato" })]
+        [StatoValido(new[] { "DaFare", "InLavorazione", "Completato" })]
         public string Stato { get; set; }
         public string Titolo { get; set;}
 

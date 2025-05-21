@@ -132,7 +132,7 @@ namespace Template.Services.Shared
         public async Task<IEnumerable<GetAvailableTasksQuery>> GetAvailableTasksAsync() 
         {
             return await _dbContext.Tasks
-                .Where(t => t.Stato == "InAttesa")
+                .Where(t => t.Stato == "DaFare")
                 .Select(t => new GetAvailableTasksQuery
                 {
                     Id = t.Id,
