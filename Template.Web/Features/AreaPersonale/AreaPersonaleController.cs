@@ -6,6 +6,10 @@ using Template.Web.Areas;
 using Template.Services.Shared;
 using Template.Web.Features.AreaPersonale;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Globalization;
+
 
 namespace Template.Web.Features.AreaPersonale
 {
@@ -62,38 +66,45 @@ namespace Template.Web.Features.AreaPersonale
                 {
                     "InLavorazione" => "warning",
                     "Completato" => "success",
+                    "Respinto" => "danger",
                     _ => "secondary"
                 }
             }).ToList();
 
-            // 2) Rendiconti con Task associato
+            // 2) Rendiconti
             var rendDtos = await _sharedService.GetRendicontoByUserAsync(userId);
 
-            // Recupero anche i task per mappare i titoli nel rendiconto
-            var allTasks = assignedDtos.ToDictionary(t => t.Id, t => t.Titolo);
-
-            var rendicontoLogs = rendDtos.Select(r => new RendicontoLogViewModel
+            // 2b) Mappa i rendiconti recuperando titolo via SharedService
+            var rendicontoLogs = new List<RendicontoLogViewModel>();
+            foreach (var r in rendDtos.OrderBy(r => r.Data))
             {
-                Giorno = r.Data.ToString("dddd", new System.Globalization.CultureInfo("it-IT")),
-                Data = r.Data.ToString("dd/MM/yyyy"),
-                OrarioInizio = r.OraInizio.ToString("00") + ":00",
-                OrarioFine = r.OraFine.ToString("00") + ":00",
-                TitoloTask = allTasks.ContainsKey(r.IdTask) ? allTasks[r.IdTask] : "Task sconosciuto",
-                OreLavorate = r.OreLavorate
-            }).OrderBy(r => DateTime.ParseExact(r.Data, "dd/MM/yyyy", null)).ToList();
+                // per ogni rendDto chiedo al servizio il dettaglio per ottenere il titolo
+                var detail = await _sharedService.Query(new TaskDetailQuery { Id = r.IdTask });
+                var titolo = detail?.Titolo ?? "Task non trovato";
 
+                rendicontoLogs.Add(new RendicontoLogViewModel
+                {
+                    Giorno = r.Data.ToString("dddd", new System.Globalization.CultureInfo("it-IT")),
+                    Data = r.Data.ToString("dd/MM/yyyy"),
+                    OrarioInizio = r.OraInizio.ToString("00") + ":00",
+                    OrarioFine = r.OraFine.ToString("00") + ":00",
+                    OreLavorate = r.OreLavorate,
+                    TitoloTask = titolo
+                });
+            }
+
+            // Totale ore lavorate
             var totaleOre = rendDtos.Sum(r => r.OreLavorate);
 
-            // 3) Recupero le ferie/permessi
+            // 3) Ferie / Permessi
             var feriePermessiDtos = await _sharedService.GetFeriePermessiByUserAsync(userId);
-
             var feriePermessiLogs = feriePermessiDtos.Select(fp => new FeriePermessoLogViewModel
             {
                 Data = fp.Data.ToString("dd/MM/yyyy"),
-                Tipo = fp.Tipo // "Ferie" o "Permesso"
+                Tipo = fp.Tipo
             }).ToList();
 
-            // 4) ViewModel finale
+            // 4) Costruzione del ViewModel
             var model = new AreaPersonaleViewModel
             {
                 UserId = userId,
@@ -103,7 +114,7 @@ namespace Template.Web.Features.AreaPersonale
                 TaskInLavorazione = taskItems,
                 RendicontoLogs = rendicontoLogs,
                 OreTotali = (int)totaleOre,
-                FeriePermessoLogs = feriePermessiLogs // Aggiungi la lista delle ferie/permessi
+                FeriePermessoLogs = feriePermessiLogs
             };
 
             return View(model);
