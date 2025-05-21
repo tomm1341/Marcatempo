@@ -5,13 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Template.Services;
 using System;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using Template.Web.Areas;
 using Template.Infrastructure;
-using Microsoft.Extensions.Localization;
-using Template.Web.Features.Login;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Template.Web.Features.Dettagli
 {
@@ -26,10 +21,30 @@ namespace Template.Web.Features.Dettagli
             _sharedService = sharedService;
         }
 
-
         [HttpGet]
-        public async virtual Task<IActionResult> Details(Guid id)
+        public async virtual Task<IActionResult> Details(Guid id, bool ritorna = false, bool respinto = false)
         {
+            if (respinto)
+            {
+                // se vengo da "Respingi" con motivazione
+                await _sharedService.Handle(new ChangeTaskStatusCommand
+                {
+                    Id = id,
+                    Stato = "Respinto"
+                });
+                TempData["Success"] = "Task respinto. Inserisci qui sotto il motivo nella descrizione.";
+            }
+            else if (ritorna)
+            {
+                // se usavi ancora 'ritorna' per rimettere in lavorazione
+                await _sharedService.Handle(new ChangeTaskStatusCommand
+                {
+                    Id = id,
+                    Stato = "InLavorazione"
+                });
+                TempData["Success"] = "Task rimesso in lavorazione. Puoi ora specificare il motivo nella descrizione.";
+            }
+
             var dto = await _sharedService.Query(new TaskDetailQuery { Id = id });
 
             var vm = new DettagliViewModel
@@ -46,7 +61,6 @@ namespace Template.Web.Features.Dettagli
                 IdCreatore = dto.IdCreatore,
                 NomeAssegnatario = dto.NomeAssegnatario,
                 NomeCreatore = dto.NomeCreatore,
-
                 IsOwner = dto.IdAssegnatario.HasValue && dto.IdAssegnatario.Value == CurrentUserId
             };
 
@@ -66,7 +80,8 @@ namespace Template.Web.Features.Dettagli
                 var rendList = await _sharedService.GetRendicontoByTaskAsync(id);
                 var last = rendList
                     .Where(r => r.IdUtente == CurrentUserId)
-                    .OrderBy(r => r.Data).ThenBy(r => r.OraInizio)
+                    .OrderBy(r => r.Data)
+                    .ThenBy(r => r.OraInizio)
                     .LastOrDefault();
 
                 if (last != null)
@@ -87,11 +102,17 @@ namespace Template.Web.Features.Dettagli
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(Details), new { id = model.TaskId });
 
-            if (model.IdAssegnatario != CurrentUserId)
+            // ricava il ruolo corrente
+            var identita = (IdentitaViewModel)ViewData[IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY];
+            bool isResponsabile = identita.RuoloUtenteCorrente == "ResponsabileInterno"
+                                || identita.RuoloUtenteCorrente == "ResponsabileEsterno";
+            bool isOwner = model.IdAssegnatario == CurrentUserId;
+
+            if (!isOwner && !isResponsabile)
                 return Forbid();
 
             RendicontoDTO rendDto = null;
-            if (model.Data != default && model.OraFine > model.OraInizio)
+            if (model.Data != default && model.OraFine > model.OraInizio && isOwner)
             {
                 rendDto = new RendicontoDTO
                 {
@@ -103,6 +124,7 @@ namespace Template.Web.Features.Dettagli
                 };
             }
 
+            // aggiorna descrizione (e rendiconto se owner)
             var newRendId = await _sharedService.UpdateTaskAndRendicontoAsync(
                 model.TaskId,
                 model.Descrizione,
@@ -115,8 +137,7 @@ namespace Template.Web.Features.Dettagli
             return RedirectToAction(nameof(Details), new { id = model.TaskId });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async virtual Task<IActionResult> MarkAsCompleted(Guid id)
         {
             var task = await _dbContext.Tasks.FindAsync(id);
@@ -148,9 +169,5 @@ namespace Template.Web.Features.Dettagli
             TempData["Success"] = message;
             return RedirectToAction(nameof(Details), new { id });
         }
-
     }
-
 }
-
-

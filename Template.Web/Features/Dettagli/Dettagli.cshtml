@@ -5,6 +5,7 @@
     {
         "In Lavorazione" => "bg-warning text-dark",
         "Completato" => "bg-success text-white",
+        "Respinto" => "bg-danger text-white",
         _ => "bg-secondary text-white"
     };
     string GetPrioritaBadgeClass(string priorita) => priorita switch
@@ -14,6 +15,13 @@
         "Bassa" => "text-success fw-bold",
         _ => ""
     };
+}
+@{
+    var identitaCorrente = (Template.Web.Areas.IdentitaViewModel)ViewData[Template.Web.Areas.IdentitaViewModel.VIEWDATA_IDENTITACORRENTE_KEY];
+
+    var isResponsabile = false;
+    if (identitaCorrente.RuoloUtenteCorrente == "ResponsabileInterno" || identitaCorrente.RuoloUtenteCorrente == "ResponsabileEsterno")
+        isResponsabile = true;
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -51,9 +59,9 @@
 
             <!-- SAVE form -->
             <form id="saveForm"
-                  asp-controller="Dettagli"
-                  asp-action="SaveDetails"
-                  method="post">
+            asp-controller="Dettagli"
+            asp-action="SaveDetails"
+            method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="TaskId" />
                 <input type="hidden" asp-for="IdAssegnatario" />
@@ -95,13 +103,13 @@
                     <div class="col-12 col-md-8">
                         <div class="mb-3">
                             <label class="form-label small text-secondary">Descrizione</label>
-                            @if (Model.IsOwner)
+                            @if (Model.IsOwner || isResponsabile)
                             {
                                 <textarea asp-for="Descrizione"
-                                          id="descrizioneInput"
-                                          data-orig="@Model.Descrizione"
-                                          class="form-control"
-                                          rows="5"></textarea>
+                                id="descrizioneInput"
+                                data-orig="@Model.Descrizione"
+                                class="form-control"
+                                rows="5"></textarea>
                             }
                             else
                             {
@@ -117,30 +125,30 @@
                                 <div class="col-12 col-md-4">
                                     <label class="form-label small text-secondary">Data completamento</label>
                                     <input asp-for="Data"
-                                           id="dataInput"
-                                           data-orig="@Model.Data.ToString("yyyy-MM-dd")"
-                                           type="date"
-                                           class="form-control text-dark fw-semibold"
-                                           style="max-width: 150px;"
-                                           value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
+                                    id="dataInput"
+                                    data-orig="@Model.Data.ToString("yyyy-MM-dd")"
+                                    type="date"
+                                    class="form-control text-dark fw-semibold"
+                                    style="max-width: 150px;"
+                                    value="@(Model.Data != default ? Model.Data.ToString("yyyy-MM-dd") : "")" />
                                 </div>
                                 <div class="col-6 col-md-4">
                                     <label class="form-label small text-secondary">Ora inizio</label>
                                     <input asp-for="OraInizio"
-                                           id="inizioInput"
-                                           data-orig="@Model.OraInizio"
-                                           type="number" min="0" max="23"
-                                           class="form-control text-dark fw-semibold"
-                                           value="@(Model.OraInizio)" />
+                                    id="inizioInput"
+                                    data-orig="@Model.OraInizio"
+                                    type="number" min="0" max="23"
+                                    class="form-control text-dark fw-semibold"
+                                    value="@(Model.OraInizio)" />
                                 </div>
                                 <div class="col-6 col-md-4">
                                     <label class="form-label small text-secondary">Ora fine</label>
                                     <input asp-for="OraFine"
-                                           id="fineInput"
-                                           data-orig="@Model.OraFine"
-                                           type="number" min="0" max="23"
-                                           class="form-control text-dark fw-semibold"
-                                           value="@(Model.OraFine)" />
+                                    id="fineInput"
+                                    data-orig="@Model.OraFine"
+                                    type="number" min="0" max="23"
+                                    class="form-control text-dark fw-semibold"
+                                    value="@(Model.OraFine)" />
                                 </div>
                             </div>
                         }
@@ -156,9 +164,17 @@
                         </button>
                         <!-- Completa -->
                         <button id="completeButton"
-                                type="button"
-                                class="btn btn-primary">
+                        type="button"
+                        class="btn btn-primary">
                             <i class="bi bi-check-circle me-1"></i> Completa Task
+                        </button>
+                    </div>
+                }
+                @if (isResponsabile && !Model.IsOwner) {
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <!-- Salva descrizione responsabile-->
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-save me-1"></i> Salva descrizione
                         </button>
                     </div>
                 }
@@ -175,8 +191,8 @@
 
             <!-- Torna indietro -->
             <div class="mt-4">
-                <a asp-controller="Disponibili"
-                   asp-action="Disponibili"
+                <a asp-controller="AreaPersonale"
+                   asp-action="AreaPersonale"
                    class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i> Torna indietro
                 </a>
