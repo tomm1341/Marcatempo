@@ -28,7 +28,7 @@ namespace Template.Web.Features.Task
         {
             return View(new CreateTaskCommand
             {
-                Stato = "InAttesa"
+                Stato = "DaFare"
             });
         }
 
@@ -42,7 +42,7 @@ namespace Template.Web.Features.Task
             try
             {
                 command.Id = Guid.NewGuid();
-                command.Stato = "InAttesa"; 
+                command.Stato = "DaFare"; 
 
                 await _sharedService.Handle(command, CurrentUserId);
 

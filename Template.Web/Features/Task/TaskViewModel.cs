@@ -21,7 +21,7 @@ namespace Template.Web.Features.Task
  
         public DateTime? DataScadenza { get; set; }
 
-        public string Stato { get; set; } = "InAttesa";
+        public string Stato { get; set; } = "DaFare";
 
         public DateTime DataCreazione { get; set; } = DateTime.Now;
 
