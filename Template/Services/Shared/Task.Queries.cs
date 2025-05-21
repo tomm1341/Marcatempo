@@ -164,13 +164,11 @@ namespace Template.Services.Shared
                       })
                 .ToListAsync();
         }
-            /// <summary>
-            /// Restituisce tutti i task il cui IdAssegnatario corrisponde all'utente passato
-            /// </summary>
+
             public async Task<IEnumerable<AssignedTaskDTO>> Query(AssignedTaskQuery qry)
             {
                 return await _dbContext.Tasks
-                    .Where(t => t.IdAssegnatario == qry.UserId && t.Stato == "InLavorazione")
+                    .Where(t => t.IdAssegnatario == qry.UserId && t.Stato == "InLavorazione" || t.IdAssegnatario == qry.UserId && t.Stato == "Respinto")
                     .Select(t => new AssignedTaskDTO
                     {
                         Id = t.Id,

@@ -123,7 +123,7 @@ namespace Template.Services.Shared
                 _dbContext.Tasks.Remove(task);
                 await _dbContext.SaveChangesAsync();
             }
-            return $"Task con ID {task.Id} eliminato con successo."; // Messaggio di conferma
+            return $"Task con titolo \"{task.Titolo}\" eliminato con successo."; // Messaggio di conferma
         }
 
         public async Task<string> Handle(PresaInCaricoTask cmd)
@@ -170,7 +170,7 @@ namespace Template.Services.Shared
             _dbContext.Tasks.Update(task);
             await _dbContext.SaveChangesAsync();
 
-            return $"Task con titolo {task.Titolo} è stato segnato come completato.";
+            return $"Task con titolo \"{task.Titolo}\" è stato segnato come completato.";
 
         }
     }
