@@ -23,10 +23,8 @@ namespace Template.Web.Features.Disponibili
         [HttpGet]
         public virtual async Task<IActionResult> Disponibili()
         {
-            // 1. Carica i task "InAttesa" dal servizio
             var tasks = await _sharedService.GetAvailableTasksAsync();
 
-            // 2. Mappa sui ViewModel
             var list = tasks
                 .Select(t =>
                 {
