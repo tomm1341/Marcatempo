@@ -59,7 +59,7 @@
                                 </span>
                             </td>
                             <td>@task.Priorità</td>
-                            <td>@task.DataScadenza</td>
+                            <td>@task.DataScadenza?.ToString("dd/MM/yyyy")</td>
                             <td>
                                 <span class="fw-semibold">
                                     @if (task.Stato == "Validato")
@@ -88,10 +88,15 @@
                                                 <i class="bi bi-check-lg"></i>
                                             </button>
                                         </form>
-                                        <form asp-action="Respingi" method="post" class="m-0">
+                                        <form asp-action="Respingi"
+                                              method="post"
+                                              class="m-0 respingi-form"
+                                              data-id="@task.Id">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@task.Id" />
-                                            <button type="submit" class="btn btn-sm btn-danger">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-danger btn-respingo"
+                                                    data-id="@task.Id">
                                                 <i class="bi bi-x-lg"></i>
                                             </button>
                                         </form>
@@ -111,3 +116,24 @@
         </div>
     }
 </div>
+
+@section scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btn-respingo').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+
+                    const wantsReason = confirm("Se vuoi rifiutare il task devi anche inserire una motivazione.\n\nSeleziona 'Annulla' per annullare l'operazione");
+                    if (wantsReason) {
+                        // reindirizza ai dettagli passando respinto=true
+                        window.location.href =
+                            `@Url.Action("Details", "Dettagli")?id=${id}&respinto=true`;
+                    }
+                    // altrimenti: non fare nulla
+                });
+            });
+        });
+    </script>
+}
+
