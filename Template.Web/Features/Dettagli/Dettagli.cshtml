@@ -179,7 +179,21 @@
                     </div>
                 }
             </form>
-
+            @if (Model.Stato == "DaFare")
+            {
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <form asp-controller="Dettagli"
+                          asp-action="PrendiInCarico"
+                          method="post"
+                          class="mb-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.TaskId" />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Prendi in carico
+                        </button>
+                    </form>
+                </div>
+            }
             <!-- Hidden form per completare -->
             <form id="completeForm"
                   asp-controller="Dettagli"

@@ -169,5 +169,26 @@ namespace Template.Web.Features.Dettagli
             TempData["Success"] = message;
             return RedirectToAction(nameof(Details), new { id });
         }
+        [HttpPost, ValidateAntiForgeryToken]
+        public virtual async Task<IActionResult> PrendiInCarico(Guid id)
+        {
+            var userId = Identita.IdUtenteCorrente;
+            if (userId == Guid.Empty)
+            {
+                TempData["Error"] = "Utente corrente non valido.";
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var message = await _sharedService.Handle(new PresaInCaricoTask
+            {
+                TaskId = id,
+                IdAssegnatario = userId
+            });
+
+            TempData["Success"] = message;
+            return RedirectToAction("AreaPersonale", "AreaPersonale");
+        }
+
+
     }
 }
